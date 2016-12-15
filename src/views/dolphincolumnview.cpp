@@ -536,9 +536,8 @@ void DolphinColumnView::slotDirListerCompleted()
         return;
     }
 
-    const int requiredWidth = settings->columnWidth();
-
     const ColumnModeSettings* settings = DolphinSettings::instance().columnModeSettings();
+    const int requiredWidth = settings->columnWidth();
     if (requiredWidth > settings->columnWidth()) {
         int frameAroundContents = 0;
         if (style()->styleHint(QStyle::SH_ScrollView_FrameOnlyAroundContents)) {
