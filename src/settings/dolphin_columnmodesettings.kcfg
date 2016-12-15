@@ -38,7 +38,7 @@
         </entry>
         <entry name="ColumnWidth" type="Int">
             <label>Column width</label>
-            <default>250</default>
+            <default>750</default>
         </entry>
     </group>
 </kcfg>
