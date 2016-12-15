@@ -1638,13 +1638,13 @@ void DolphinMainWindow::setupActions()
     // (note that most of it is set up in DolphinViewActionHandler)
 
     KAction* split = actionCollection()->addAction("split_view");
-    split->setShortcut(Qt::Key_F3);
+    split->setShortcut(Qt::Key_F3, Qt::CTRL | Qt::Key_S);
     updateSplitAction();
     connect(split, SIGNAL(triggered()), this, SLOT(toggleSplitView()));
 
     KAction* reload = actionCollection()->addAction("reload");
     reload->setText(i18nc("@action:inmenu View", "Reload"));
-    reload->setShortcut(Qt::Key_F5);
+    reload->setShortcut(Qt::Key_F5, Qt::CTRL | Qt::Key_R);
     reload->setIcon(KIcon("view-refresh"));
     connect(reload, SIGNAL(triggered()), this, SLOT(reloadView()));
 
@@ -1696,7 +1696,7 @@ void DolphinMainWindow::setupActions()
     KAction* showFilterBar = actionCollection()->addAction("show_filter_bar");
     showFilterBar->setText(i18nc("@action:inmenu Tools", "Show Filter Bar"));
     showFilterBar->setIcon(KIcon("view-filter"));
-    showFilterBar->setShortcut(Qt::CTRL | Qt::Key_I);
+    showFilterBar->setShortcut(Qt::Key_Slash);
     connect(showFilterBar, SIGNAL(triggered()), this, SLOT(showFilterBar()));
 
     KAction* compareFiles = actionCollection()->addAction("compare_files");
