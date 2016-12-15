@@ -1850,8 +1850,6 @@ void DolphinMainWindow::setupDockWidgets()
     const GeneralSettings* generalSettings = DolphinSettings::instance().generalSettings();
     const bool firstRun = generalSettings->firstRun();
     if (firstRun) {
-        infoDock->hide();
-        foldersDock->hide();
 #ifndef Q_OS_WIN
         terminalDock->hide();
 #endif
@@ -1895,6 +1893,7 @@ void DolphinMainWindow::setupDockWidgets()
             placesPanel, SLOT(setUrl(KUrl)));
     connect(placesDock, SIGNAL(visibilityChanged(bool)),
             this, SLOT(slotPlacesPanelVisibilityChanged(bool)));
+    tabifyDockWidget(QDockWidget *foldersDock, QDockWidget *placesDock)
 
     // Add actions into the "Panels" menu
     KActionMenu* panelsMenu = new KActionMenu(i18nc("@action:inmenu View", "Panels"), this);
