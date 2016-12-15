@@ -536,8 +536,7 @@ void DolphinColumnView::slotDirListerCompleted()
         return;
     }
 
-    // Try to optimize the width of the column, so that no name gets clipped
-    const int requiredWidth = sizeHintForColumn(DolphinModel::Name);
+    const int requiredWidth = settings->columnWidth();
 
     const ColumnModeSettings* settings = DolphinSettings::instance().columnModeSettings();
     if (requiredWidth > settings->columnWidth()) {
