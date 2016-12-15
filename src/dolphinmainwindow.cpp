@@ -256,7 +256,7 @@ DolphinMainWindow::DolphinMainWindow() :
     if (firstRun) {
         menuBar()->setVisible(false);
         // Assure a proper default size if Dolphin runs the first time
-        resize(750, 500);
+        resize(2250, 1500);
     }
 
     const bool showMenu = !menuBar()->isHidden();
