@@ -54,7 +54,7 @@ QSize Panel::sizeHint() const
     // the creation and initialization of widgets until a showEvent() is called.
     // Because of this the size-hint of the embedded widgets cannot be used
     // and a default size is provided:
-    return QSize(180, 180);
+    return QSize(540, 540);
 }
 
 void Panel::setUrl(const KUrl& url)
