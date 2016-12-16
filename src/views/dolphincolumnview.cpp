@@ -103,7 +103,7 @@ DolphinColumnView::DolphinColumnView(QWidget* parent,
         m_font.setPointSizeF(settings->fontSize());
     }
 
-    setMinimumWidth(settings->fontSize() * 10);
+    setMinimumWidth(749);
     setMaximumWidth(settings->columnWidth());
 
     connect(this, SIGNAL(viewportEntered()),
