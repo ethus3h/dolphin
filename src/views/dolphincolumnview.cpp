@@ -103,7 +103,7 @@ DolphinColumnView::DolphinColumnView(QWidget* parent,
         m_font.setPointSizeF(settings->fontSize());
     }
 
-    setMinimumWidth(settings->fontSize() * 10);
+    setMinimumWidth(749);
     setMaximumWidth(settings->columnWidth());
 
     connect(this, SIGNAL(viewportEntered()),
@@ -536,10 +536,8 @@ void DolphinColumnView::slotDirListerCompleted()
         return;
     }
 
-    // Try to optimize the width of the column, so that no name gets clipped
-    const int requiredWidth = sizeHintForColumn(DolphinModel::Name);
-
     const ColumnModeSettings* settings = DolphinSettings::instance().columnModeSettings();
+    const int requiredWidth = settings->columnWidth();
     if (requiredWidth > settings->columnWidth()) {
         int frameAroundContents = 0;
         if (style()->styleHint(QStyle::SH_ScrollView_FrameOnlyAroundContents)) {

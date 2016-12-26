@@ -87,15 +87,24 @@
     <ToolBar noMerge="1" name="mainToolBar" >
         <text context="@title:menu">Main Toolbar</text>
         <Action name="go_back" />
+        <Action name="go_up"/>
         <Action name="go_forward" />
+        <Action name="refresh"/>
         <Separator name="separator_1" />
-        <Action name="icons" />
-        <Action name="details" />
         <Action name="columns" />
+        <Action name="details" />
+        <Action name="icons" />
         <Separator name="separator_0" />
-        <Action name="edit_find"/>
+        <Action name="new_tab" />
         <Action name="show_preview" />
         <Action name="split_view" />
+        <Action name="edit_find"/>
+        <Separator name="separator_0" />
+        <Action name="move_to_trash" />
+        <Action name="rename" />
+        <Action name="edit_paste" />
+        <Action name="edit_cut" />
+        <Action name="edit_copy" />
     </ToolBar>
     <ActionProperties scheme="Default">
         <Action priority="0" name="go_back"/>

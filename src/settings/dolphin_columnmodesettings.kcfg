@@ -30,7 +30,7 @@
         </entry>
         <entry name="IconSize" type="Int">
             <label>Icon size</label>
-            <default code="true">KIconLoader::SizeSmall</default>
+            <default code="true">KIconLoader::SizeLarge</default>
         </entry>
         <entry name="PreviewSize" type="Int">
             <label>Preview size</label>
@@ -38,7 +38,7 @@
         </entry>
         <entry name="ColumnWidth" type="Int">
             <label>Column width</label>
-            <default>250</default>
+            <default>750</default>
         </entry>
     </group>
 </kcfg>
