@@ -247,7 +247,7 @@ void PreviewsSettingsPage::loadSettings()
                                                      << QLatin1String("karbon_xfig_thumbnail")
                                                      << QLatin1String("jpegthumbnail"));
 
-    // If the user is upgrading from KDE <= 4.6, we must check if he had the 'jpegrotatedthumbnail' plugin enabled.
+    // If the user is upgrading from KDE <= 4.6, we must check if they had the 'jpegrotatedthumbnail' plugin enabled.
     // This plugin does not exist any more in KDE >= 4.7, so we have to replace it with the 'jpegthumbnail' plugin.
     //
     // Note that the upgrade to the correct plugin is done already in KFilePreviewGenerator. However, if Konqueror is
