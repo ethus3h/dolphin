@@ -20,9 +20,9 @@
 #ifndef VIEWMODECONTROLLER_H
 #define VIEWMODECONTROLLER_H
 
-#include <QUrl>
+#include <KUrl>
 #include <QObject>
-#include "dolphin_export.h"
+#include <libdolphin_export.h>
 #include <views/dolphinview.h>
 
 /**
@@ -33,7 +33,7 @@
  * connect to signals of the ViewModeController to react on changes. The view
  * implementations get only read-access to the ViewModeController.
  */
-class DOLPHIN_EXPORT ViewModeController : public QObject
+class LIBDOLPHINPRIVATE_EXPORT ViewModeController : public QObject
 {
     Q_OBJECT
 
@@ -44,13 +44,13 @@ public:
     /**
      * @return URL that is shown by the view mode implementation.
      */
-    QUrl url() const;
+    KUrl url() const;
 
     /**
      * Sets the URL to \a url and does nothing else. Called when
      * a redirection happens. See ViewModeController::setUrl()
      */
-    void redirectToUrl(const QUrl& url);
+    void redirectToUrl(const KUrl& url);
 
     /**
      * Informs the view mode implementation about a change of the activation
@@ -83,13 +83,13 @@ public slots:
      * Sets the URL to \a url and emits the signals cancelPreviews() and
      * urlChanged() if \a url is different for the current URL.
      */
-    void setUrl(const QUrl& url);
+    void setUrl(const KUrl& url);
 
 signals:
     /**
      * Is emitted if the URL has been changed by ViewModeController::setUrl().
      */
-    void urlChanged(const QUrl& url);
+    void urlChanged(const KUrl& url);
 
     /**
      * Is emitted, if ViewModeController::indicateActivationChange() has been
@@ -118,7 +118,7 @@ signals:
 private:
     int m_zoomLevel;
     QString m_nameFilter;
-    QUrl m_url;
+    KUrl m_url;
 };
 
 #endif

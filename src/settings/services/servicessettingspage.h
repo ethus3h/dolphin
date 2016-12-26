@@ -21,11 +21,12 @@
 
 #include <settings/settingspagebase.h>
 
+#include <QMap>
 #include <QString>
 
+class QCheckBox;
+class QGroupBox;
 class QListView;
-class QSortFilterProxyModel;
-class ServiceModel;
 
 /**
  * @brief Page for the 'Services' settings of the Dolphin settings dialog.
@@ -39,13 +40,13 @@ public:
     virtual ~ServicesSettingsPage();
 
     /** @see SettingsPageBase::applySettings() */
-    virtual void applySettings() Q_DECL_OVERRIDE;
+    virtual void applySettings();
 
     /** @see SettingsPageBase::restoreDefaults() */
-    virtual void restoreDefaults() Q_DECL_OVERRIDE;
+    virtual void restoreDefaults();
 
 protected:
-    virtual void showEvent(QShowEvent* event) Q_DECL_OVERRIDE;
+    virtual void showEvent(QShowEvent* event);
 
 private slots:
     /**
@@ -61,19 +62,11 @@ private:
 
     bool isInServicesList(const QString& service) const;
 
-    /**
-     * Adds a row to the model of m_listView.
-     */
-    void addRow(const QString& icon,
-                const QString& text,
-                const QString& value,
-                bool checked);
-
 private:
     bool m_initialized;
-    ServiceModel* m_serviceModel;
-    QSortFilterProxyModel* m_sortModel;
-    QListView* m_listView;
+    QListView *m_listView;
+    QGroupBox* m_vcsGroupBox;
+    QMap<QString, QCheckBox*> m_vcsPluginsMap;
     QStringList m_enabledVcsPlugins;
 };
 

@@ -1,7 +1,6 @@
 /***************************************************************************
  *   Copyright (C) 2006-2010 by Peter Penz <peter.penz19@gmail.com>        *
  *   Copyright (C) 2006 by Gregor Kališnik <gregor@podnapisi.net>          *
- *   Copyright (C) 2012 by Stuart Citrin <ctrn3e8@gmail.com>               *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
  *   it under the terms of the GNU General Public License as published by  *
@@ -24,8 +23,7 @@
 
 #include <QWidget>
 
-class QLineEdit;
-class QToolButton;
+class KLineEdit;
 
 /**
  * @brief Provides an input field for filtering the currently shown items.
@@ -40,9 +38,6 @@ public:
     explicit FilterBar(QWidget* parent = 0);
     virtual ~FilterBar();
 
-    /** Called by view container to hide this **/
-    void closeFilterBar();
-
     /**
      * Selects the whole text of the filter bar.
      */
@@ -51,10 +46,6 @@ public:
 public slots:
     /** Clears the input field. */
     void clear();
-    /** Clears the input field if the "lock button" is disabled. */
-    void slotUrlChanged();
-    /** The input field is cleared also if the "lock button" is released. */
-    void slotToggleLockButton(bool checked);
 
 signals:
     /**
@@ -68,18 +59,12 @@ signals:
      */
     void closeRequest();
 
-    /*
-     * Emitted as soon as the focus should be returned back to the view.
-     */
-    void focusViewRequest();
-
 protected:
-    virtual void showEvent(QShowEvent* event) Q_DECL_OVERRIDE;
-    virtual void keyReleaseEvent(QKeyEvent* event) Q_DECL_OVERRIDE;
+    virtual void showEvent(QShowEvent* event);
+    virtual void keyReleaseEvent(QKeyEvent* event);
 
 private:
-    QLineEdit* m_filterInput;
-    QToolButton* m_lockButton;
+    KLineEdit* m_filterInput;
 };
 
 #endif

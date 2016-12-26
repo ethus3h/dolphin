@@ -23,8 +23,7 @@
 
 #include <KNewFileMenu>
 
-#include "dolphin_export.h"
-
+class DolphinMainWindow;
 class KJob;
 
 /**
@@ -35,20 +34,20 @@ class KJob;
  * All errors are shown in the status bar of Dolphin
  * instead as modal error dialog with an OK button.
  */
-class DOLPHIN_EXPORT DolphinNewFileMenu : public KNewFileMenu
+class DolphinNewFileMenu : public KNewFileMenu
 {
     Q_OBJECT
 
 public:
-    DolphinNewFileMenu(KActionCollection* collection, QObject* parent);
+    DolphinNewFileMenu(DolphinMainWindow* parent);
     virtual ~DolphinNewFileMenu();
-
-signals:
-    void errorMessage(const QString& error);
 
 protected slots:
     /** @see KNewFileMenu::slotResult() */
-    virtual void slotResult(KJob* job) Q_DECL_OVERRIDE;
+    virtual void slotResult(KJob* job);
+
+private:
+    DolphinMainWindow* m_mainWin;
 };
 
 #endif

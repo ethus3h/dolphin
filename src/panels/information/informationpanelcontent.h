@@ -20,33 +20,19 @@
 #ifndef INFORMATIONPANELCONTENT_H
 #define INFORMATIONPANELCONTENT_H
 
-#include "config-baloo.h"
+#include <KConfig>
 #include <KFileItem>
-#include <QUrl>
-
-#include <QPointer>
-#include <QWidget>
+#include <KUrl>
+#include <KVBox>
 
 class KFileItemList;
+class KFileMetaDataWidget;
 class PhononWidget;
 class PixmapViewer;
-class PlacesItemModel;
 class QPixmap;
 class QString;
 class QLabel;
 class QScrollArea;
-
-namespace KIO {
-  class PreviewJob;
-}
-
-#ifndef HAVE_BALOO
-class KFileMetaDataWidget;
-#else
-namespace Baloo {
-    class FileMetaDataWidget;
-}
-#endif
 
 /**
  * @brief Manages the widgets that display the meta information
@@ -81,11 +67,11 @@ public:
     void configureSettings(const QList<QAction*>& customContextMenuActions);
 
 signals:
-    void urlActivated( const QUrl& url );
+    void urlActivated( const KUrl& url );
 
 protected:
     /** @see QObject::eventFilter() */
-    virtual bool eventFilter(QObject* obj, QEvent* event) Q_DECL_OVERRIDE;
+    virtual bool eventFilter(QObject* obj, QEvent* event);
 
 private slots:
     /**
@@ -106,7 +92,8 @@ private slots:
      */
     void markOutdatedPreview();
 
-    void slotHasVideoChanged(bool hasVideo);
+    void slotPlayingStarted();
+    void slotPlayingStopped();
 
     /**
      * Is invoked after the file meta data configuration dialog has been
@@ -121,7 +108,7 @@ private:
      * @return True, if the URL represents exactly a place.
      * @param url The url to check.
      */
-    bool applyPlace(const QUrl& url);
+    bool applyPlace(const KUrl& url);
 
     /**
      * Sets the text for the label \a m_nameLabel and assures that the
@@ -140,20 +127,14 @@ private:
 private:
     KFileItem m_item;
 
-    QPointer<KIO::PreviewJob> m_previewJob;
+    bool m_pendingPreview;
     QTimer* m_outdatedPreviewTimer;
 
     PixmapViewer* m_preview;
     PhononWidget* m_phononWidget;
     QLabel* m_nameLabel;
-#ifndef HAVE_BALOO
     KFileMetaDataWidget* m_metaDataWidget;
-#else
-    Baloo::FileMetaDataWidget* m_metaDataWidget;
-#endif
     QScrollArea* m_metaDataArea;
-
-    PlacesItemModel* m_placesItemModel;
 };
 
 #endif // INFORMATIONPANELCONTENT_H

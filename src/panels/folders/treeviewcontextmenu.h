@@ -23,7 +23,6 @@
 #include <QObject>
 #include <KFileItem>
 
-class QMimeData;
 class FoldersPanel;
 
 /**
@@ -51,25 +50,25 @@ public:
     void open();
 
 private slots:
-    /** Cuts the item m_fileItem. */
+    /** Cuts the item m_fileInfo. */
     void cut();
 
-    /** Copies the item m_fileItem. */
+    /** Copies the item m_fileInfo. */
     void copy();
 
-    /** Paste the clipboard to m_fileItem. */
+    /** Paste the clipboard to m_fileInfo. */
     void paste();
 
-    /** Renames the item m_fileItem. */
+    /** Renames the item m_fileInfo. */
     void rename();
 
-    /** Moves the item m_fileItem to the trash. */
+    /** Moves the item m_fileInfo to the trash. */
     void moveToTrash();
 
-    /** Deletes the item m_fileItem. */
+    /** Deletes the item m_fileInfo. */
     void deleteItem();
 
-    /** Shows the properties of the item m_fileItem. */
+    /** Shows the properties of the item m_fileInfo. */
     void showProperties();
 
     /**
@@ -89,7 +88,7 @@ private:
 
 private:
     FoldersPanel* m_parent;
-    KFileItem m_fileItem;
+    KFileItem m_fileInfo;
 };
 
 #endif

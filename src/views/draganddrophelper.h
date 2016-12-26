@@ -1,5 +1,5 @@
 /***************************************************************************
- *   Copyright (C) 2007-2011 by Peter Penz <peter.penz19@gmail.com>        *
+ *   Copyright (C) 2007 by Peter Penz <peter.penz19@gmail.com>             *
  *   Copyright (C) 2007 by David Faure <faure@kde.org>                     *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
@@ -21,32 +21,76 @@
 #ifndef DRAGANDDROPHELPER_H
 #define DRAGANDDROPHELPER_H
 
-#include "dolphin_export.h"
+#include "libdolphin_export.h"
+#include <QObject>
+#include <QPixmap>
 
-
-class QUrl;
+class DolphinViewController;
+class KFileItem;
+class KUrl;
 class QDropEvent;
+class QAbstractItemView;
+class QMimeData;
 class QWidget;
-namespace KIO { class DropJob; }
 
-class DOLPHIN_EXPORT DragAndDropHelper
+/**
+ * @brief Helper class for having a common drag and drop behavior.
+ *
+ * The class is used by DolphinIconsView, DolphinDetailsView,
+ * DolphinColumnView and PanelTreeView to have a consistent
+ * drag and drop behavior between all views.
+ */
+class LIBDOLPHINPRIVATE_EXPORT DragAndDropHelper : public QObject
 {
+    Q_OBJECT
+
 public:
+    static DragAndDropHelper& instance();
+
     /**
-     * Handles the dropping of URLs to the given destination. A context menu
-     * with the options 'Move Here', 'Copy Here', 'Link Here' and 'Cancel' is
-     * offered to the user. The drag destination must represent a directory or
-     * a desktop-file, otherwise the dropping gets ignored.
-     *
-     * @param destUrl   URL of the item destination. Is used only if destItem::isNull()
-     *                  is true.
-     * @param event     Drop event.
-     * @param window    Associated widget.
-     * @return          KIO::DropJob pointer
+     * Creates a drag object for the view \a itemView for all selected items.
      */
-    static KIO::DropJob* dropUrls(const QUrl& destUrl,
-                                  QDropEvent* event,
-                                  QWidget *window);
+    void startDrag(QAbstractItemView* itemView,
+                   Qt::DropActions supportedActions,
+                   DolphinViewController* dolphinViewController = 0);
+
+    /**
+     * Returns true if and only if the view \a itemView was the last view to
+     * be passed to startDrag(...), and that drag is still in progress.
+     */
+    bool isDragSource(QAbstractItemView* itemView) const;
+
+    /**
+     * Handles the dropping of URLs to the given
+     * destination. A context menu with the options
+     * 'Move Here', 'Copy Here', 'Link Here' and
+     * 'Cancel' is offered to the user.
+     * @param destItem  Item of the destination (can be null, see KFileItem::isNull()).
+     * @param destPath  Path of the destination.
+     * @param event     Drop event.
+     * @param widget    Source widget where the dragging has been started.
+     */
+    void dropUrls(const KFileItem& destItem,
+                  const KUrl& destPath,
+                  QDropEvent* event,
+                  QWidget* widget);
+signals:
+    void errorMessage(const QString& msg);
+
+private:
+    DragAndDropHelper();
+
+    /**
+     * Creates a pixmap the contains the all icons of the items
+     * that are dragged.
+     */
+    QPixmap createDragPixmap(QAbstractItemView* itemView) const;
+
+    // The last view passed in startDrag(...), or 0 if
+    // no startDrag(...) initiated drag is in progress.
+    QAbstractItemView *m_dragSource;
+
+    friend class DragAndDropHelperSingleton;
 };
 
 #endif

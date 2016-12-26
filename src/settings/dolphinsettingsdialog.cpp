@@ -20,7 +20,9 @@
 
 #include "dolphinsettingsdialog.h"
 
+#include <dolphinapplication.h>
 #include <dolphinmainwindow.h>
+#include "dolphinsettings.h"
 #include "dolphin_generalsettings.h"
 #include "general/generalsettingspage.h"
 #include "navigation/navigationsettingspage.h"
@@ -29,14 +31,11 @@
 #include "viewmodes/viewsettingspage.h"
 #include "trash/trashsettingspage.h"
 
-#include <KWindowConfig>
-#include <KLocalizedString>
-#include <QIcon>
+#include <KLocale>
+#include <KMessageBox>
+#include <KIcon>
 
-#include <QPushButton>
-#include <QDialogButtonBox>
-
-DolphinSettingsDialog::DolphinSettingsDialog(const QUrl& url, QWidget* parent) :
+DolphinSettingsDialog::DolphinSettingsDialog(const KUrl& url, QWidget* parent) :
     KPageDialog(parent),
     m_pages()
 
@@ -45,58 +44,55 @@ DolphinSettingsDialog::DolphinSettingsDialog(const QUrl& url, QWidget* parent) :
     setMinimumSize(QSize(512, minSize.height()));
 
     setFaceType(List);
-    setWindowTitle(i18nc("@title:window", "Dolphin Preferences"));
-    QDialogButtonBox* box = new QDialogButtonBox(QDialogButtonBox::Ok
-            | QDialogButtonBox::Apply | QDialogButtonBox::Cancel | QDialogButtonBox::RestoreDefaults);
-    box->button(QDialogButtonBox::Apply)->setEnabled(false);
-    box->button(QDialogButtonBox::Ok)->setDefault(true);
-    setButtonBox(box);
-
-    connect(box->button(QDialogButtonBox::Ok), &QAbstractButton::clicked, this, &DolphinSettingsDialog::applySettings);
-    connect(box->button(QDialogButtonBox::Apply), &QAbstractButton::clicked, this, &DolphinSettingsDialog::applySettings);
-    connect(box->button(QDialogButtonBox::RestoreDefaults), &QAbstractButton::clicked, this, &DolphinSettingsDialog::restoreDefaults);
+    setCaption(i18nc("@title:window", "Dolphin Preferences"));
+    setButtons(Ok | Apply | Cancel | Default);
+    enableButtonApply(false);
+    setDefaultButton(Ok);
 
     // Startup
     StartupSettingsPage* startupSettingsPage = new StartupSettingsPage(url, this);
     KPageWidgetItem* startupSettingsFrame = addPage(startupSettingsPage,
                                                     i18nc("@title:group", "Startup"));
-    startupSettingsFrame->setIcon(QIcon::fromTheme(QStringLiteral("go-home")));
-    connect(startupSettingsPage, &StartupSettingsPage::changed, this, &DolphinSettingsDialog::enableApply);
+    startupSettingsFrame->setIcon(KIcon("go-home"));
+    connect(startupSettingsPage, SIGNAL(changed()), this, SLOT(enableApply()));
 
     // View Modes
     ViewSettingsPage* viewSettingsPage = new ViewSettingsPage(this);
     KPageWidgetItem* viewSettingsFrame = addPage(viewSettingsPage,
                                                  i18nc("@title:group", "View Modes"));
-    viewSettingsFrame->setIcon(QIcon::fromTheme(QStringLiteral("view-choose")));
-    connect(viewSettingsPage, &ViewSettingsPage::changed, this, &DolphinSettingsDialog::enableApply);
+    viewSettingsFrame->setIcon(KIcon("view-choose"));
+    connect(viewSettingsPage, SIGNAL(changed()), this, SLOT(enableApply()));
 
     // Navigation
     NavigationSettingsPage* navigationSettingsPage = new NavigationSettingsPage(this);
     KPageWidgetItem* navigationSettingsFrame = addPage(navigationSettingsPage,
                                                        i18nc("@title:group", "Navigation"));
-    navigationSettingsFrame->setIcon(QIcon::fromTheme(QStringLiteral("edit-select")));
-    connect(navigationSettingsPage, &NavigationSettingsPage::changed, this, &DolphinSettingsDialog::enableApply);
+    navigationSettingsFrame->setIcon(KIcon("input-mouse"));
+    connect(navigationSettingsPage, SIGNAL(changed()), this, SLOT(enableApply()));
 
     // Services
     ServicesSettingsPage* servicesSettingsPage = new ServicesSettingsPage(this);
     KPageWidgetItem* servicesSettingsFrame = addPage(servicesSettingsPage,
                                                        i18nc("@title:group", "Services"));
-    servicesSettingsFrame->setIcon(QIcon::fromTheme(QStringLiteral("flag")));
-    connect(servicesSettingsPage, &ServicesSettingsPage::changed, this, &DolphinSettingsDialog::enableApply);
+    servicesSettingsFrame->setIcon(KIcon("services"));
+    connect(servicesSettingsPage, SIGNAL(changed()), this, SLOT(enableApply()));
 
     // Trash
     TrashSettingsPage* trashSettingsPage = new TrashSettingsPage(this);
     KPageWidgetItem* trashSettingsFrame = addPage(trashSettingsPage,
                                                    i18nc("@title:group", "Trash"));
-    trashSettingsFrame->setIcon(QIcon::fromTheme(QStringLiteral("trash-empty")));
-    connect(trashSettingsPage, &TrashSettingsPage::changed, this, &DolphinSettingsDialog::enableApply);
+    trashSettingsFrame->setIcon(KIcon("user-trash"));
+    connect(trashSettingsPage, SIGNAL(changed()), this, SLOT(enableApply()));
 
     // General
     GeneralSettingsPage* generalSettingsPage = new GeneralSettingsPage(url, this);
     KPageWidgetItem* generalSettingsFrame = addPage(generalSettingsPage,
                                                     i18nc("@title:group General settings", "General"));
-    generalSettingsFrame->setIcon(QIcon::fromTheme(QStringLiteral("view-preview")));
-    connect(generalSettingsPage, &GeneralSettingsPage::changed, this, &DolphinSettingsDialog::enableApply);
+    generalSettingsFrame->setIcon(KIcon("system-run"));
+    connect(generalSettingsPage, SIGNAL(changed()), this, SLOT(enableApply()));
+
+    const KConfigGroup dialogConfig(KSharedConfig::openConfig("dolphinrc"), "SettingsDialog");
+    restoreDialogSize(dialogConfig);
 
     m_pages.append(startupSettingsPage);
     m_pages.append(viewSettingsPage);
@@ -104,20 +100,28 @@ DolphinSettingsDialog::DolphinSettingsDialog(const QUrl& url, QWidget* parent) :
     m_pages.append(servicesSettingsPage);
     m_pages.append(trashSettingsPage);
     m_pages.append(generalSettingsPage);
-
-    const KConfigGroup dialogConfig(KSharedConfig::openConfig(QStringLiteral("dolphinrc")), "SettingsDialog");
-    KWindowConfig::restoreWindowSize(windowHandle(), dialogConfig);
 }
 
 DolphinSettingsDialog::~DolphinSettingsDialog()
 {
-    KConfigGroup dialogConfig(KSharedConfig::openConfig(QStringLiteral("dolphinrc")), "SettingsDialog");
-    KWindowConfig::saveWindowSize(windowHandle(), dialogConfig);
+    KConfigGroup dialogConfig(KSharedConfig::openConfig("dolphinrc"), "SettingsDialog");
+    saveDialogSize(dialogConfig);
+}
+
+void DolphinSettingsDialog::slotButtonClicked(int button)
+{
+    if ((button == Ok) || (button == Apply)) {
+        applySettings();
+    } else if (button == Default) {
+        restoreDefaults();
+    }
+
+    KPageDialog::slotButtonClicked(button);
 }
 
 void DolphinSettingsDialog::enableApply()
 {
-    buttonBox()->button(QDialogButtonBox::Apply)->setEnabled(true);
+    enableButtonApply(true);
 }
 
 void DolphinSettingsDialog::applySettings()
@@ -128,14 +132,15 @@ void DolphinSettingsDialog::applySettings()
 
     emit settingsChanged();
 
-    GeneralSettings* settings = GeneralSettings::self();
+    GeneralSettings* settings = DolphinSettings::instance().generalSettings();
     if (settings->modifiedStartupSettings()) {
         // Reset the modified startup settings hint. The changed startup settings
         // have been applied already due to emitting settingsChanged().
         settings->setModifiedStartupSettings(false);
-        settings->save();
+        settings->writeConfig();
     }
-    buttonBox()->button(QDialogButtonBox::Apply)->setEnabled(false);
+
+    enableButtonApply(false);
 }
 
 void DolphinSettingsDialog::restoreDefaults()
@@ -145,3 +150,4 @@ void DolphinSettingsDialog::restoreDefaults()
     }
 }
 
+#include "dolphinsettingsdialog.moc"

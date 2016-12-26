@@ -20,13 +20,18 @@
 
 #include "dolphinnewfilemenu.h"
 
+#include "dolphinmainwindow.h"
+#include "dolphinviewcontainer.h"
+#include "statusbar/dolphinstatusbar.h"
 #include "views/dolphinnewfilemenuobserver.h"
+#include "views/dolphinview.h"
 
 #include <KActionCollection>
 #include <KIO/Job>
 
-DolphinNewFileMenu::DolphinNewFileMenu(KActionCollection* collection, QObject* parent) :
-    KNewFileMenu(collection, QStringLiteral("new_menu"), parent)
+DolphinNewFileMenu::DolphinNewFileMenu(DolphinMainWindow* parent) :
+    KNewFileMenu(parent->actionCollection(), "create_new", parent),
+    m_mainWin(parent)
 {
     DolphinNewFileMenuObserver::instance().attach(this);
 }
@@ -39,9 +44,11 @@ DolphinNewFileMenu::~DolphinNewFileMenu()
 void DolphinNewFileMenu::slotResult(KJob* job)
 {
     if (job->error()) {
-        emit errorMessage(job->errorString());
+        DolphinStatusBar* statusBar = m_mainWin->activeViewContainer()->statusBar();
+        statusBar->setMessage(job->errorString(), DolphinStatusBar::Error);
     } else {
         KNewFileMenu::slotResult(job);
     }
 }
 
+#include "dolphinnewfilemenu.moc"

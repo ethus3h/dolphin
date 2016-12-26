@@ -21,12 +21,8 @@
 #define INFORMATIONPANEL_H
 
 #include <panels/panel.h>
-#include <KFileItem>
+
 class InformationPanelContent;
-namespace KIO
-{
-    class Job;
-}
 
 /**
  * @brief Panel for showing meta information of one ore more selected items.
@@ -40,7 +36,7 @@ public:
     virtual ~InformationPanel();
 
 signals:
-    void urlActivated(const QUrl& url);
+    void urlActivated(const KUrl& url);
 
 public slots:
     /**
@@ -59,16 +55,16 @@ public slots:
 
 protected:
     /** @see Panel::urlChanged() */
-    virtual bool urlChanged() Q_DECL_OVERRIDE;
+    virtual bool urlChanged();
 
     /** @see QWidget::showEvent() */
-    virtual void showEvent(QShowEvent* event) Q_DECL_OVERRIDE;
+    virtual void showEvent(QShowEvent* event);
 
     /** @see QWidget::resizeEvent() */
-    virtual void resizeEvent(QResizeEvent* event) Q_DECL_OVERRIDE;
+    virtual void resizeEvent(QResizeEvent* event);
 
     /** @see QWidget::contextMenuEvent() */
-    virtual void contextMenuEvent(QContextMenuEvent* event) Q_DECL_OVERRIDE;
+    virtual void contextMenuEvent(QContextMenuEvent* event);
 
 private slots:
     /**
@@ -116,7 +112,7 @@ private:
     /**
      * Returns true, if \a url is equal to the shown URL m_shownUrl.
      */
-    bool isEqualToShownUrl(const QUrl& url) const;
+    bool isEqualToShownUrl(const KUrl& url) const;
 
     /**
      * Marks the URL as invalid and will reset the Information Panel
@@ -136,22 +132,22 @@ private:
     QTimer* m_resetUrlTimer;
 
     // URL that is currently shown in the Information Panel.
-    QUrl m_shownUrl;
+    KUrl m_shownUrl;
 
     // URL candidate that will replace m_shownURL after a delay.
     // Used to remember URLs when hovering items.
-    QUrl m_urlCandidate;
+    KUrl m_urlCandidate;
 
     // URL candidate that is marked as invalid (e. g. because the directory
     // has been deleted or the shown item has been renamed). The Information
     // Panel will be reset asynchronously to prevent unnecessary resets when
     // a directory has been changed.
-    QUrl m_invalidUrlCandidate;
+    KUrl m_invalidUrlCandidate;
 
     KFileItem m_fileItem; // file item for m_shownUrl if available (otherwise null)
     KFileItemList m_selection;
 
-    KIO::Job* m_folderStatJob;
+    KJob* m_folderStatJob;
 
     InformationPanelContent* m_content;
 };

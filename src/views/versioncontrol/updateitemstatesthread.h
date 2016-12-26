@@ -20,22 +20,27 @@
 #ifndef UPDATEITEMSTATESTHREAD_H
 #define UPDATEITEMSTATESTHREAD_H
 
-#include "dolphin_export.h"
+#include <libdolphin_export.h>
 #include <views/versioncontrol/versioncontrolobserver.h>
 
 #include <QMutex>
 #include <QThread>
+
+class KVersionControlPlugin;
 
 /**
  * The performance of updating the version state of items depends
  * on the used plugin. To prevent that Dolphin gets blocked by a
  * slow plugin, the updating is delegated to a thread.
  */
-class DOLPHIN_EXPORT UpdateItemStatesThread : public QThread
+class LIBDOLPHINPRIVATE_EXPORT UpdateItemStatesThread : public QThread
 {
     Q_OBJECT
 
 public:
+    UpdateItemStatesThread();
+    virtual ~UpdateItemStatesThread();
+
     /**
      * @param plugin     Version control plugin that is used to update the
      *                   state of the items. Whenever the plugin is accessed
@@ -44,20 +49,36 @@ public:
      *                   UpdateItemStatesThread::unlockPlugin() must be used.
      * @param itemStates List of items, where the states get updated.
      */
-    UpdateItemStatesThread(KVersionControlPlugin* plugin,
-                           const QMap<QString, QVector<VersionControlObserver::ItemState> >& itemStates);
-    virtual ~UpdateItemStatesThread();
+    void setData(KVersionControlPlugin* plugin,
+                 const QList<VersionControlObserver::ItemState>& itemStates);
 
-    QMap<QString, QVector<VersionControlObserver::ItemState> > itemStates() const;
+    /**
+     * Whenever the plugin is accessed by the thread creator, lockPlugin() must
+     * be invoked. True is returned, if the plugin could be locked within 300
+     * milliseconds.
+     */
+    bool lockPlugin();
+
+    /**
+     * Must be invoked if lockPlugin() returned true and plugin has been accessed
+     * by the thread creator.
+     */
+    void unlockPlugin();
+
+    QList<VersionControlObserver::ItemState> itemStates() const;
+
+    bool retrievedItems() const;
 
 protected:
-    virtual void run() Q_DECL_OVERRIDE;
+    virtual void run();
 
 private:
     QMutex* m_globalPluginMutex; // Protects the m_plugin globally
     KVersionControlPlugin* m_plugin;
 
-    QMap<QString, QVector<VersionControlObserver::ItemState> > m_itemStates;
+    mutable QMutex m_itemMutex; // Protects m_retrievedItems and m_itemStates
+    bool m_retrievedItems;
+    QList<VersionControlObserver::ItemState> m_itemStates;
 };
 
 #endif // UPDATEITEMSTATESTHREAD_H

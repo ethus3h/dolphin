@@ -20,31 +20,43 @@
 #ifndef DOLPHINSEARCHBOX_H
 #define DOLPHINSEARCHBOX_H
 
-#include <QUrl>
+#include <KUrl>
+#include <QList>
 #include <QWidget>
 
-class DolphinFacetsWidget;
-class QLineEdit;
+class AbstractSearchFilterWidget;
+class KLineEdit;
 class KSeparator;
+class QFormLayout;
 class QToolButton;
 class QScrollArea;
 class QLabel;
 class QVBoxLayout;
 
 /**
- * @brief Input box for searching files with or without Baloo.
+ * @brief Input box for searching files with or without Nepomuk.
  *
  * The widget allows to specify:
  * - Where to search: Everywhere or below the current directory
  * - What to search: Filenames or content
  *
- * If Baloo is available and the current folder is indexed, further
+ * If Nepomuk is available and the current folder is indexed, further
  * options are offered.
  */
 class DolphinSearchBox : public QWidget {
     Q_OBJECT
 
 public:
+    enum SearchContext {
+        SearchFileName,
+        SearchContent
+    };
+
+    enum SearchLocation {
+        SearchFromHere,
+        SearchEverywhere
+    };
+
     explicit DolphinSearchBox(QWidget* parent = 0);
     virtual ~DolphinSearchBox();
 
@@ -64,17 +76,11 @@ public:
      * Sets the current path that is used as root for
      * searching files, if "From Here" has been selected.
      */
-    void setSearchPath(const QUrl& url);
-    QUrl searchPath() const;
+    void setSearchPath(const KUrl& url);
+    KUrl searchPath() const;
 
     /** @return URL that will start the searching of files. */
-    QUrl urlForSearching() const;
-
-    /**
-     * Extracts information from the given search \a url to
-     * initialize the search box properly.
-     */
-    void fromSearchUrl(const QUrl& url);
+    KUrl urlForSearching() const;
 
     /**
      * Selects the whole text of the search box.
@@ -82,32 +88,28 @@ public:
     void selectAll();
 
     /**
-     * Set the search box to the active mode, if \a active
-     * is true. The active mode is default. The inactive mode only differs
-     * visually from the active mode, no change of the behavior is given.
-     *
-     * Using the search box in the inactive mode is useful when having split views,
-     * where the inactive view is indicated by an search box visually.
+     * @param readOnly If set to true the searchbox cannot be modified
+     *                 by the user and acts as visual indicator for
+     *                 an externally triggered search query.
+     * @param query    If readOnly is true this URL will be used
+     *                 to show a human readable information about the
+     *                 query.
      */
-    void setActive(bool active);
-
-    /**
-     * @return True, if the search box is in the active mode.
-     * @see    DolphinSearchBox::setActive()
-     */
-    bool isActive() const;
+    void setReadOnly(bool readOnly, const KUrl& query = KUrl());
+    bool isReadOnly() const;
 
 protected:
-    virtual bool event(QEvent* event) Q_DECL_OVERRIDE;
-    virtual void showEvent(QShowEvent* event) Q_DECL_OVERRIDE;
-    virtual void keyReleaseEvent(QKeyEvent* event) Q_DECL_OVERRIDE;
-    virtual bool eventFilter(QObject* obj, QEvent* event) Q_DECL_OVERRIDE;
+    virtual bool event(QEvent* event);
+    virtual void showEvent(QShowEvent* event);
+    virtual void keyReleaseEvent(QKeyEvent* event);
 
 signals:
     /**
-     * Is emitted when a searching should be triggered.
+     * Is emitted when a searching should be triggered
+     * and provides the text that should be used as input
+     * for searching.
      */
-    void searchRequest();
+    void search(const QString& text);
 
     /**
      * Is emitted when the user has changed a character of
@@ -115,28 +117,30 @@ signals:
      */
     void searchTextChanged(const QString& text);
 
-    void returnPressed();
+    void returnPressed(const QString& text);
+
+    /**
+     * Is emitted if the search location has been changed by the user.
+     */
+    void searchLocationChanged(SearchLocation location);
+
+    /**
+     * Is emitted if the search context has been changed by the user.
+     */
+    void searchContextChanged(SearchContext context);
 
     /**
      * Emitted as soon as the search box should get closed.
      */
     void closeRequest();
 
-    /**
-     * Is emitted, if the searchbox has been activated by
-     * an user interaction
-     * @see DolphinSearchBox::setActive()
-     */
-    void activated();
-
 private slots:
-    void emitSearchRequest();
-    void emitCloseRequest();
+    void emitSearchSignal();
+    void slotSearchLocationChanged();
+    void slotSearchContextChanged();
     void slotConfigurationChanged();
     void slotSearchTextChanged(const QString& text);
-    void slotReturnPressed();
-    void slotFacetsButtonToggled();
-    void slotFacetChanged();
+    void slotReturnPressed(const QString& text);
 
 private:
     void initButton(QToolButton* button);
@@ -145,36 +149,29 @@ private:
     void init();
 
     /**
-     * @return URL that represents the Baloo query for starting the search.
+     * @return URL that represents the Nepomuk query for starting the search.
      */
-    QUrl balooUrlForSearching() const;
+    KUrl nepomukUrlForSearching() const;
 
-    /**
-     * Extracts information from the given Baloo search \a url to
-     * initialize the search box properly.
-     */
-    void fromBalooSearchUrl(const QUrl& url);
-
-    void updateFacetsToggleButton();
+    void applyReadOnlyState();
 
 private:
     bool m_startedSearching;
-    bool m_active;
+    bool m_readOnly;
 
     QVBoxLayout* m_topLayout;
 
     QLabel* m_searchLabel;
-    QLineEdit* m_searchInput;
+    KLineEdit* m_searchInput;
     QScrollArea* m_optionsScrollArea;
     QToolButton* m_fileNameButton;
     QToolButton* m_contentButton;
     KSeparator* m_separator;
     QToolButton* m_fromHereButton;
     QToolButton* m_everywhereButton;
-    QToolButton* m_facetsToggleButton;
-    DolphinFacetsWidget* m_facetsWidget;
 
-    QUrl m_searchPath;
+    KUrl m_searchPath;
+    KUrl m_readOnlyQuery;
 
     QTimer* m_startSearchTimer;
 };

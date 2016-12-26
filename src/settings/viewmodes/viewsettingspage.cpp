@@ -20,41 +20,45 @@
 
 #include "viewsettingspage.h"
 
-#include <views/dolphinview.h>
-#include "viewsettingstab.h"
+#include "columnviewsettingspage.h"
+#include "iconsviewsettingspage.h"
+#include "detailsviewsettingspage.h"
 
 #include <QVBoxLayout>
-#include <QTabWidget>
 
-#include <KLocalizedString>
+#include <KDialog>
+#include <KLocale>
+#include <KIconLoader>
+#include <KTabWidget>
 
 ViewSettingsPage::ViewSettingsPage(QWidget* parent) :
     SettingsPageBase(parent),
-    m_tabs()
+    m_pages()
 {
     QVBoxLayout* topLayout = new QVBoxLayout(this);
     topLayout->setMargin(0);
+    topLayout->setSpacing(KDialog::spacingHint());
 
-    QTabWidget* tabWidget = new QTabWidget(this);
+    KTabWidget* tabWidget = new KTabWidget(this);
 
-    // Initialize 'Icons' tab
-    ViewSettingsTab* iconsTab = new ViewSettingsTab(ViewSettingsTab::IconsMode, tabWidget);
-    tabWidget->addTab(iconsTab, QIcon::fromTheme(QStringLiteral("view-list-icons")), i18nc("@title:tab", "Icons"));
-    connect(iconsTab, &ViewSettingsTab::changed, this, &ViewSettingsPage::changed);
+    // initialize 'Icons' tab
+    IconsViewSettingsPage* iconsPage = new IconsViewSettingsPage(tabWidget);
+    tabWidget->addTab(iconsPage, KIcon("view-list-icons"), i18nc("@title:tab", "Icons"));
+    connect(iconsPage, SIGNAL(changed()), this, SIGNAL(changed()));
 
-    // Initialize 'Compact' tab
-    ViewSettingsTab* compactTab = new ViewSettingsTab(ViewSettingsTab::CompactMode, tabWidget);
-    tabWidget->addTab(compactTab, QIcon::fromTheme(QStringLiteral("view-list-details")), i18nc("@title:tab", "Compact"));
-    connect(compactTab, &ViewSettingsTab::changed, this, &ViewSettingsPage::changed);
+    // initialize 'Details' tab
+    DetailsViewSettingsPage* detailsPage = new DetailsViewSettingsPage(tabWidget);
+    tabWidget->addTab(detailsPage, KIcon("view-list-details"), i18nc("@title:tab", "Details"));
+    connect(detailsPage, SIGNAL(changed()), this, SIGNAL(changed()));
 
-    // Initialize 'Details' tab
-    ViewSettingsTab* detailsTab = new ViewSettingsTab(ViewSettingsTab::DetailsMode, tabWidget);
-    tabWidget->addTab(detailsTab, QIcon::fromTheme(QStringLiteral("view-list-tree")), i18nc("@title:tab", "Details"));
-    connect(detailsTab, &ViewSettingsTab::changed, this, &ViewSettingsPage::changed);
+    // initialize 'Column' tab
+    ColumnViewSettingsPage* columnPage = new ColumnViewSettingsPage(tabWidget);
+    tabWidget->addTab(columnPage, KIcon("view-file-columns"), i18nc("@title:tab", "Column"));
+    connect(columnPage, SIGNAL(changed()), this, SIGNAL(changed()));
 
-    m_tabs.append(iconsTab);
-    m_tabs.append(compactTab);
-    m_tabs.append(detailsTab);
+    m_pages.append(iconsPage);
+    m_pages.append(detailsPage);
+    m_pages.append(columnPage);
 
     topLayout->addWidget(tabWidget, 0, 0);
 }
@@ -65,15 +69,16 @@ ViewSettingsPage::~ViewSettingsPage()
 
 void ViewSettingsPage::applySettings()
 {
-    foreach (ViewSettingsTab* tab, m_tabs) {
-        tab->applySettings();
+    foreach (ViewSettingsPageBase* page, m_pages) {
+        page->applySettings();
     }
 }
 
 void ViewSettingsPage::restoreDefaults()
 {
-    foreach (ViewSettingsTab* tab, m_tabs) {
-        tab->restoreDefaultSettings();
+    foreach (ViewSettingsPageBase* page, m_pages) {
+        page->restoreDefaults();
     }
 }
 
+#include "viewsettingspage.moc"

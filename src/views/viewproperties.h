@@ -22,8 +22,8 @@
 #define VIEWPROPERTIES_H
 
 #include <views/dolphinview.h>
-#include <QUrl>
-#include "dolphin_export.h"
+#include <KUrl>
+#include <libdolphin_export.h>
 
 class ViewPropertySettings;
 /**
@@ -35,9 +35,9 @@ class ViewPropertySettings;
  * just construct an instance by passing the path of the directory:
  *
  * \code
- * ViewProperties props(QUrl::fromLocalFile("/home/peter/Documents"));
+ * ViewProperties props(KUrl("/home/peter/Documents"));
  * const DolphinView::Mode mode = props.viewMode();
- * const bool hiddenFilesShown = props.hiddenFilesShown();
+ * const bool showHiddenFiles = props.isShowHiddenFilesEnabled();
  * \endcode
  *
  * When modifying a view property, the '.directory' file is automatically updated
@@ -47,26 +47,26 @@ class ViewPropertySettings;
  * (see GeneralSettings::globalViewMode()), the values from the global .directory file
  * are used for initialization.
  */
-class DOLPHIN_EXPORT ViewProperties
+class LIBDOLPHINPRIVATE_EXPORT ViewProperties
 {
 public:
-    explicit ViewProperties(const QUrl& url);
+    explicit ViewProperties(const KUrl& url);
     virtual ~ViewProperties();
 
     void setViewMode(DolphinView::Mode mode);
     DolphinView::Mode viewMode() const;
 
-    void setPreviewsShown(bool show);
-    bool previewsShown() const;
+    void setShowPreview(bool show);
+    bool showPreview() const;
 
-    void setHiddenFilesShown(bool show);
-    bool hiddenFilesShown() const;
+    void setShowHiddenFiles(bool show);
+    bool showHiddenFiles() const;
 
-    void setGroupedSorting(bool grouped);
-    bool groupedSorting() const;
+    void setCategorizedSorting(bool categorized);
+    bool categorizedSorting() const;
 
-    void setSortRole(const QByteArray& role);
-    QByteArray sortRole() const;
+    void setSorting(DolphinView::Sorting sorting);
+    DolphinView::Sorting sorting() const;
 
     void setSortOrder(Qt::SortOrder sortOrder);
     Qt::SortOrder sortOrder() const;
@@ -79,17 +79,14 @@ public:
      * Note that the additional-info property is the only property where
      * the value is dependent from another property (in this case the view-mode).
      */
-    void setVisibleRoles(const QList<QByteArray>& info);
+    void setAdditionalInfo(const KFileItemDelegate::InformationList& info);
 
     /**
      * Returns the additional information for the current set view-mode.
      * Note that the additional-info property is the only property where
      * the value is dependent from another property (in this case the view-mode).
      */
-    QList<QByteArray> visibleRoles() const;
-
-    void setHeaderColumnWidths(const QList<int>& widths);
-    QList<int> headerColumnWidths() const;
+    KFileItemDelegate::InformationList additionalInfo() const;
 
     /**
      * Sets the directory properties view mode, show preview,
@@ -118,12 +115,13 @@ public:
     void save();
 
     /**
-     * @return True if properties for the given URL exist:
-     *         As soon as the properties for an URL have been saved with
-     *         ViewProperties::save(), true will be returned. If false is
-     *         returned, the default view-properties are used.
+     * Returns the URL of the directory, where the mirrored view properties
+     * are stored into. Mirrored view properties are used if:
+     * - there is no write access for storing the view properties into
+     *   the original directory
+     * - for non local directories
      */
-    bool exist() const;
+    static KUrl mirroredDirectory();
 
 private:
     /**
@@ -134,35 +132,27 @@ private:
     QString destinationDir(const QString& subDir) const;
 
     /**
+     * Helper method for ViewProperties::additionalInfo(): Returns
+     * the additional info for the outdated version 1 of the view-properties.
+     */
+    KFileItemDelegate::InformationList additionalInfoV1() const;
+
+    /**
+     * Helper method for ViewProperties::additionalInfo(): Returns
+     * the additional info for the current version 2 of the view-properties.
+     */
+    KFileItemDelegate::InformationList additionalInfoV2() const;
+
+    /**
      * Returns the view-mode prefix when storing additional properties for
      * a view-mode.
      */
     QString viewModePrefix() const;
 
     /**
-     * Provides backward compatibility with .directory files created with
-     * Dolphin < 2.0: Converts the old additionalInfo-property into
-     * the visibleRoles-property and clears the additionalInfo-property.
-     */
-    void convertAdditionalInfo();
-
-    /**
-     * Provides backward compatibility with .directory files created with
-     * Dolphin < 2.1: Converts the old name-role "name" to the generic
-     * role "text".
-     */
-    void convertNameRoleToTextRole();
-
-    /**
      * Returns true, if \a filePath is part of the home-path (see QDir::homePath()).
      */
     static bool isPartOfHome(const QString& filePath);
-
-    /**
-     * @return A hash-value for an URL that can be used as directory name.
-     *         Is used to be able to remember view-properties for long baloo-URLs.
-     */
-    static QString directoryHashForUrl(const QUrl &url);
 
     Q_DISABLE_COPY(ViewProperties)
 

@@ -20,9 +20,9 @@
 #define STARTUPSETTINGSPAGE_H
 
 #include <settings/settingspagebase.h>
-#include <QUrl>
+#include <KUrl>
 
-class QLineEdit;
+class KLineEdit;
 class QCheckBox;
 
 /**
@@ -36,14 +36,14 @@ class StartupSettingsPage : public SettingsPageBase
     Q_OBJECT
 
 public:
-    StartupSettingsPage(const QUrl& url, QWidget* parent);
+    StartupSettingsPage(const KUrl& url, QWidget* parent);
     virtual ~StartupSettingsPage();
 
     /** @see SettingsPageBase::applySettings() */
-    virtual void applySettings() Q_DECL_OVERRIDE;
+    virtual void applySettings();
 
     /** @see SettingsPageBase::restoreDefaults() */
-    virtual void restoreDefaults() Q_DECL_OVERRIDE;
+    virtual void restoreDefaults();
 
 private slots:
     void slotSettingsChanged();
@@ -55,8 +55,8 @@ private:
     void loadSettings();
 
 private:
-    QUrl m_url;
-    QLineEdit* m_homeUrl;
+    KUrl m_url;
+    KLineEdit* m_homeUrl;
 
     QCheckBox* m_splitView;
     QCheckBox* m_editableUrl;

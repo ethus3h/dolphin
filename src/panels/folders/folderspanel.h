@@ -20,13 +20,16 @@
 #ifndef FOLDERSPANEL_H
 #define FOLDERSPANEL_H
 
-#include <QUrl>
+#include <KUrl>
 #include <panels/panel.h>
 
-class KFileItemModel;
-class KItemListController;
-class QGraphicsSceneDragDropEvent;
-class KFileItem;
+class KDirLister;
+class DolphinModel;
+
+class DolphinSortFilterProxyModel;
+class PanelTreeView;
+class QModelIndex;
+
 /**
  * @brief Shows a tree view of the directories starting from
  *        the currently selected place.
@@ -51,35 +54,55 @@ public:
     void rename(const KFileItem& item);
 
 signals:
-    void folderActivated(const QUrl& url);
-    void folderMiddleClicked(const QUrl& url);
-    void errorMessage(const QString& error);
+    /**
+     * Is emitted if the an URL change is requested.
+     */
+    void changeUrl(const KUrl& url, Qt::MouseButtons buttons);
 
 protected:
     /** @see Panel::urlChanged() */
-    virtual bool urlChanged() Q_DECL_OVERRIDE;
+    virtual bool urlChanged();
 
     /** @see QWidget::showEvent() */
-    virtual void showEvent(QShowEvent* event) Q_DECL_OVERRIDE;
+    virtual void showEvent(QShowEvent* event);
+
+    /** @see QWidget::contextMenuEvent() */
+    virtual void contextMenuEvent(QContextMenuEvent* event);
 
     /** @see QWidget::keyPressEvent() */
-    virtual void keyPressEvent(QKeyEvent* event) Q_DECL_OVERRIDE;
+    virtual void keyPressEvent(QKeyEvent* event);
 
 private slots:
-    void slotItemActivated(int index);
-    void slotItemMiddleClicked(int index);
-    void slotItemContextMenuRequested(int index, const QPointF& pos);
-    void slotViewContextMenuRequested(const QPointF& pos);
-    void slotItemDropEvent(int index, QGraphicsSceneDragDropEvent* event);
-    void slotRoleEditingFinished(int index, const QByteArray& role, const QVariant& value);
-
-    void slotLoadingCompleted();
+    /**
+     * Updates the active view to the URL
+     * which is given by the item with the index \a index.
+     */
+    void updateActiveView(const QModelIndex& index);
 
     /**
-     * Increases the opacity of the view step by step until it is fully
-     * opaque.
+     * Is emitted if URLs have been dropped
+     * to the index \a index.
      */
-    void startFadeInAnimation();
+    void dropUrls(const QModelIndex& index, QDropEvent* event);
+
+    /**
+     * Expands the treeview to show the directory
+     * specified by \a index.
+     */
+    void expandToDir(const QModelIndex& index);
+
+    /**
+     * Assures that the leaf folder gets visible.
+     */
+    void scrollToLeaf();
+
+    void updateMouseButtons();
+
+    void slotDirListerCompleted();
+
+    void slotHorizontalScrollBarMoved(int value);
+
+    void slotVerticalScrollBarMoved(int value);
 
 private:
     /**
@@ -87,18 +110,23 @@ private:
      * directories until \a url.
      * @param url  URL of the leaf directory that should get expanded.
      */
-    void loadTree(const QUrl& url);
+    void loadTree(const KUrl& url);
 
     /**
-     * Sets the item with the index \a index as current item, selects
-     * the item and assures that the item will be visible.
+     * Selects the current leaf directory m_leafDir and assures
+     * that the directory is visible if the leaf has been set by
+     * FoldersPanel::setUrl().
      */
-    void updateCurrentItem(int index);
+    void selectLeafDirectory();
 
 private:
-    bool m_updateCurrentItem;
-    KItemListController* m_controller;
-    KFileItemModel* m_model;
+    bool m_setLeafVisible;
+    Qt::MouseButtons m_mouseButtons;
+    KDirLister* m_dirLister;
+    DolphinModel* m_dolphinModel;
+    DolphinSortFilterProxyModel* m_proxyModel;
+    PanelTreeView* m_treeView;
+    KUrl m_leafDir;
 };
 
 #endif // FOLDERSPANEL_H

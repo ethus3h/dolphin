@@ -1,5 +1,5 @@
 <!DOCTYPE kpartgui SYSTEM "kpartgui.dtd">
-<kpartgui name="dolphinpart" version="11" translationDomain="dolphin">
+<kpartgui name="dolphinpart" version="10" >
  <MenuBar>
   <Menu name="edit"><text>&amp;Edit</text>
    <Action name="new_menu"/>
@@ -47,8 +47,8 @@
 </MenuBar>
 <ToolBar name="mainToolBar"><text context="@title:menu">Dolphin Toolbar</text>
   <Action name="icons" />
-  <Action name="compact" />
   <Action name="details" />
+  <Action name="columns" />
 </ToolBar>
 <State name="has_selection" >
   <enable>

@@ -1,7 +1,6 @@
 /***************************************************************************
  *   Copyright (C) 2010 by Peter Penz <peter.penz19@gmail.com>             *
  *   Copyright (C) 2008 by Fredrik Höglund <fredrik@kde.org>               *
- *   Copyright (C) 2012 by Mark Gaiser <markg85@gmail.com>                 *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
  *   it under the terms of the GNU General Public License as published by  *
@@ -22,24 +21,14 @@
 #include "filemetadatatooltip.h"
 
 #include <KColorScheme>
+#include <kfilemetadatawidget.h>
 #include <KSeparator>
-// For the blurred tooltip background
-#include <KWindowEffects>
-#include <KStringHandler>
-#include <QTextDocument>
+#include <KWindowSystem>
 
 #include <QLabel>
 #include <QStyleOptionFrame>
 #include <QStylePainter>
 #include <QVBoxLayout>
-#include <QTextLayout>
-#include <QTextLine>
-
-#ifndef HAVE_BALOO
-#include <KFileMetaDataWidget>
-#else
-#include <Baloo/FileMetaDataWidget>
-#endif
 
 FileMetaDataToolTip::FileMetaDataToolTip(QWidget* parent) :
     QWidget(parent),
@@ -48,7 +37,7 @@ FileMetaDataToolTip::FileMetaDataToolTip(QWidget* parent) :
     m_fileMetaDataWidget(0)
 {
     setAttribute(Qt::WA_TranslucentBackground);
-    setWindowFlags(Qt::ToolTip | Qt::FramelessWindowHint | Qt::NoDropShadowWindowHint);
+    setWindowFlags(Qt::ToolTip | Qt::FramelessWindowHint);
 
     // Create widget for file preview
     m_preview = new QLabel(this);
@@ -57,28 +46,16 @@ FileMetaDataToolTip::FileMetaDataToolTip(QWidget* parent) :
     // Create widget for file name
     m_name = new QLabel(this);
     m_name->setForegroundRole(QPalette::ToolTipText);
-    m_name->setTextFormat(Qt::PlainText);
-    m_name->setAlignment(Qt::AlignHCenter);
-
     QFont font = m_name->font();
     font.setBold(true);
     m_name->setFont(font);
 
-    QFontMetrics fontMetrics(font);
-    m_name->setMaximumWidth(fontMetrics.averageCharWidth() * 40);
-
     // Create widget for the meta data
-#ifndef HAVE_BALOO
     m_fileMetaDataWidget = new KFileMetaDataWidget(this);
-    connect(m_fileMetaDataWidget, &KFileMetaDataWidget::metaDataRequestFinished,
-            this, &FileMetaDataToolTip::metaDataRequestFinished);
-#else
-    m_fileMetaDataWidget = new Baloo::FileMetaDataWidget(this);
-    connect(m_fileMetaDataWidget, &Baloo::FileMetaDataWidget::metaDataRequestFinished,
-            this, &FileMetaDataToolTip::metaDataRequestFinished);
-#endif
     m_fileMetaDataWidget->setForegroundRole(QPalette::ToolTipText);
     m_fileMetaDataWidget->setReadOnly(true);
+    connect(m_fileMetaDataWidget, SIGNAL(metaDataRequestFinished(KFileItemList)),
+            this, SIGNAL(metaDataRequestFinished(KFileItemList)));
 
     QVBoxLayout* textLayout = new QVBoxLayout();
     textLayout->addWidget(m_name);
@@ -117,33 +94,7 @@ QPixmap FileMetaDataToolTip::preview() const
 
 void FileMetaDataToolTip::setName(const QString& name)
 {
-    QTextOption textOption;
-    textOption.setWrapMode(QTextOption::WrapAtWordBoundaryOrAnywhere);
-
-    const QString processedName = Qt::mightBeRichText(name) ? name : KStringHandler::preProcessWrap(name);
-
-    QTextLayout textLayout(processedName);
-    textLayout.setFont(m_name->font());
-    textLayout.setTextOption(textOption);
-
-    QString wrappedText;
-    wrappedText.reserve(processedName.length());
-
-    // wrap the text to fit into the maximum width of m_name
-    textLayout.beginLayout();
-    QTextLine line = textLayout.createLine();
-    while (line.isValid()) {
-        line.setLineWidth(m_name->maximumWidth());
-        wrappedText += processedName.midRef(line.textStart(), line.textLength());
-
-        line = textLayout.createLine();
-        if (line.isValid()) {
-            wrappedText += QChar::LineSeparator;
-        }
-    }
-    textLayout.endLayout();
-
-    m_name->setText(wrappedText);
+    m_name->setText(name);
 }
 
 QString FileMetaDataToolTip::name() const
@@ -172,8 +123,4 @@ void FileMetaDataToolTip::paintEvent(QPaintEvent* event)
     QWidget::paintEvent(event);
 }
 
-void FileMetaDataToolTip::showEvent(QShowEvent *)
-{
-    KWindowEffects::enableBlurBehind(winId(), true, mask());
-}
-
+#include "filemetadatatooltip.moc"

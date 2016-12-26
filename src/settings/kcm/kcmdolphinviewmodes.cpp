@@ -19,53 +19,59 @@
 
 #include "kcmdolphinviewmodes.h"
 
-#include <KLocalizedString>
+#include <KTabWidget>
+#include <KDialog>
+#include <KLocale>
 #include <KPluginFactory>
 #include <KPluginLoader>
-#include <QIcon>
 
-#include <settings/viewmodes/viewsettingstab.h>
+#include <settings/viewmodes/columnviewsettingspage.h>
+#include <settings/viewmodes/detailsviewsettingspage.h>
+#include <settings/viewmodes/iconsviewsettingspage.h>
 
 #include <QDBusConnection>
 #include <QDBusMessage>
+#include <QDir>
 #include <QPushButton>
 #include <QVBoxLayout>
-#include <QTabWidget>
 
-K_PLUGIN_FACTORY(KCMDolphinViewModesConfigFactory, registerPlugin<DolphinViewModesConfigModule>(QStringLiteral("dolphinviewmodes"));)
+K_PLUGIN_FACTORY(KCMDolphinViewModesConfigFactory, registerPlugin<DolphinViewModesConfigModule>("dolphinviewmodes");)
 K_EXPORT_PLUGIN(KCMDolphinViewModesConfigFactory("kcmdolphinviewmodes"))
 
 DolphinViewModesConfigModule::DolphinViewModesConfigModule(QWidget* parent, const QVariantList& args) :
-    KCModule(parent),
-    m_tabs()
+    KCModule(KCMDolphinViewModesConfigFactory::componentData(), parent),
+    m_pages()
 {
     Q_UNUSED(args);
+
+    KGlobal::locale()->insertCatalog("dolphin");
 
     setButtons(KCModule::Default | KCModule::Help);
 
     QVBoxLayout* topLayout = new QVBoxLayout(this);
     topLayout->setMargin(0);
+    topLayout->setSpacing(KDialog::spacingHint());
 
-    QTabWidget* tabWidget = new QTabWidget(this);
+    KTabWidget* tabWidget = new KTabWidget(this);
 
-    // Initialize 'Icons' tab
-    ViewSettingsTab* iconsTab = new ViewSettingsTab(ViewSettingsTab::IconsMode, tabWidget);
-    tabWidget->addTab(iconsTab, QIcon::fromTheme(QStringLiteral("view-list-icons")), i18nc("@title:tab", "Icons"));
-    connect(iconsTab, &ViewSettingsTab::changed, this, &DolphinViewModesConfigModule::viewModeChanged);
+    // initialize 'Icons' tab
+    IconsViewSettingsPage* iconsPage = new IconsViewSettingsPage(tabWidget);
+    tabWidget->addTab(iconsPage, KIcon("view-list-icons"), i18nc("@title:tab", "Icons"));
+    connect(iconsPage, SIGNAL(changed()), this, SLOT(changed()));
 
-    // Initialize 'Compact' tab
-    ViewSettingsTab* compactTab = new ViewSettingsTab(ViewSettingsTab::CompactMode, tabWidget);
-    tabWidget->addTab(compactTab, QIcon::fromTheme(QStringLiteral("view-list-details")), i18nc("@title:tab", "Compact"));
-    connect(compactTab, &ViewSettingsTab::changed, this, &DolphinViewModesConfigModule::viewModeChanged);
+    // initialize 'Details' tab
+    DetailsViewSettingsPage* detailsPage = new DetailsViewSettingsPage(tabWidget);
+    tabWidget->addTab(detailsPage, KIcon("view-list-details"), i18nc("@title:tab", "Details"));
+    connect(detailsPage, SIGNAL(changed()), this, SLOT(changed()));
 
-    // Initialize 'Details' tab
-    ViewSettingsTab* detailsTab = new ViewSettingsTab(ViewSettingsTab::DetailsMode, tabWidget);
-    tabWidget->addTab(detailsTab, QIcon::fromTheme(QStringLiteral("view-list-tree")), i18nc("@title:tab", "Details"));
-    connect(detailsTab, &ViewSettingsTab::changed, this, &DolphinViewModesConfigModule::viewModeChanged);
+    // initialize 'Column' tab
+    ColumnViewSettingsPage* columnPage = new ColumnViewSettingsPage(tabWidget);
+    tabWidget->addTab(columnPage, KIcon("view-file-columns"), i18nc("@title:tab", "Column"));
+    connect(columnPage, SIGNAL(changed()), this, SLOT(changed()));
 
-    m_tabs.append(iconsTab);
-    m_tabs.append(compactTab);
-    m_tabs.append(detailsTab);
+    m_pages.append(iconsPage);
+    m_pages.append(detailsPage);
+    m_pages.append(columnPage);
 
     topLayout->addWidget(tabWidget, 0, 0);
 }
@@ -76,29 +82,24 @@ DolphinViewModesConfigModule::~DolphinViewModesConfigModule()
 
 void DolphinViewModesConfigModule::save()
 {
-    foreach (ViewSettingsTab* tab, m_tabs) {
-        tab->applySettings();
+    foreach (ViewSettingsPageBase* page, m_pages) {
+        page->applySettings();
     }
     reparseConfiguration();
 }
 
 void DolphinViewModesConfigModule::defaults()
 {
-    foreach (ViewSettingsTab* tab, m_tabs) {
-        tab->restoreDefaultSettings();
+    foreach (ViewSettingsPageBase* page, m_pages) {
+        page->restoreDefaults();
     }
     reparseConfiguration();
 }
 
 void DolphinViewModesConfigModule::reparseConfiguration()
 {
-    QDBusMessage message = QDBusMessage::createSignal(QStringLiteral("/KonqMain"), QStringLiteral("org.kde.Konqueror.Main"), QStringLiteral("reparseConfiguration"));
+    QDBusMessage message = QDBusMessage::createSignal("/KonqMain", "org.kde.Konqueror.Main", "reparseConfiguration");
     QDBusConnection::sessionBus().send(message);
-}
-
-void DolphinViewModesConfigModule::viewModeChanged()
-{
-    emit changed(true);
 }
 
 #include "kcmdolphinviewmodes.moc"

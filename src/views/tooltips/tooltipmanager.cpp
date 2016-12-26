@@ -20,73 +20,68 @@
 #include "tooltipmanager.h"
 
 #include "filemetadatatooltip.h"
-#include <QIcon>
-#include <KIO/JobUiDelegate>
+#include <KIcon>
 #include <KIO/PreviewJob>
-#include <KJobWidgets>
+#include <KSharedConfig>
 
 #include <QApplication>
 #include <QDesktopWidget>
-#include <QLayout>
-#include <QStyle>
+#include <QScrollArea>
+#include <QScrollBar>
 #include <QTimer>
 
-ToolTipManager::ToolTipManager(QWidget* parent) :
+#include <views/dolphinmodel.h>
+#include <views/dolphinsortfilterproxymodel.h>
+
+ToolTipManager::ToolTipManager(QAbstractItemView* parent,
+                               DolphinSortFilterProxyModel* model) :
     QObject(parent),
+    m_view(parent),
+    m_dolphinModel(0),
+    m_proxyModel(model),
     m_showToolTipTimer(0),
     m_contentRetrievalTimer(0),
     m_fileMetaDataToolTip(0),
     m_toolTipRequested(false),
     m_metaDataRequested(false),
     m_appliedWaitCursor(false),
-    m_margin(4),
     m_item(),
     m_itemRect()
 {
-    if (parent) {
-        m_margin = qMax(m_margin, parent->style()->pixelMetric(QStyle::PM_ToolTipLabelFrameWidth));
-    }
+    m_dolphinModel = static_cast<DolphinModel*>(m_proxyModel->sourceModel());
+    connect(parent, SIGNAL(entered(const QModelIndex&)),
+            this, SLOT(requestToolTip(const QModelIndex&)));
+    connect(parent, SIGNAL(viewportEntered()),
+            this, SLOT(hideToolTip()));
 
+    // Initialize timers
     m_showToolTipTimer = new QTimer(this);
     m_showToolTipTimer->setSingleShot(true);
     m_showToolTipTimer->setInterval(500);
-    connect(m_showToolTipTimer, &QTimer::timeout, this, static_cast<void(ToolTipManager::*)()>(&ToolTipManager::showToolTip));
+    connect(m_showToolTipTimer, SIGNAL(timeout()), this, SLOT(showToolTip()));
 
     m_contentRetrievalTimer = new QTimer(this);
     m_contentRetrievalTimer->setSingleShot(true);
     m_contentRetrievalTimer->setInterval(200);
-    connect(m_contentRetrievalTimer, &QTimer::timeout, this, &ToolTipManager::startContentRetrieval);
+    connect(m_contentRetrievalTimer, SIGNAL(timeout()), this, SLOT(startContentRetrieval()));
 
     Q_ASSERT(m_contentRetrievalTimer->interval() < m_showToolTipTimer->interval());
+
+    // When the mousewheel is used, the items don't get a hovered indication
+    // (Qt-issue #200665). To assure that the tooltip still gets hidden,
+    // the scrollbars are observed.
+    connect(parent->horizontalScrollBar(), SIGNAL(valueChanged(int)),
+            this, SLOT(hideToolTip()));
+    connect(parent->verticalScrollBar(), SIGNAL(valueChanged(int)),
+            this, SLOT(hideToolTip()));
+
+    Q_ASSERT(m_view);
+    m_view->viewport()->installEventFilter(this);
+    m_view->installEventFilter(this);
 }
 
 ToolTipManager::~ToolTipManager()
 {
-    delete m_fileMetaDataToolTip;
-    m_fileMetaDataToolTip = 0;
-}
-
-void ToolTipManager::showToolTip(const KFileItem& item, const QRectF& itemRect)
-{
-    hideToolTip();
-
-    m_itemRect = itemRect.toRect();
-
-    m_itemRect.adjust(-m_margin, -m_margin, m_margin, m_margin);
-    m_item = item;
-
-    // Only start the retrieving of the content, when the mouse has been over this
-    // item for 200 milliseconds. This prevents a lot of useless preview jobs and
-    // meta data retrieval, when passing rapidly over a lot of items.
-    Q_ASSERT(!m_fileMetaDataToolTip);
-    m_fileMetaDataToolTip = new FileMetaDataToolTip();
-    connect(m_fileMetaDataToolTip, &FileMetaDataToolTip::metaDataRequestFinished,
-            this, &ToolTipManager::slotMetaDataRequestFinished);
-
-    m_contentRetrievalTimer->start();
-    m_showToolTipTimer->start();
-    m_toolTipRequested = true;
-    Q_ASSERT(!m_metaDataRequested);
 }
 
 void ToolTipManager::hideToolTip()
@@ -101,12 +96,55 @@ void ToolTipManager::hideToolTip()
     m_showToolTipTimer->stop();
     m_contentRetrievalTimer->stop();
 
-    if (m_fileMetaDataToolTip) {
-        m_fileMetaDataToolTip->hide();
-        // Do not delete the tool tip immediately to prevent crashes when
-        // QCoreApplication tries to deliver an 'Enter' event to it, see bug 310579.
-        m_fileMetaDataToolTip->deleteLater();
-        m_fileMetaDataToolTip = 0;
+    delete m_fileMetaDataToolTip;
+    m_fileMetaDataToolTip = 0;
+}
+
+
+bool ToolTipManager::eventFilter(QObject* watched, QEvent* event)
+{
+    if (watched == m_view->viewport()) {
+        switch (event->type()) {
+        case QEvent::Leave:
+        case QEvent::MouseButtonPress:
+            hideToolTip();
+            break;
+        default:
+            break;
+        }
+    } else if ((watched == m_view) && (event->type() == QEvent::KeyPress)) {
+        hideToolTip();
+    }
+
+    return QObject::eventFilter(watched, event);
+}
+
+void ToolTipManager::requestToolTip(const QModelIndex& index)
+{
+    hideToolTip();
+
+    // Only request a tooltip for the name column and when no selection or
+    // drag & drop operation is done (indicated by the left mouse button)
+    if ((index.column() == DolphinModel::Name) && !(QApplication::mouseButtons() & Qt::LeftButton)) {
+        m_itemRect = m_view->visualRect(index);
+        const QPoint pos = m_view->viewport()->mapToGlobal(m_itemRect.topLeft());
+        m_itemRect.moveTo(pos);
+
+        const QModelIndex dirIndex = m_proxyModel->mapToSource(index);
+        m_item = m_dolphinModel->itemForIndex(dirIndex);
+
+        // Only start the retrieving of the content, when the mouse has been over this
+        // item for 200 milliseconds. This prevents a lot of useless preview jobs and
+        // meta data retrieval, when passing rapidly over a lot of items.
+        Q_ASSERT(!m_fileMetaDataToolTip);
+        m_fileMetaDataToolTip = new FileMetaDataToolTip(m_view);
+        connect(m_fileMetaDataToolTip, SIGNAL(metaDataRequestFinished(KFileItemList)),
+                this, SLOT(slotMetaDataRequestFinished()));
+
+        m_contentRetrievalTimer->start();
+        m_showToolTipTimer->start();
+        m_toolTipRequested = true;
+        Q_ASSERT(!m_metaDataRequested);
     }
 }
 
@@ -128,16 +166,12 @@ void ToolTipManager::startContentRetrieval()
     // Request a preview of the item
     m_fileMetaDataToolTip->setPreview(QPixmap());
 
-    KIO::PreviewJob* job = new KIO::PreviewJob(KFileItemList() << m_item, QSize(256, 256));
-    job->setIgnoreMaximumSize(m_item.isLocalFile());
-    if (job->ui()) {
-        KJobWidgets::setWindow(job, qApp->activeWindow());
-    }
+    KIO::PreviewJob* job = KIO::filePreview(KFileItemList() << m_item, QSize(256, 256));
 
-    connect(job, &KIO::PreviewJob::gotPreview,
-            this, &ToolTipManager::setPreviewPix);
-    connect(job, &KIO::PreviewJob::failed,
-            this, &ToolTipManager::previewFailed);
+    connect(job, SIGNAL(gotPreview(const KFileItem&, const QPixmap&)),
+            this, SLOT(setPreviewPix(const KFileItem&, const QPixmap&)));
+    connect(job, SIGNAL(failed(const KFileItem&)),
+            this, SLOT(previewFailed()));
 }
 
 
@@ -165,7 +199,7 @@ void ToolTipManager::previewFailed()
         return;
     }
 
-    const QPixmap pixmap = QIcon::fromTheme(m_item.iconName()).pixmap(128, 128);
+    const QPixmap pixmap = KIcon(m_item.iconName()).pixmap(128, 128);
     m_fileMetaDataToolTip->setPreview(pixmap);
     if (!m_showToolTipTimer->isActive()) {
         showToolTip();
@@ -191,6 +225,10 @@ void ToolTipManager::showToolTip()
     if (m_appliedWaitCursor) {
         QApplication::restoreOverrideCursor();
         m_appliedWaitCursor = false;
+    }
+
+    if (QApplication::mouseButtons() & Qt::LeftButton) {
+        return;
     }
 
     if (m_fileMetaDataToolTip->preview().isNull() || m_metaDataRequested) {
@@ -225,10 +263,11 @@ void ToolTipManager::showToolTip()
     // It must be assured that:
     // - the content is fully visible
     // - the content is not drawn inside m_itemRect
-    const bool hasRoomToLeft  = (m_itemRect.left()   - size.width()  - m_margin >= screen.left());
-    const bool hasRoomToRight = (m_itemRect.right()  + size.width()  + m_margin <= screen.right());
-    const bool hasRoomAbove   = (m_itemRect.top()    - size.height() - m_margin >= screen.top());
-    const bool hasRoomBelow   = (m_itemRect.bottom() + size.height() + m_margin <= screen.bottom());
+    const int margin = 3;
+    const bool hasRoomToLeft  = (m_itemRect.left()   - size.width()  - margin >= screen.left());
+    const bool hasRoomToRight = (m_itemRect.right()  + size.width()  + margin <= screen.right());
+    const bool hasRoomAbove   = (m_itemRect.top()    - size.height() - margin >= screen.top());
+    const bool hasRoomBelow   = (m_itemRect.bottom() + size.height() + margin <= screen.bottom());
     if (!hasRoomAbove && !hasRoomBelow && !hasRoomToLeft && !hasRoomToRight) {
         return;
     }
@@ -240,16 +279,16 @@ void ToolTipManager::showToolTip()
             x = screen.right() - size.width() + 1;
         }
         if (hasRoomBelow) {
-            y = m_itemRect.bottom() + m_margin;
+            y = m_itemRect.bottom() + margin;
         } else {
-            y = m_itemRect.top() - size.height() - m_margin;
+            y = m_itemRect.top() - size.height() - margin;
         }
     } else {
         Q_ASSERT(hasRoomToLeft || hasRoomToRight);
         if (hasRoomToRight) {
-            x = m_itemRect.right() + m_margin;
+            x = m_itemRect.right() + margin;
         } else {
-            x = m_itemRect.left() - size.width() - m_margin;
+            x = m_itemRect.left() - size.width() - margin;
         }
         // Put the tooltip at the bottom of the screen. The x-coordinate has already
         // been adjusted, so that no overlapping with m_itemRect occurs.
@@ -265,3 +304,4 @@ void ToolTipManager::showToolTip()
     m_toolTipRequested = false;
 }
 
+#include "tooltipmanager.moc"

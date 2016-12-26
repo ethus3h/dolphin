@@ -19,6 +19,9 @@
 
 #include "kcmdolphinservices.h"
 
+#include <KTabWidget>
+#include <KDialog>
+#include <KLocale>
 #include <KPluginFactory>
 #include <KPluginLoader>
 
@@ -26,22 +29,25 @@
 
 #include <QVBoxLayout>
 
-K_PLUGIN_FACTORY(KCMDolphinServicesConfigFactory, registerPlugin<DolphinServicesConfigModule>(QStringLiteral("dolphinservices"));)
+K_PLUGIN_FACTORY(KCMDolphinServicesConfigFactory, registerPlugin<DolphinServicesConfigModule>("dolphinservices");)
 K_EXPORT_PLUGIN(KCMDolphinServicesConfigFactory("kcmdolphinservices"))
 
 DolphinServicesConfigModule::DolphinServicesConfigModule(QWidget* parent, const QVariantList& args) :
-    KCModule(parent),
+    KCModule(KCMDolphinServicesConfigFactory::componentData(), parent),
     m_services(0)
 {
     Q_UNUSED(args);
+
+    KGlobal::locale()->insertCatalog("dolphin");
 
     setButtons(KCModule::Default | KCModule::Help);
 
     QVBoxLayout* topLayout = new QVBoxLayout(this);
     topLayout->setMargin(0);
+    topLayout->setSpacing(KDialog::spacingHint());
 
     m_services = new ServicesSettingsPage(this);
-    connect(m_services, &ServicesSettingsPage::changed, this, static_cast<void(DolphinServicesConfigModule::*)()>(&DolphinServicesConfigModule::changed));
+    connect(m_services, SIGNAL(changed()), this, SLOT(changed()));
     topLayout->addWidget(m_services, 0, 0);
 }
 

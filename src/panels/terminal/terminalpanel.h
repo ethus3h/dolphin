@@ -22,9 +22,7 @@
 
 #include <panels/panel.h>
 
-#include <QQueue>
-
-class TerminalInterface;
+class TerminalInterfaceV2;
 class QVBoxLayout;
 class QWidget;
 
@@ -32,10 +30,6 @@ namespace KIO {
     class StatJob;
 }
 
-namespace KParts {
-    class ReadOnlyPart;
-}
-class KJob;
 /**
  * @brief Shows the terminal which is synchronized with the URL of the
  *        active view.
@@ -55,22 +49,18 @@ public slots:
 signals:
     void hideTerminalPanel();
 
-    /**
-     * Is emitted if the an URL change is requested.
-     */
-    void changeUrl(const QUrl& url);
-
 protected:
-    virtual bool urlChanged() Q_DECL_OVERRIDE;
+    /** @see Panel::urlChanged() */
+    virtual bool urlChanged();
 
-    virtual void showEvent(QShowEvent* event) Q_DECL_OVERRIDE;
+    /** @see QWidget::showEvent() */
+    virtual void showEvent(QShowEvent* event);
 
 private slots:
     void slotMostLocalUrlResult(KJob* job);
-    void slotKonsolePartCurrentDirectoryChanged(const QString& dir);
 
 private:
-    void changeDir(const QUrl& url);
+    void changeDir(const KUrl& url);
     void sendCdToTerminal(const QString& path);
 
 private:
@@ -78,11 +68,8 @@ private:
     KIO::StatJob* m_mostLocalUrlJob;
 
     QVBoxLayout* m_layout;
-    TerminalInterface* m_terminal;
+    TerminalInterfaceV2* m_terminal;
     QWidget* m_terminalWidget;
-    KParts::ReadOnlyPart* m_konsolePart;
-    QString m_konsolePartCurrentDirectory;
-    QQueue<QString> m_sendCdToTerminalHistory;
 };
 
 #endif // TERMINALPANEL_H

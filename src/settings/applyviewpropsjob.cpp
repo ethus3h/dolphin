@@ -23,7 +23,7 @@
 #include "applyviewpropsjob.h"
 #include <views/viewproperties.h>
 
-ApplyViewPropsJob::ApplyViewPropsJob(const QUrl& dir,
+ApplyViewPropsJob::ApplyViewPropsJob(const KUrl& dir,
                                      const ViewProperties& viewProps) :
     KIO::Job(),
     m_viewProps(0),
@@ -32,14 +32,14 @@ ApplyViewPropsJob::ApplyViewPropsJob(const QUrl& dir,
 {
     m_viewProps = new ViewProperties(dir);
     m_viewProps->setViewMode(viewProps.viewMode());
-    m_viewProps->setPreviewsShown(viewProps.previewsShown());
-    m_viewProps->setHiddenFilesShown(viewProps.hiddenFilesShown());
-    m_viewProps->setSortRole(viewProps.sortRole());
+    m_viewProps->setShowPreview(viewProps.showPreview());
+    m_viewProps->setShowHiddenFiles(viewProps.showHiddenFiles());
+    m_viewProps->setSorting(viewProps.sorting());
     m_viewProps->setSortOrder(viewProps.sortOrder());
 
     KIO::ListJob* listJob = KIO::listRecursive(dir, KIO::HideProgressInfo);
-    connect(listJob, &KIO::ListJob::entries,
-            this, &ApplyViewPropsJob::slotEntries);
+    connect(listJob, SIGNAL(entries(KIO::Job*, const KIO::UDSEntryList&)),
+            SLOT(slotEntries(KIO::Job*, const KIO::UDSEntryList&)));
     addSubjob(listJob);
 }
 
@@ -51,14 +51,15 @@ ApplyViewPropsJob::~ApplyViewPropsJob()
 
 void ApplyViewPropsJob::slotEntries(KIO::Job*, const KIO::UDSEntryList& list)
 {
-    foreach (const KIO::UDSEntry& entry, list) {
+    KIO::UDSEntryList::ConstIterator it = list.begin();
+    const KIO::UDSEntryList::ConstIterator end = list.end();
+    foreach(const KIO::UDSEntry& entry, list) {
         const QString name = entry.stringValue(KIO::UDSEntry::UDS_NAME);
-        if (name != QLatin1String(".") && name != QLatin1String("..") && entry.isDir()) {
+        if ((name != ".") && (name != "..") && entry.isDir()) {
             ++m_progress;
 
-            QUrl url(m_dir);
-            url = url.adjusted(QUrl::StripTrailingSlash);
-            url.setPath(url.path() + '/' + name);
+            KUrl url(m_dir);
+            url.addPath(name);
 
             Q_ASSERT(m_viewProps);
 
@@ -77,3 +78,4 @@ void ApplyViewPropsJob::slotResult(KJob* job)
     emitResult();
 }
 
+#include "applyviewpropsjob.moc"

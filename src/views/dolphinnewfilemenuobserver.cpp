@@ -19,38 +19,35 @@
 
 #include "dolphinnewfilemenuobserver.h"
 
-#include "dolphinnewfilemenu.h"
+#include <KGlobal>
+#include <KNewFileMenu>
 
 class DolphinNewFileMenuObserverSingleton
 {
 public:
     DolphinNewFileMenuObserver instance;
 };
-Q_GLOBAL_STATIC(DolphinNewFileMenuObserverSingleton, s_DolphinNewFileMenuObserver)
+K_GLOBAL_STATIC(DolphinNewFileMenuObserverSingleton, s_DolphinNewFileMenuObserver)
 
 DolphinNewFileMenuObserver& DolphinNewFileMenuObserver::instance()
 {
     return s_DolphinNewFileMenuObserver->instance;
 }
 
-void DolphinNewFileMenuObserver::attach(const DolphinNewFileMenu* menu)
+void DolphinNewFileMenuObserver::attach(const KNewFileMenu* menu)
 {
-    connect(menu, &DolphinNewFileMenu::fileCreated,
-            this, &DolphinNewFileMenuObserver::itemCreated);
-    connect(menu, &DolphinNewFileMenu::directoryCreated,
-            this, &DolphinNewFileMenuObserver::itemCreated);
-    connect(menu, &DolphinNewFileMenu::errorMessage,
-            this, &DolphinNewFileMenuObserver::errorMessage);
+    connect(menu, SIGNAL(fileCreated(const KUrl&)),
+            this, SIGNAL(itemCreated(const KUrl&)));
+    connect(menu, SIGNAL(directoryCreated(const KUrl&)),
+            this, SIGNAL(itemCreated(const KUrl&)));
 }
 
-void DolphinNewFileMenuObserver::detach(const DolphinNewFileMenu* menu)
+void DolphinNewFileMenuObserver::detach(const KNewFileMenu* menu)
 {
-    disconnect(menu, &DolphinNewFileMenu::fileCreated,
-               this, &DolphinNewFileMenuObserver::itemCreated);
-    disconnect(menu, &DolphinNewFileMenu::directoryCreated,
-               this, &DolphinNewFileMenuObserver::itemCreated);
-    disconnect(menu, &DolphinNewFileMenu::errorMessage,
-               this, &DolphinNewFileMenuObserver::errorMessage);
+    disconnect(menu, SIGNAL(fileCreated(const KUrl&)),
+               this, SIGNAL(itemCreated(const KUrl&)));
+    disconnect(menu, SIGNAL(directoryCreated(const KUrl&)),
+               this, SIGNAL(itemCreated(const KUrl&)));
 }
 
 DolphinNewFileMenuObserver::DolphinNewFileMenuObserver() :
@@ -62,3 +59,4 @@ DolphinNewFileMenuObserver::~DolphinNewFileMenuObserver()
 {
 }
 
+#include "dolphinnewfilemenuobserver.moc"

@@ -21,18 +21,22 @@
 #define DOLPHINCONTEXTMENU_H
 
 #include <KFileItem>
-#include <QUrl>
-#include <KFileCopyToMenu>
-#include <QMenu>
+#include <KService>
+#include <KUrl>
+#include <konq_copytomenu.h>
 
+#include <QObject>
 
+#include <QVector>
 
+#include <QScopedPointer>
 
+class KMenu;
+class KFileItem;
 class QAction;
 class DolphinMainWindow;
 class KFileItemActions;
 class KFileItemListProperties;
-class DolphinRemoveAction;
 
 /**
  * @brief Represents the context menu which appears when doing a right
@@ -46,7 +50,7 @@ class DolphinRemoveAction;
  * - 'Actions':   Contains all actions which can be applied to the
  *                given item.
  */
-class DolphinContextMenu : public QMenu
+class DolphinContextMenu : public QObject
 {
     Q_OBJECT
 
@@ -54,7 +58,6 @@ public:
     enum Command
     {
         None,
-        OpenParentFolder,
         OpenParentFolderInNewWindow,
         OpenParentFolderInNewTab
     };
@@ -62,7 +65,6 @@ public:
     /**
      * @parent        Pointer to the main window the context menu
      *                belongs to.
-     * @pos           Position in screen coordinates.
      * @fileInfo      Pointer to the file item the context menu
      *                is applied. If 0 is passed, the context menu
      *                is above the viewport.
@@ -70,9 +72,8 @@ public:
      *                should be opened.
      */
     DolphinContextMenu(DolphinMainWindow* parent,
-                       const QPoint& pos,
                        const KFileItem& fileInfo,
-                       const QUrl& baseUrl);
+                       const KUrl& baseUrl);
 
     virtual ~DolphinContextMenu();
 
@@ -88,9 +89,30 @@ public:
      */
     Command open();
 
-protected:
-    virtual void keyPressEvent(QKeyEvent *ev) Q_DECL_OVERRIDE;
-    virtual void keyReleaseEvent(QKeyEvent *ev) Q_DECL_OVERRIDE;
+    /**
+     * TODO: This method is a workaround for a X11-issue in combination
+     * with KModifierKeyInfo: When constructing KModifierKeyInfo in the
+     * constructor of the context menu, the user interface might freeze.
+     * To bypass this, the KModifierKeyInfo is constructed in DolphinMainWindow
+     * directly after starting the application. Remove this method, if
+     * the X11-issue got fixed (contact the maintainer of KModifierKeyInfo for
+     * more details).
+     */
+    static void initializeModifierKeyInfo();
+
+private slots:
+    /**
+     * Is invoked if a key modifier has been pressed and updates the context
+     * menu to show the 'Delete' action instead of the 'Move To Trash' action
+     * if the shift-key has been pressed.
+     */
+    void slotKeyModifierPressed(Qt::Key key, bool pressed);
+
+    /**
+     * Triggers the 'Delete'-action if the shift-key has been pressed, otherwise
+     * the 'Move to Trash'-action gets triggered.
+     */
+    void slotRemoveActionTriggered();
 
 private:
     void openTrashContextMenu();
@@ -98,7 +120,7 @@ private:
     void openItemContextMenu();
     void openViewportContextMenu();
 
-    void insertDefaultItemActions(const KFileItemListProperties&);
+    void insertDefaultItemActions();
 
     /**
      * Adds the "Show menubar" action to the menu if the
@@ -106,11 +128,16 @@ private:
      */
     void addShowMenuBarAction();
 
-    bool placeExists(const QUrl& url) const;
+    /**
+     * Returns a name for adding the URL \a url to the Places panel.
+     */
+    QString placesName(const KUrl& url) const;
+
+    bool placeExists(const KUrl& url) const;
 
     QAction* createPasteAction();
 
-    KFileItemListProperties& selectedItemsProperties() const;
+    KFileItemListProperties& selectedItemsProperties();
 
     /**
      * Returns the file item for m_baseUrl.
@@ -126,7 +153,7 @@ private:
     /**
      * Adds actions that are provided by a KFileItemActionPlugin.
      */
-    void addFileItemPluginActions(KFileItemActions& fileItemActions);
+    void addFileItemPluginActions();
 
     /**
      * Adds actions that are provided by a KVersionControlPlugin.
@@ -138,6 +165,12 @@ private:
      * provided in the details view.
      */
     void addCustomActions();
+
+    /**
+     * Updates m_removeAction to represent the 'Delete'-action if the shift-key
+     * has been pressed. Otherwise it represents the 'Move to Trash'-action.
+     */
+    void updateRemoveAction();
 
 private:
     struct Entry
@@ -157,24 +190,25 @@ private:
         TrashContext = 2
     };
 
-    QPoint m_pos;
     DolphinMainWindow* m_mainWindow;
 
     KFileItem m_fileInfo;
 
-    QUrl m_baseUrl;
+    KUrl m_baseUrl;
     KFileItem* m_baseFileItem;  /// File item for m_baseUrl
 
     KFileItemList m_selectedItems;
-    mutable KFileItemListProperties* m_selectedItemsProperties;
+    KFileItemListProperties* m_selectedItemsProperties;
 
     int m_context;
-    KFileCopyToMenu m_copyToMenu;
+    KonqCopyToMenu m_copyToMenu;
     QList<QAction*> m_customActions;
+    KMenu* m_popup;
 
     Command m_command;
 
-    DolphinRemoveAction* m_removeAction; // Action that represents either 'Move To Trash' or 'Delete'
+    bool m_shiftPressed;
+    QAction* m_removeAction; // Action that represents either 'Move To Trash' or 'Delete'
 };
 
 #endif

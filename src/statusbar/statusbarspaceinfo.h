@@ -20,16 +20,16 @@
 #ifndef STATUSBARSPACEINFO_H
 #define STATUSBARSPACEINFO_H
 
-#include <QUrl>
+#include <KUrl>
 
+#include <QColor>
+#include <QKeyEvent>
+#include <QString>
 
-#include <KCapacityBar>
+#include <kcapacitybar.h>
 
 class QHideEvent;
 class QShowEvent;
-class QMouseEvent;
-
-class SpaceInfoObserver;
 
 /**
  * @short Shows the available space for the volume represented
@@ -43,20 +43,21 @@ public:
     explicit StatusBarSpaceInfo(QWidget* parent = 0);
     virtual ~StatusBarSpaceInfo();
 
-    void setUrl(const QUrl& url);
-    QUrl url() const;
+    void setUrl(const KUrl& url);
+    KUrl url() const;
 
 protected:
-    void showEvent(QShowEvent* event) Q_DECL_OVERRIDE;
-    void hideEvent(QHideEvent* event) Q_DECL_OVERRIDE;
-    void mousePressEvent(QMouseEvent* event) Q_DECL_OVERRIDE;
+    void showEvent(QShowEvent* event);
+    void hideEvent(QHideEvent* event);
 
 private slots:
-    void slotValuesChanged();
+    /** Refreshes the space information for the current set URL. */
+    void refresh();
 
 private:
-    QScopedPointer<SpaceInfoObserver> m_observer;
-    QUrl m_url;
+    quint64 m_kBSize;
+    KUrl m_url;
+    QTimer* m_timer;
 };
 
 #endif

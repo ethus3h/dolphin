@@ -1,5 +1,5 @@
 /***************************************************************************
- *   Copyright (C) 2008-2012 by Peter Penz <peter.penz19@gmail.com>        *
+ *   Copyright (C) 2008 by Peter Penz <peter.penz19@gmail.com>             *
  *   Copyright (C) 2010 by Christian Muehlhaeuser <muesli@gmail.com>       *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
@@ -21,20 +21,12 @@
 #ifndef PLACESPANEL_H
 #define PLACESPANEL_H
 
-#include <QUrl>
-#include <QMimeData>
-#include <panels/panel.h>
+#include <kfileplacesview.h>
 
-class KItemListController;
-class PlacesItem;
-class PlacesItemModel;
-class PlacesView;
-class QGraphicsSceneDragDropEvent;
-class KJob;
 /**
  * @brief Combines bookmarks and mounted devices as list.
  */
-class PlacesPanel : public Panel
+class PlacesPanel : public KFilePlacesView
 {
     Q_OBJECT
 
@@ -43,53 +35,17 @@ public:
     virtual ~PlacesPanel();
 
 signals:
-    void placeActivated(const QUrl& url);
-    void placeMiddleClicked(const QUrl& url);
-    void errorMessage(const QString& error);
+    void urlChanged(const KUrl& url, Qt::MouseButtons buttons);
 
 protected:
-    virtual bool urlChanged() Q_DECL_OVERRIDE;
-    virtual void showEvent(QShowEvent* event) Q_DECL_OVERRIDE;
-
-public slots:
-    virtual void readSettings() Q_DECL_OVERRIDE;
+    virtual void mousePressEvent(QMouseEvent* event);
 
 private slots:
-    void slotItemActivated(int index);
-    void slotItemMiddleClicked(int index);
-    void slotItemContextMenuRequested(int index, const QPointF& pos);
-    void slotViewContextMenuRequested(const QPointF& pos);
-    void slotItemDropEvent(int index, QGraphicsSceneDragDropEvent* event);
-    void slotItemDropEventStorageSetupDone(int index, bool success);
-    void slotAboveItemDropEvent(int index, QGraphicsSceneDragDropEvent* event);
-    void slotUrlsDropped(const QUrl& dest, QDropEvent* event, QWidget* parent);
-    void slotTrashUpdated(KJob* job);
-    void slotStorageSetupDone(int index, bool success);
+    void slotUrlsDropped(const KUrl& dest, QDropEvent* event, QWidget* parent);
+    void emitExtendedUrlChangedSignal(const KUrl& url);
 
 private:
-    void emptyTrash();
-    void addEntry();
-    void editEntry(int index);
-
-    /**
-     * Selects the item that has the closest URL for the URL set
-     * for the panel (see Panel::setUrl()).
-     */
-    void selectClosestItem();
-
-    void triggerItem(int index, Qt::MouseButton button);
-
-private:
-    KItemListController* m_controller;
-    PlacesItemModel* m_model;
-    PlacesView* m_view;
-
-    QUrl m_storageSetupFailedUrl;
-    Qt::MouseButton m_triggerStorageSetupButton;
-
-    int m_itemDropEventIndex;
-    QMimeData* m_itemDropEventMimeData;
-    QDropEvent* m_itemDropEvent;
+    Qt::MouseButtons m_mouseButtons;
 };
 
 #endif // PLACESPANEL_H

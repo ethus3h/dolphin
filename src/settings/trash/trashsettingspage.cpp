@@ -20,31 +20,34 @@
 #include "trashsettingspage.h"
 
 #include <KCModuleProxy>
+#include <KDialog>
+#include <KVBox>
+
+#include <settings/dolphinsettings.h>
 
 #include <QVBoxLayout>
 
 TrashSettingsPage::TrashSettingsPage(QWidget* parent) :
         SettingsPageBase(parent)
 {
-    QVBoxLayout* topLayout = new QVBoxLayout(this);
-    QWidget* vBox = new QWidget(this);
-    QVBoxLayout *vBoxVBoxLayout = new QVBoxLayout(vBox);
-    vBoxVBoxLayout->setMargin(0);
+    const int spacing = KDialog::spacingHint();
 
-    m_proxy = new KCModuleProxy(QStringLiteral("kcmtrash"));
+    QVBoxLayout* topLayout = new QVBoxLayout(this);
+    KVBox* vBox = new KVBox(this);
+    vBox->setSpacing(spacing);
+
+    m_proxy = new KCModuleProxy("kcmtrash");
     topLayout->addWidget(m_proxy);
 
     // Add a dummy widget with no restriction regarding
     // a vertical resizing. This assures that the dialog layout
     // is not stretched vertically.
-    QWidget *w = new QWidget(vBox);
-    vBoxVBoxLayout->addWidget(w);
-    
+    new QWidget(vBox);
     topLayout->addWidget(vBox);
 
     loadSettings();
 
-    connect(m_proxy, static_cast<void(KCModuleProxy::*)(bool)>(&KCModuleProxy::changed), this, &TrashSettingsPage::changed);
+    connect(m_proxy, SIGNAL(changed(bool)), this, SIGNAL(changed()));
 }
 
 TrashSettingsPage::~TrashSettingsPage()
@@ -66,3 +69,4 @@ void TrashSettingsPage::loadSettings()
     m_proxy->load();
 }
 
+#include "trashsettingspage.moc"

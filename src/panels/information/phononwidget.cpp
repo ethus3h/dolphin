@@ -20,29 +20,26 @@
 
 #include "phononwidget.h"
 
-#include <Phonon/AudioOutput>
 #include <Phonon/Global>
 #include <Phonon/MediaObject>
 #include <Phonon/SeekSlider>
-#include <Phonon/VideoWidget>
+#include <Phonon/VideoPlayer>
 
 #include <QVBoxLayout>
 #include <QHBoxLayout>
 #include <QShowEvent>
 #include <QToolButton>
-#include <QDialog>
-#include <QIcon>
-#include <KIconLoader>
-#include <QUrl>
-#include <KLocalizedString>
 
-class EmbeddedVideoPlayer : public Phonon::VideoWidget
+#include <KDialog>
+#include <KIcon>
+#include <KUrl>
+#include <KLocale>
+
+class EmbeddedVideoPlayer : public Phonon::VideoPlayer
 {
-    Q_OBJECT
-
     public:
-        EmbeddedVideoPlayer(QWidget *parent = 0) :
-            Phonon::VideoWidget(parent)
+        EmbeddedVideoPlayer(Phonon::Category category, QWidget *parent = 0) :
+            Phonon::VideoPlayer(category, parent)
         {
         }
 
@@ -54,7 +51,7 @@ class EmbeddedVideoPlayer : public Phonon::VideoWidget
 
         virtual QSize sizeHint() const
         {
-            return m_sizeHint.isValid() ? m_sizeHint : Phonon::VideoWidget::sizeHint();
+            return m_sizeHint.isValid() ? m_sizeHint : Phonon::VideoPlayer::sizeHint();
         }
 
     private:
@@ -63,18 +60,19 @@ class EmbeddedVideoPlayer : public Phonon::VideoWidget
 
 PhononWidget::PhononWidget(QWidget *parent)
     : QWidget(parent),
+    m_mode(Audio),
     m_url(),
     m_playButton(0),
     m_stopButton(0),
     m_topLayout(0),
+    m_audioMedia(0),
     m_media(0),
     m_seekSlider(0),
-    m_audioOutput(0),
     m_videoPlayer(0)
 {
 }
 
-void PhononWidget::setUrl(const QUrl &url)
+void PhononWidget::setUrl(const KUrl &url)
 {
     if (m_url != url) {
         stop(); // emits playingStopped() signal
@@ -82,9 +80,22 @@ void PhononWidget::setUrl(const QUrl &url)
     }
 }
 
-QUrl PhononWidget::url() const
+KUrl PhononWidget::url() const
 {
     return m_url;
+}
+
+void PhononWidget::setMode(Mode mode)
+{
+    if (m_mode != mode) {
+        stop(); // emits playingStopped() signal
+        m_mode = mode;
+    }
+}
+
+PhononWidget::Mode PhononWidget::mode() const
+{
+    return m_mode;
 }
 
 void PhononWidget::setVideoSize(const QSize& size)
@@ -110,7 +121,7 @@ void PhononWidget::showEvent(QShowEvent *event)
     if (!m_topLayout) {
         m_topLayout = new QVBoxLayout(this);
         m_topLayout->setMargin(0);
-
+        m_topLayout->setSpacing(KDialog::spacingHint());
         QHBoxLayout *controlsLayout = new QHBoxLayout(this);
         controlsLayout->setMargin(0);
         controlsLayout->setSpacing(0);
@@ -125,21 +136,16 @@ void PhononWidget::showEvent(QShowEvent *event)
 
         m_topLayout->addLayout(controlsLayout);
 
-        const int smallIconSize = IconSize(KIconLoader::Small);
-        const QSize buttonSize(smallIconSize, smallIconSize);
-
         m_playButton->setToolTip(i18n("play"));
-        m_playButton->setIconSize(buttonSize);
-        m_playButton->setIcon(QIcon::fromTheme(QStringLiteral("media-playback-start")));
-        m_playButton->setAutoRaise(true);
-        connect(m_playButton, &QToolButton::clicked, this, &PhononWidget::play);
+        m_playButton->setIconSize(QSize(16, 16));
+        m_playButton->setIcon(KIcon("media-playback-start"));
+        connect(m_playButton, SIGNAL(clicked()), this, SLOT(play()));
 
         m_stopButton->setToolTip(i18n("stop"));
-        m_stopButton->setIconSize(buttonSize);
-        m_stopButton->setIcon(QIcon::fromTheme(QStringLiteral("media-playback-stop")));
-        m_stopButton->setAutoRaise(true);
+        m_stopButton->setIconSize(QSize(16, 16));
+        m_stopButton->setIcon(KIcon("media-playback-stop"));
         m_stopButton->hide();
-        connect(m_stopButton, &QToolButton::clicked, this, &PhononWidget::stop);
+        connect(m_stopButton, SIGNAL(clicked()), this, SLOT(stop()));
 
         m_seekSlider->setIconVisible(false);
 
@@ -167,12 +173,6 @@ void PhononWidget::stateChanged(Phonon::State newstate)
         m_stopButton->show();
         m_playButton->hide();
         break;
-    case Phonon::StoppedState:
-        if (m_videoPlayer) {
-            m_videoPlayer->hide();
-        }
-        emit hasVideoChanged(false);
-        // fall through
     default:
         m_stopButton->hide();
         m_playButton->show();
@@ -183,47 +183,54 @@ void PhononWidget::stateChanged(Phonon::State newstate)
 
 void PhononWidget::play()
 {
-    if (!m_media) {
-        m_media = new Phonon::MediaObject(this);
-        connect(m_media, &Phonon::MediaObject::stateChanged,
-                this, &PhononWidget::stateChanged);
-        connect(m_media, &Phonon::MediaObject::hasVideoChanged,
-                this, &PhononWidget::slotHasVideoChanged);
-        m_seekSlider->setMediaObject(m_media);
-    }
+    switch (m_mode) {
+    case Audio:
+        if (!m_audioMedia) {
+            m_audioMedia = Phonon::createPlayer(Phonon::MusicCategory, m_url);
+            m_audioMedia->setParent(this);
+        }
+        m_media = m_audioMedia;
+        m_media->setCurrentSource(m_url);
+        m_media->play();
+        break;
 
-    if (!m_videoPlayer) {
-        m_videoPlayer = new EmbeddedVideoPlayer(this);
-        m_topLayout->insertWidget(0, m_videoPlayer);
-        Phonon::createPath(m_media, m_videoPlayer);
+    case Video:
+        if (!m_videoPlayer) {
+            m_videoPlayer = new EmbeddedVideoPlayer(Phonon::VideoCategory, this);
+            m_topLayout->insertWidget(0, m_videoPlayer);
+        }
         applyVideoSize();
+        m_videoPlayer->show();
+        m_videoPlayer->play(m_url);
+        m_media = m_videoPlayer->mediaObject();
+        break;
+
+    default:
+        break;
     }
 
-    if (!m_audioOutput) {
-        m_audioOutput = new Phonon::AudioOutput(Phonon::MusicCategory, this);
-        Phonon::createPath(m_media, m_audioOutput);
-    }
+    Q_ASSERT(m_media);
+    connect(m_media, SIGNAL(stateChanged(Phonon::State, Phonon::State)),
+            this, SLOT(stateChanged(Phonon::State)));
+    m_seekSlider->setMediaObject(m_media);
 
-    emit hasVideoChanged(false);
-
-    m_media->setCurrentSource(m_url);
-    m_media->hasVideo();
-    m_media->play();
+    emit playingStarted();
 }
 
 void PhononWidget::stop()
 {
     if (m_media) {
         m_media->stop();
+        disconnect(m_media, SIGNAL(stateChanged(Phonon::State, Phonon::State)),
+                   this, SLOT(stateChanged(Phonon::State)));
+        emit playingStopped();
+
+        m_stopButton->hide();
+        m_playButton->show();
     }
-}
 
-void PhononWidget::slotHasVideoChanged(bool hasVideo)
-{
-    emit hasVideoChanged(hasVideo);
-
-    if (hasVideo) {
-        m_videoPlayer->show();
+    if (m_videoPlayer) {
+        m_videoPlayer->hide();
     }
 }
 
@@ -233,5 +240,3 @@ void PhononWidget::applyVideoSize()
         m_videoPlayer->setSizeHint(m_videoSize);
     }
 }
-
-#include "phononwidget.moc"

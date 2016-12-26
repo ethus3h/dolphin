@@ -21,9 +21,10 @@
 
 #include <KIconLoader>
 
+#include <QLayout>
 #include <QPainter>
 #include <QPixmap>
-#include <QStyle>
+#include <QKeyEvent>
 
 PixmapViewer::PixmapViewer(QWidget* parent, Transition transition) :
     QWidget(parent),
@@ -38,8 +39,8 @@ PixmapViewer::PixmapViewer(QWidget* parent, Transition transition) :
     m_animation.setCurveShape(QTimeLine::LinearCurve);
 
     if (m_transition != NoTransition) {
-        connect(&m_animation, &QTimeLine::valueChanged, this, static_cast<void(PixmapViewer::*)()>(&PixmapViewer::update));
-        connect(&m_animation, &QTimeLine::finished, this, &PixmapViewer::checkPendingPixmaps);
+        connect(&m_animation, SIGNAL(valueChanged(qreal)), this, SLOT(update()));
+        connect(&m_animation, SIGNAL(finished()), this, SLOT(checkPendingPixmaps()));
     }
 }
 
@@ -95,19 +96,21 @@ void PixmapViewer::paintEvent(QPaintEvent* event)
         const int scaledWidth  = static_cast<int>((m_oldPixmap.width()  * (1.0 - value)) + (m_pixmap.width()  * value));
         const int scaledHeight = static_cast<int>((m_oldPixmap.height() * (1.0 - value)) + (m_pixmap.height() * value));
 
+        const int x = (width()  - scaledWidth ) / 2;
+        const int y = (height() - scaledHeight) / 2;
+
         const bool useOldPixmap = (m_transition == SizeTransition) &&
                                   (m_oldPixmap.width() > m_pixmap.width());
         const QPixmap& largePixmap = useOldPixmap ? m_oldPixmap : m_pixmap;
-	if (!largePixmap.isNull()) {
-            const QPixmap scaledPixmap = largePixmap.scaled(scaledWidth,
-                                                            scaledHeight,
-                                                            Qt::IgnoreAspectRatio,
-                                                            Qt::FastTransformation);
-
-            style()->drawItemPixmap(&painter, rect(), Qt::AlignCenter, scaledPixmap);
-	}
+        const QPixmap scaledPixmap = largePixmap.scaled(scaledWidth,
+                                                        scaledHeight,
+                                                        Qt::IgnoreAspectRatio,
+                                                        Qt::FastTransformation);
+        painter.drawPixmap(x, y, scaledPixmap);
     } else {
-        style()->drawItemPixmap(&painter, rect(), Qt::AlignCenter, m_pixmap);
+        const int x = (width()  - m_pixmap.width() ) / 2;
+        const int y = (height() - m_pixmap.height()) / 2;
+        painter.drawPixmap(x, y, m_pixmap);
     }
 }
 
@@ -124,3 +127,4 @@ void PixmapViewer::checkPendingPixmaps()
     }
 }
 
+#include "pixmapviewer.moc"

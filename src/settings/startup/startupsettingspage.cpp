@@ -19,27 +19,28 @@
 
 #include "startupsettingspage.h"
 
-#include "global.h"
+#include "settings/dolphinsettings.h"
 #include "dolphinmainwindow.h"
 #include "dolphinviewcontainer.h"
 
 #include "dolphin_generalsettings.h"
 
-#include <KLocalizedString>
-#include <QLineEdit>
+#include <KDialog>
+#include <KFileDialog>
+#include <KLocale>
+#include <KLineEdit>
 #include <KMessageBox>
+#include <KVBox>
 
-#include <QVBoxLayout>
 #include <QCheckBox>
 #include <QGroupBox>
 #include <QLabel>
 #include <QPushButton>
-#include <QHBoxLayout>
-#include <QFileDialog>
+#include <QRadioButton>
 
 #include "views/dolphinview.h"
 
-StartupSettingsPage::StartupSettingsPage(const QUrl& url, QWidget* parent) :
+StartupSettingsPage::StartupSettingsPage(const KUrl& url, QWidget* parent) :
     SettingsPageBase(parent),
     m_url(url),
     m_homeUrl(0),
@@ -48,48 +49,35 @@ StartupSettingsPage::StartupSettingsPage(const QUrl& url, QWidget* parent) :
     m_showFullPath(0),
     m_filterBar(0)
 {
+    const int spacing = KDialog::spacingHint();
+
     QVBoxLayout* topLayout = new QVBoxLayout(this);
-    QWidget* vBox = new QWidget(this);
-    QVBoxLayout *vBoxLayout = new QVBoxLayout(vBox);
-    vBoxLayout->setMargin(0);
-    vBoxLayout->setAlignment(Qt::AlignTop);
+    KVBox* vBox = new KVBox(this);
+    vBox->setSpacing(spacing);
 
     // create 'Home URL' editor
     QGroupBox* homeBox = new QGroupBox(i18nc("@title:group", "Home Folder"), vBox);
-    vBoxLayout->addWidget(homeBox);
 
-    QWidget* homeUrlBox = new QWidget(homeBox);
-    QHBoxLayout *homeUrlBoxLayout = new QHBoxLayout(homeUrlBox);
-    homeUrlBoxLayout->setMargin(0);
+    KHBox* homeUrlBox = new KHBox(homeBox);
+    homeUrlBox->setSpacing(spacing);
 
-    QLabel* homeUrlLabel = new QLabel(i18nc("@label:textbox", "Location:"), homeUrlBox);
-    homeUrlBoxLayout->addWidget(homeUrlLabel);
-    m_homeUrl = new QLineEdit(homeUrlBox);
-    homeUrlBoxLayout->addWidget(m_homeUrl);
-    m_homeUrl->setClearButtonEnabled(true);
+    new QLabel(i18nc("@label:textbox", "Location:"), homeUrlBox);
+    m_homeUrl = new KLineEdit(homeUrlBox);
+    m_homeUrl->setClearButtonShown(true);
 
-    QPushButton* selectHomeUrlButton = new QPushButton(QIcon::fromTheme(QStringLiteral("folder-open")), QString(), homeUrlBox);
-    homeUrlBoxLayout->addWidget(selectHomeUrlButton);
+    QPushButton* selectHomeUrlButton = new QPushButton(KIcon("folder-open"), QString(), homeUrlBox);
+    connect(selectHomeUrlButton, SIGNAL(clicked()),
+            this, SLOT(selectHomeUrl()));
 
-#ifndef QT_NO_ACCESSIBILITY
-    selectHomeUrlButton->setAccessibleName(i18nc("@action:button", "Select Home Location"));
-#endif
-
-    connect(selectHomeUrlButton, &QPushButton::clicked,
-            this, &StartupSettingsPage::selectHomeUrl);
-
-    QWidget* buttonBox = new QWidget(homeBox);
-    QHBoxLayout *buttonBoxLayout = new QHBoxLayout(buttonBox);
-    buttonBoxLayout->setMargin(0);
+    KHBox* buttonBox = new KHBox(homeBox);
+    buttonBox->setSpacing(spacing);
 
     QPushButton* useCurrentButton = new QPushButton(i18nc("@action:button", "Use Current Location"), buttonBox);
-    buttonBoxLayout->addWidget(useCurrentButton);
-    connect(useCurrentButton, &QPushButton::clicked,
-            this, &StartupSettingsPage::useCurrentLocation);
+    connect(useCurrentButton, SIGNAL(clicked()),
+            this, SLOT(useCurrentLocation()));
     QPushButton* useDefaultButton = new QPushButton(i18nc("@action:button", "Use Default Location"), buttonBox);
-    buttonBoxLayout->addWidget(useDefaultButton);
-    connect(useDefaultButton, &QPushButton::clicked,
-            this, &StartupSettingsPage::useDefaultLocation);
+    connect(useDefaultButton, SIGNAL(clicked()),
+            this, SLOT(useDefaultLocation()));
 
     QVBoxLayout* homeBoxLayout = new QVBoxLayout(homeBox);
     homeBoxLayout->addWidget(homeUrlBox);
@@ -97,13 +85,9 @@ StartupSettingsPage::StartupSettingsPage(const QUrl& url, QWidget* parent) :
 
     // create 'Split view', 'Show full path', 'Editable location' and 'Filter bar' checkboxes
     m_splitView = new QCheckBox(i18nc("@option:check Startup Settings", "Split view mode"), vBox);
-    vBoxLayout->addWidget(m_splitView);
     m_editableUrl = new QCheckBox(i18nc("@option:check Startup Settings", "Editable location bar"), vBox);
-    vBoxLayout->addWidget(m_editableUrl);
     m_showFullPath = new QCheckBox(i18nc("@option:check Startup Settings", "Show full path inside location bar"), vBox);
-    vBoxLayout->addWidget(m_showFullPath);
     m_filterBar = new QCheckBox(i18nc("@option:check Startup Settings", "Show filter bar"), vBox);
-    vBoxLayout->addWidget(m_filterBar);
 
     // Add a dummy widget with no restriction regarding
     // a vertical resizing. This assures that the dialog layout
@@ -114,11 +98,11 @@ StartupSettingsPage::StartupSettingsPage(const QUrl& url, QWidget* parent) :
 
     loadSettings();
 
-    connect(m_homeUrl, &QLineEdit::textChanged, this, &StartupSettingsPage::slotSettingsChanged);
-    connect(m_splitView,    &QCheckBox::toggled, this, &StartupSettingsPage::slotSettingsChanged);
-    connect(m_editableUrl,  &QCheckBox::toggled, this, &StartupSettingsPage::slotSettingsChanged);
-    connect(m_showFullPath, &QCheckBox::toggled, this, &StartupSettingsPage::slotSettingsChanged);
-    connect(m_filterBar,    &QCheckBox::toggled, this, &StartupSettingsPage::slotSettingsChanged);
+    connect(m_homeUrl, SIGNAL(textChanged(const QString&)), this, SLOT(slotSettingsChanged()));
+    connect(m_splitView,    SIGNAL(toggled(bool)), this, SLOT(slotSettingsChanged()));
+    connect(m_editableUrl,  SIGNAL(toggled(bool)), this, SLOT(slotSettingsChanged()));
+    connect(m_showFullPath, SIGNAL(toggled(bool)), this, SLOT(slotSettingsChanged()));
+    connect(m_filterBar,    SIGNAL(toggled(bool)), this, SLOT(slotSettingsChanged()));
 }
 
 StartupSettingsPage::~StartupSettingsPage()
@@ -127,12 +111,12 @@ StartupSettingsPage::~StartupSettingsPage()
 
 void StartupSettingsPage::applySettings()
 {
-    GeneralSettings* settings = GeneralSettings::self();
+    GeneralSettings* settings = DolphinSettings::instance().generalSettings();
 
-    const QUrl url(QUrl::fromUserInput(m_homeUrl->text(), QString(), QUrl::AssumeLocalFile));
-    KFileItem fileItem(url);
-    if ((url.isValid() && fileItem.isDir()) || (url.scheme() == QLatin1String("timeline"))) {
-        settings->setHomeUrl(url.toDisplayString(QUrl::PreferLocalFile));
+    const KUrl url(m_homeUrl->text());
+    KFileItem fileItem(KFileItem::Unknown, KFileItem::Unknown, url);
+    if (url.isValid() && fileItem.isDir()) {
+        settings->setHomeUrl(url.prettyUrl());
     } else {
         KMessageBox::error(this, i18nc("@info", "The location for the home folder is invalid or does not exist, it will not be applied."));
     }
@@ -142,12 +126,12 @@ void StartupSettingsPage::applySettings()
     settings->setShowFullPath(m_showFullPath->isChecked());
     settings->setFilterBar(m_filterBar->isChecked());
 
-    settings->save();
+    settings->writeConfig();
 }
 
 void StartupSettingsPage::restoreDefaults()
 {
-    GeneralSettings* settings = GeneralSettings::self();
+    GeneralSettings* settings = DolphinSettings::instance().generalSettings();
     settings->useDefaults(true);
     loadSettings();
     settings->useDefaults(false);
@@ -158,36 +142,42 @@ void StartupSettingsPage::slotSettingsChanged()
     // Provide a hint that the startup settings have been changed. This allows the views
     // to apply the startup settings only if they have been explicitly changed by the user
     // (see bug #254947).
-    GeneralSettings::setModifiedStartupSettings(true);
+    GeneralSettings* settings = DolphinSettings::instance().generalSettings();
+    settings->setModifiedStartupSettings(true);
+
     emit changed();
 }
 
 void StartupSettingsPage::selectHomeUrl()
 {
-    const QUrl homeUrl(QUrl::fromUserInput(m_homeUrl->text(), QString(), QUrl::AssumeLocalFile));
-    QUrl url = QFileDialog::getExistingDirectoryUrl(this, QString(), homeUrl);
+    const QString homeUrl = m_homeUrl->text();
+    KUrl url = KFileDialog::getExistingDirectoryUrl(homeUrl, this);
     if (!url.isEmpty()) {
-        m_homeUrl->setText(url.toDisplayString(QUrl::PreferLocalFile));
+        m_homeUrl->setText(url.prettyUrl());
         slotSettingsChanged();
     }
 }
 
 void StartupSettingsPage::useCurrentLocation()
 {
-    m_homeUrl->setText(m_url.toDisplayString(QUrl::PreferLocalFile));
+    m_homeUrl->setText(m_url.prettyUrl());
 }
 
 void StartupSettingsPage::useDefaultLocation()
 {
-    m_homeUrl->setText(QDir::homePath());
+    KUrl url(QDir::homePath());
+    m_homeUrl->setText(url.prettyUrl());
 }
 
 void StartupSettingsPage::loadSettings()
 {
-    const QUrl url(Dolphin::homeUrl());
-    m_homeUrl->setText(url.toDisplayString(QUrl::PreferLocalFile));
-    m_splitView->setChecked(GeneralSettings::splitView());
-    m_editableUrl->setChecked(GeneralSettings::editableUrl());
-    m_showFullPath->setChecked(GeneralSettings::showFullPath());
-    m_filterBar->setChecked(GeneralSettings::filterBar());
+    GeneralSettings* settings = DolphinSettings::instance().generalSettings();
+    KUrl url(settings->homeUrl());
+    m_homeUrl->setText(url.prettyUrl());
+    m_splitView->setChecked(settings->splitView());
+    m_editableUrl->setChecked(settings->editableUrl());
+    m_showFullPath->setChecked(settings->showFullPath());
+    m_filterBar->setChecked(settings->filterBar());
 }
+
+#include "startupsettingspage.moc"

@@ -21,54 +21,66 @@
 #include "behaviorsettingspage.h"
 
 #include "dolphin_generalsettings.h"
+#include <settings/dolphinsettings.h>
 
-#include <KLocalizedString>
+#include <KDialog>
+#include <KLocale>
 
 #include <QCheckBox>
 #include <QGroupBox>
+#include <QHBoxLayout>
+#include <QLabel>
 #include <QRadioButton>
 #include <QVBoxLayout>
 
 #include <views/viewproperties.h>
 
-BehaviorSettingsPage::BehaviorSettingsPage(const QUrl& url, QWidget* parent) :
+const bool CONFIRM_TRASH = false;
+const bool CONFIRM_DELETE = true;
+
+BehaviorSettingsPage::BehaviorSettingsPage(const KUrl& url, QWidget* parent) :
     SettingsPageBase(parent),
     m_url(url),
-    m_localViewProps(0),
-    m_globalViewProps(0),
+    m_localProps(0),
+    m_globalProps(0),
+    m_confirmMoveToTrash(0),
+    m_confirmDelete(0),
+    m_renameInline(0),
     m_showToolTips(0),
     m_showSelectionToggle(0),
-    m_naturalSorting(0),
-    m_caseSensitiveSorting(0),
-    m_caseInsensitiveSorting(0),
-    m_renameInline(0),
-    m_useTabForSplitViewSwitch(0)
+    m_naturalSorting(0)
 {
     QVBoxLayout* topLayout = new QVBoxLayout(this);
 
-    // View properties
-    QGroupBox* viewPropsBox = new QGroupBox(i18nc("@title:group", "View"), this);
-    viewPropsBox->setSizePolicy(QSizePolicy::Preferred, QSizePolicy::Maximum);
+    // 'View Properties' box
+    QGroupBox* propsBox = new QGroupBox(i18nc("@title:group", "View Properties"), this);
+    propsBox->setSizePolicy(QSizePolicy::Preferred, QSizePolicy::Maximum);
 
-    m_localViewProps = new QRadioButton(i18nc("@option:radio", "Remember properties for each folder"), viewPropsBox);
-    m_globalViewProps = new QRadioButton(i18nc("@option:radio", "Use common properties for all folders"), viewPropsBox);
+    m_localProps = new QRadioButton(i18nc("@option:radio", "Remember view properties for each folder"), propsBox);
 
-    QVBoxLayout* viewPropsLayout = new QVBoxLayout(viewPropsBox);
-    viewPropsLayout->addWidget(m_localViewProps);
-    viewPropsLayout->addWidget(m_globalViewProps);
+    m_globalProps = new QRadioButton(i18nc("@option:radio", "Use common view properties for all folders"), propsBox);
 
-    // Sorting properties
-    QGroupBox* sortingPropsBox = new QGroupBox(i18nc("@title:group", "Sorting Mode"), this);
-    sortingPropsBox->setSizePolicy(QSizePolicy::Preferred, QSizePolicy::Maximum);
+    QVBoxLayout* propsBoxLayout = new QVBoxLayout(propsBox);
+    propsBoxLayout->addWidget(m_localProps);
+    propsBoxLayout->addWidget(m_globalProps);
 
-    m_naturalSorting = new QRadioButton(i18nc("option:radio", "Natural sorting"), sortingPropsBox);
-    m_caseInsensitiveSorting = new QRadioButton(i18nc("option:radio", "Alphabetical sorting, case insensitive"), sortingPropsBox);
-    m_caseSensitiveSorting = new QRadioButton(i18nc("option:radio", "Alphabetical sorting, case sensitive"), sortingPropsBox);
+    // 'Ask Confirmation For' box
+    QGroupBox* confirmBox = new QGroupBox(i18nc("@title:group", "Ask For Confirmation When"), this);
+    confirmBox->setSizePolicy(QSizePolicy::Preferred, QSizePolicy::Maximum);
+    m_confirmMoveToTrash = new QCheckBox(i18nc("@option:check Ask for Confirmation When",
+                                               "Moving files or folders to trash"), confirmBox);
+    m_confirmDelete = new QCheckBox(i18nc("@option:check Ask for Confirmation When",
+                                          "Deleting files or folders"), confirmBox);
+    m_confirmClosingMultipleTabs = new QCheckBox(i18nc("@option:check Ask for Confirmation When",
+                                                       "Closing windows with multiple tabs"), confirmBox);
 
-    QVBoxLayout* sortingPropsLayout = new QVBoxLayout(sortingPropsBox);
-    sortingPropsLayout->addWidget(m_naturalSorting);
-    sortingPropsLayout->addWidget(m_caseInsensitiveSorting);
-    sortingPropsLayout->addWidget(m_caseSensitiveSorting);
+    QVBoxLayout* confirmBoxLayout = new QVBoxLayout(confirmBox);
+    confirmBoxLayout->addWidget(m_confirmMoveToTrash);
+    confirmBoxLayout->addWidget(m_confirmDelete);
+    confirmBoxLayout->addWidget(m_confirmClosingMultipleTabs);
+
+    // 'Rename inline'
+    m_renameInline = new QCheckBox(i18nc("@option:check", "Rename inline"), this);
 
     // 'Show tooltips'
     m_showToolTips = new QCheckBox(i18nc("@option:check", "Show tooltips"), this);
@@ -76,31 +88,28 @@ BehaviorSettingsPage::BehaviorSettingsPage(const QUrl& url, QWidget* parent) :
     // 'Show selection marker'
     m_showSelectionToggle = new QCheckBox(i18nc("@option:check", "Show selection marker"), this);
 
-    // 'Inline renaming of items'
-    m_renameInline = new QCheckBox(i18nc("option:check", "Rename inline"), this);
+    // 'Natural sorting of items'
+    m_naturalSorting = new QCheckBox(i18nc("option:check", "Natural sorting of items"), this);
 
-    // 'Use tab for switching between right and left split'
-    m_useTabForSplitViewSwitch = new QCheckBox(i18nc("option:check", "Use tab for switching between right and left split view"), this);
-
-    topLayout->addWidget(viewPropsBox);
-    topLayout->addWidget(sortingPropsBox);
+    topLayout->addWidget(propsBox);
+    topLayout->addWidget(confirmBox);
+    topLayout->addWidget(m_renameInline);
     topLayout->addWidget(m_showToolTips);
     topLayout->addWidget(m_showSelectionToggle);
-    topLayout->addWidget(m_renameInline);
-    topLayout->addWidget(m_useTabForSplitViewSwitch);
+    topLayout->addWidget(m_naturalSorting);
     topLayout->addStretch();
 
     loadSettings();
 
-    connect(m_localViewProps, &QRadioButton::toggled, this, &BehaviorSettingsPage::changed);
-    connect(m_globalViewProps, &QRadioButton::toggled, this, &BehaviorSettingsPage::changed);
-    connect(m_showToolTips, &QCheckBox::toggled, this, &BehaviorSettingsPage::changed);
-    connect(m_showSelectionToggle, &QCheckBox::toggled, this, &BehaviorSettingsPage::changed);
-    connect(m_naturalSorting, &QRadioButton::toggled, this, &BehaviorSettingsPage::changed);
-    connect(m_caseInsensitiveSorting, &QRadioButton::toggled, this, &BehaviorSettingsPage::changed);
-    connect(m_caseSensitiveSorting, &QRadioButton::toggled, this, &BehaviorSettingsPage::changed);
-    connect(m_renameInline, &QCheckBox::toggled, this, &BehaviorSettingsPage::changed);
-    connect(m_useTabForSplitViewSwitch, &QCheckBox::toggled, this, &BehaviorSettingsPage::changed);
+    connect(m_localProps, SIGNAL(toggled(bool)), this, SIGNAL(changed()));
+    connect(m_globalProps, SIGNAL(toggled(bool)), this, SIGNAL(changed()));
+    connect(m_confirmMoveToTrash, SIGNAL(toggled(bool)), this, SIGNAL(changed()));
+    connect(m_confirmDelete, SIGNAL(toggled(bool)), this, SIGNAL(changed()));
+    connect(m_confirmClosingMultipleTabs, SIGNAL(toggled(bool)), this, SIGNAL(changed()));
+    connect(m_renameInline, SIGNAL(toggled(bool)), this, SIGNAL(changed()));
+    connect(m_showToolTips, SIGNAL(toggled(bool)), this, SIGNAL(changed()));
+    connect(m_showSelectionToggle, SIGNAL(toggled(bool)), this, SIGNAL(changed()));
+    connect(m_naturalSorting, SIGNAL(toggled(bool)), this, SIGNAL(changed()));
 }
 
 BehaviorSettingsPage::~BehaviorSettingsPage()
@@ -109,19 +118,14 @@ BehaviorSettingsPage::~BehaviorSettingsPage()
 
 void BehaviorSettingsPage::applySettings()
 {
-    GeneralSettings* settings = GeneralSettings::self();
     ViewProperties props(m_url);  // read current view properties
 
-    const bool useGlobalViewProps = m_globalViewProps->isChecked();
-    settings->setGlobalViewProps(useGlobalViewProps);
-    settings->setShowToolTips(m_showToolTips->isChecked());
-    settings->setShowSelectionToggle(m_showSelectionToggle->isChecked());
-    setSortingChoiceValue(settings);
-    settings->setRenameInline(m_renameInline->isChecked());
-    settings->setUseTabForSwitchingSplitView(m_useTabForSplitViewSwitch->isChecked());
-    settings->save();
+    const bool useGlobalProps = m_globalProps->isChecked();
 
-    if (useGlobalViewProps) {
+    GeneralSettings* settings = DolphinSettings::instance().generalSettings();
+    settings->setGlobalViewProps(useGlobalProps);
+
+    if (useGlobalProps) {
         // Remember the global view properties by applying the current view properties.
         // It is important that GeneralSettings::globalViewProps() is set before
         // the class ViewProperties is used, as ViewProperties uses this setting
@@ -129,56 +133,56 @@ void BehaviorSettingsPage::applySettings()
         ViewProperties globalProps(m_url);
         globalProps.setDirProperties(props);
     }
+
+    KSharedConfig::Ptr kioConfig = KSharedConfig::openConfig("kiorc", KConfig::NoGlobals);
+    KConfigGroup confirmationGroup(kioConfig, "Confirmations");
+    confirmationGroup.writeEntry("ConfirmTrash", m_confirmMoveToTrash->isChecked());
+    confirmationGroup.writeEntry("ConfirmDelete", m_confirmDelete->isChecked());
+    confirmationGroup.sync();
+
+    settings->setConfirmClosingMultipleTabs(m_confirmClosingMultipleTabs->isChecked());
+    settings->setRenameInline(m_renameInline->isChecked());
+    settings->setShowToolTips(m_showToolTips->isChecked());
+    settings->setShowSelectionToggle(m_showSelectionToggle->isChecked());
+    settings->writeConfig();
+
+    const bool naturalSorting = m_naturalSorting->isChecked();
+    if (KGlobalSettings::naturalSorting() != naturalSorting) {
+        KConfigGroup group(KGlobal::config(), "KDE");
+        group.writeEntry("NaturalSorting", naturalSorting, KConfig::Persistent | KConfig::Global);
+        KGlobalSettings::emitChange(KGlobalSettings::NaturalSortingChanged);
+    }
 }
 
 void BehaviorSettingsPage::restoreDefaults()
 {
-    GeneralSettings* settings = GeneralSettings::self();
+    GeneralSettings* settings = DolphinSettings::instance().generalSettings();
     settings->useDefaults(true);
     loadSettings();
     settings->useDefaults(false);
+    m_confirmMoveToTrash->setChecked(CONFIRM_TRASH);
+    m_confirmDelete->setChecked(CONFIRM_DELETE);
 }
 
 void BehaviorSettingsPage::loadSettings()
 {
-    const bool useGlobalViewProps = GeneralSettings::globalViewProps();
-    m_localViewProps->setChecked(!useGlobalViewProps);
-    m_globalViewProps->setChecked(useGlobalViewProps);
-
-    m_showToolTips->setChecked(GeneralSettings::showToolTips());
-    m_showSelectionToggle->setChecked(GeneralSettings::showSelectionToggle());
-    m_renameInline->setChecked(GeneralSettings::renameInline());
-    m_useTabForSplitViewSwitch->setChecked(GeneralSettings::useTabForSwitchingSplitView());
-
-    loadSortingChoiceSettings();
-}
-
-void BehaviorSettingsPage::setSortingChoiceValue(GeneralSettings *settings)
-{
-    using Choice = GeneralSettings::EnumSortingChoice;
-    if (m_naturalSorting->isChecked()) {
-        settings->setSortingChoice(Choice::NaturalSorting);
-    } else if (m_caseInsensitiveSorting->isChecked()) {
-        settings->setSortingChoice(Choice::CaseInsensitiveSorting);
-    } else if (m_caseSensitiveSorting->isChecked()) {
-        settings->setSortingChoice(Choice::CaseSensitiveSorting);
+    GeneralSettings* settings = DolphinSettings::instance().generalSettings();
+    if (settings->globalViewProps()) {
+        m_globalProps->setChecked(true);
+    } else {
+        m_localProps->setChecked(true);
     }
+
+    KSharedConfig::Ptr kioConfig = KSharedConfig::openConfig("kiorc", KConfig::IncludeGlobals);
+    const KConfigGroup confirmationGroup(kioConfig, "Confirmations");
+    m_confirmMoveToTrash->setChecked(confirmationGroup.readEntry("ConfirmTrash", CONFIRM_TRASH));
+    m_confirmDelete->setChecked(confirmationGroup.readEntry("ConfirmDelete", CONFIRM_DELETE));
+
+    m_confirmClosingMultipleTabs->setChecked(settings->confirmClosingMultipleTabs());
+    m_renameInline->setChecked(settings->renameInline());
+    m_showToolTips->setChecked(settings->showToolTips());
+    m_showSelectionToggle->setChecked(settings->showSelectionToggle());
+    m_naturalSorting->setChecked(KGlobalSettings::naturalSorting());
 }
 
-void BehaviorSettingsPage::loadSortingChoiceSettings()
-{
-    using Choice = GeneralSettings::EnumSortingChoice;
-    switch (GeneralSettings::sortingChoice()) {
-    case Choice::NaturalSorting:
-        m_naturalSorting->setChecked(true);
-        break;
-    case Choice::CaseInsensitiveSorting:
-        m_caseInsensitiveSorting->setChecked(true);
-        break;
-    case Choice::CaseSensitiveSorting:
-        m_caseSensitiveSorting->setChecked(true);
-        break;
-    default:
-        Q_UNREACHABLE();
-    }
-}
+#include "behaviorsettingspage.moc"

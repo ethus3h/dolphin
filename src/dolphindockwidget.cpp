@@ -21,19 +21,9 @@
 
 #include <QStyle>
 
-namespace {
-    // Disable the 'Floatable' feature, i.e., the possibility to drag the
-    // dock widget out of the main window. This works around problems like
-    // https://bugs.kde.org/show_bug.cgi?id=288629
-    // https://bugs.kde.org/show_bug.cgi?id=322299
-    const QDockWidget::DockWidgetFeatures DefaultDockWidgetFeatures = QDockWidget::DockWidgetMovable | QDockWidget::DockWidgetClosable;
-}
-
  // Empty titlebar for the dock widgets when "Lock Layout" has been activated.
 class DolphinDockTitleBar : public QWidget
 {
-    Q_OBJECT
-
 public:
     DolphinDockTitleBar(QWidget* parent = 0) : QWidget(parent) {}
     virtual ~DolphinDockTitleBar() {}
@@ -55,7 +45,6 @@ DolphinDockWidget::DolphinDockWidget(const QString& title, QWidget* parent, Qt::
     m_locked(false),
     m_dockTitleBar(0)
 {
-    setFeatures(DefaultDockWidgetFeatures);
 }
 
 DolphinDockWidget::DolphinDockWidget(QWidget* parent, Qt::WindowFlags flags) :
@@ -63,7 +52,6 @@ DolphinDockWidget::DolphinDockWidget(QWidget* parent, Qt::WindowFlags flags) :
     m_locked(false),
     m_dockTitleBar(0)
 {
-    setFeatures(DefaultDockWidgetFeatures);
 }
 
 DolphinDockWidget::~DolphinDockWidget()
@@ -80,10 +68,8 @@ void DolphinDockWidget::setLocked(bool lock)
                 m_dockTitleBar = new DolphinDockTitleBar(this);
             }
             setTitleBarWidget(m_dockTitleBar);
-            setFeatures(QDockWidget::NoDockWidgetFeatures);
         } else {
             setTitleBarWidget(0);
-            setFeatures(DefaultDockWidgetFeatures);
         }
     }
 }

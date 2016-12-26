@@ -1,7 +1,6 @@
 /***************************************************************************
  *   Copyright (C) 2006-2010 by Peter Penz <peter.penz19@gmail.com>        *
  *   Copyright (C) 2006 by Gregor Kališnik <gregor@podnapisi.net>          *
- *   Copyright (C) 2012 by Stuart Citrin <ctrn3e8@gmail.com>               *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
  *   it under the terms of the GNU General Public License as published by  *
@@ -20,14 +19,15 @@
  ***************************************************************************/
 #include "filterbar.h"
 
+#include <QBoxLayout>
 #include <QKeyEvent>
 #include <QLabel>
 #include <QToolButton>
-#include <QHBoxLayout>
 
-#include <QIcon>
-#include <KLocalizedString>
-#include <QLineEdit>
+#include <KIcon>
+#include <KLocale>
+#include <KLineEdit>
+#include <KIconLoader>
 
 FilterBar::FilterBar(QWidget* parent) :
     QWidget(parent)
@@ -35,27 +35,19 @@ FilterBar::FilterBar(QWidget* parent) :
     // Create close button
     QToolButton *closeButton = new QToolButton(this);
     closeButton->setAutoRaise(true);
-    closeButton->setIcon(QIcon::fromTheme(QStringLiteral("dialog-close")));
+    closeButton->setIcon(KIcon("dialog-close"));
     closeButton->setToolTip(i18nc("@info:tooltip", "Hide Filter Bar"));
-    connect(closeButton, &QToolButton::clicked, this, &FilterBar::closeRequest);
-
-    // Create button to lock text when changing folders
-    m_lockButton = new QToolButton(this);
-    m_lockButton->setAutoRaise(true);
-    m_lockButton->setCheckable(true);
-    m_lockButton->setIcon(QIcon::fromTheme(QStringLiteral("object-unlocked")));
-    m_lockButton->setToolTip(i18nc("@info:tooltip", "Keep Filter When Changing Folders"));
-    connect(m_lockButton, &QToolButton::toggled, this, &FilterBar::slotToggleLockButton);
+    connect(closeButton, SIGNAL(clicked()), this, SIGNAL(closeRequest()));
 
     // Create label
     QLabel* filterLabel = new QLabel(i18nc("@label:textbox", "Filter:"), this);
 
     // Create filter editor
-    m_filterInput = new QLineEdit(this);
+    m_filterInput = new KLineEdit(this);
     m_filterInput->setLayoutDirection(Qt::LeftToRight);
-    m_filterInput->setClearButtonEnabled(true);
-    connect(m_filterInput, &QLineEdit::textChanged,
-            this, &FilterBar::filterChanged);
+    m_filterInput->setClearButtonShown(true);
+    connect(m_filterInput, SIGNAL(textChanged(const QString&)),
+            this, SIGNAL(filterChanged(const QString&)));
     setFocusProxy(m_filterInput);
 
     // Apply layout
@@ -64,22 +56,12 @@ FilterBar::FilterBar(QWidget* parent) :
     hLayout->addWidget(closeButton);
     hLayout->addWidget(filterLabel);
     hLayout->addWidget(m_filterInput);
-    hLayout->addWidget(m_lockButton);
 
     filterLabel->setBuddy(m_filterInput);
 }
 
 FilterBar::~FilterBar()
 {
-}
-
-void FilterBar::closeFilterBar()
-{
-    hide();
-    clear();
-    if (m_lockButton) {
-        m_lockButton->setChecked(false);
-    }
 }
 
 void FilterBar::selectAll()
@@ -92,23 +74,6 @@ void FilterBar::clear()
     m_filterInput->clear();
 }
 
-void FilterBar::slotUrlChanged()
-{
-    if (!m_lockButton || !(m_lockButton->isChecked())) {
-        clear();
-    }
-}
-
-void FilterBar::slotToggleLockButton(bool checked)
-{
-    if (checked) {
-        m_lockButton->setIcon(QIcon::fromTheme(QStringLiteral("object-locked")));
-    } else {
-        m_lockButton->setIcon(QIcon::fromTheme(QStringLiteral("object-unlocked")));
-        clear();
-    }
-}
-
 void FilterBar::showEvent(QShowEvent* event)
 {
     if (!event->spontaneous()) {
@@ -119,23 +84,13 @@ void FilterBar::showEvent(QShowEvent* event)
 void FilterBar::keyReleaseEvent(QKeyEvent* event)
 {
     QWidget::keyReleaseEvent(event);
-
-    switch (event->key()) {
-    case Qt::Key_Escape:
+    if (event->key() == Qt::Key_Escape) {
         if (m_filterInput->text().isEmpty()) {
             emit closeRequest();
         } else {
             m_filterInput->clear();
         }
-        break;
-
-    case Qt::Key_Enter:
-    case Qt::Key_Return:
-        emit focusViewRequest();
-        break;
-
-    default:
-        break;
     }
 }
 
+#include "filterbar.moc"

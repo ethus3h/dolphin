@@ -35,10 +35,10 @@ public:
     virtual ~StatusBarSettingsPage();
 
     /** @see SettingsPageBase::applySettings() */
-    virtual void applySettings() Q_DECL_OVERRIDE;
+    virtual void applySettings();
 
     /** @see SettingsPageBase::restoreDefaults() */
-    virtual void restoreDefaults() Q_DECL_OVERRIDE;
+    virtual void restoreDefaults();
 
 private:
     void loadSettings();

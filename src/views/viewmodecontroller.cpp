@@ -33,12 +33,12 @@ ViewModeController::~ViewModeController()
 {
 }
 
-QUrl ViewModeController::url() const
+KUrl ViewModeController::url() const
 {
     return m_url;
 }
 
-void ViewModeController::redirectToUrl(const QUrl& url)
+void ViewModeController::redirectToUrl(const KUrl& url)
 {
     m_url = url;
 }
@@ -76,7 +76,7 @@ int ViewModeController::zoomLevel() const
     return m_zoomLevel;
 }
 
-void ViewModeController::setUrl(const QUrl& url)
+void ViewModeController::setUrl(const KUrl& url)
 {
     if (m_url != url) {
         m_url = url;
@@ -85,3 +85,4 @@ void ViewModeController::setUrl(const QUrl& url)
     }
 }
 
+#include "viewmodecontroller.moc"

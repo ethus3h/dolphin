@@ -22,9 +22,10 @@
 
 #include <QObject>
 
-#include "dolphin_export.h"
+#include "libdolphin_export.h"
 
-class DolphinNewFileMenu;
+class KNewFileMenu;
+class KUrl;
 
 /**
  * @brief Allows to observe new file items that have been created
@@ -33,18 +34,17 @@ class DolphinNewFileMenu;
  * As soon as a DolphinNewFileMenu instance created a new item,
  * the observer will emit the signal itemCreated().
  */
-class DOLPHIN_EXPORT DolphinNewFileMenuObserver : public QObject
+class LIBDOLPHINPRIVATE_EXPORT DolphinNewFileMenuObserver : public QObject
 {
     Q_OBJECT
 
 public:
     static DolphinNewFileMenuObserver& instance();
-    void attach(const DolphinNewFileMenu* menu);
-    void detach(const DolphinNewFileMenu* menu);
+    void attach(const KNewFileMenu* menu);
+    void detach(const KNewFileMenu* menu);
 
 signals:
-    void itemCreated(const QUrl& url);
-    void errorMessage(const QString& error);
+    void itemCreated(const KUrl& url);
 
 private:
     DolphinNewFileMenuObserver();

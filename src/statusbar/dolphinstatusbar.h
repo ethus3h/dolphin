@@ -1,5 +1,6 @@
 /***************************************************************************
- *   Copyright (C) 2006-2012 by Peter Penz <peter.penz19@gmail.com>        *
+ *   Copyright (C) 2006 by Peter Penz                                      *
+ *   peter.penz@gmx.at                                                     *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
  *   it under the terms of the GNU General Public License as published by  *
@@ -20,10 +21,12 @@
 #ifndef DOLPHINSTATUSBAR_H
 #define DOLPHINSTATUSBAR_H
 
+#include "konq_statusbarmessagelabel.h"
 #include <QTime>
 #include <QWidget>
 
-class QUrl;
+class DolphinView;
+class KUrl;
 class StatusBarSpaceInfo;
 class QLabel;
 class QProgressBar;
@@ -34,18 +37,45 @@ class QTimer;
 /**
  * @brief Represents the statusbar of a Dolphin view.
  *
- * The statusbar allows to show messages, progress
- * information and space-information of a disk.
+ * The statusbar allows to show messages and progress
+ * information.
  */
 class DolphinStatusBar : public QWidget
 {
     Q_OBJECT
 
 public:
-    DolphinStatusBar(QWidget* parent);
+    /**
+     * Describes the type of the message text. Dependent
+     * from the type a corresponding icon and color is
+     * used for the message text.
+     */
+    enum Type {
+        Default = KonqStatusBarMessageLabel::Default,
+        OperationCompleted = KonqStatusBarMessageLabel::OperationCompleted,
+        Information = KonqStatusBarMessageLabel::Information,
+        Error = KonqStatusBarMessageLabel::Error
+    };
+
+    DolphinStatusBar(QWidget* parent, DolphinView* view);
+
     virtual ~DolphinStatusBar();
 
-    QString text() const;
+    /**
+     * Sets the message text to \a msg. Dependant
+     * from the given type \a type an icon is shown and
+     * the color of the text is adjusted. The height of
+     * the statusbar is automatically adjusted in a way,
+     * that the full text fits into the available width.
+     *
+     * If a progress is ongoing and a message
+     * with the type Type::Error is set, the progress
+     * is cleared automatically.
+     */
+    void setMessage(const QString& msg, Type type);
+    QString message() const;
+
+    Type type() const;
 
     /**
      * Sets the text for the progress information.
@@ -57,40 +87,32 @@ public:
 
     /**
      * Sets the progress in percent (0 - 100). The
-     * progress is shown delayed by 500 milliseconds:
-     * If the progress does reach 100 % within 500 milliseconds,
+     * progress is shown delayed by 1 second:
+     * If the progress does reach 100 % within 1 second,
      * the progress is not shown at all.
      */
     void setProgress(int percent);
     int progress() const;
 
     /**
-     * Replaces the text set by setText() by the text that
-     * has been set by setDefaultText(). It is assured that the previous
-     * text will be shown for at least 1 second. DolphinStatusBar::text()
-     * will return an empty string after the reset has been done.
+     * Clears the message text of the status bar by replacing
+     * the message with the default text, which can be set
+     * by DolphinStatusBar::setDefaultText(). The progress
+     * information is not cleared.
      */
-    void resetToDefaultText();
+    void clear();
 
     /**
      * Sets the default text, which is shown if the status bar
-     * is rest by DolphinStatusBar::resetToDefaultText().
+     * is cleared by DolphinStatusBar::clear().
      */
     void setDefaultText(const QString& text);
     QString defaultText() const;
 
-    QUrl url() const;
-    int zoomLevel() const;
-
     /**
      * Refreshes the status bar to get synchronized with the (updated) Dolphin settings.
      */
-    void readSettings();
-
-public slots:
-    void setText(const QString& text);
-    void setUrl(const QUrl& url);
-    void setZoomLevel(int zoomLevel);
+    void refresh();
 
 signals:
     /**
@@ -98,35 +120,28 @@ signals:
      */
     void stopPressed();
 
-    void zoomLevelChanged(int zoomLevel);
-
 protected:
-    virtual void contextMenuEvent(QContextMenuEvent* event) Q_DECL_OVERRIDE;
-    virtual bool eventFilter(QObject* obj, QEvent* event) Q_DECL_OVERRIDE;
+    /** @see QWidget::contextMenuEvent() */
+    virtual void contextMenuEvent(QContextMenuEvent* event);
 
 private slots:
+    /**
+     * Is invoked, when the URL of the DolphinView, where the
+     * statusbar belongs too, has been changed. The space information
+     * content is updated.
+     */
+    void updateSpaceInfoContent(const KUrl& url);
+
+    /**
+     * Sets the zoom level of the item view to \a zoomLevel.
+     */
+    void setZoomLevel(int zoomLevel);
+
+    void zoomOut();
+    void zoomIn();
     void showZoomSliderToolTip(int zoomLevel);
+
     void updateProgressInfo();
-
-    /**
-     * Updates the text for m_label and does an eliding in
-     * case if the text does not fit into the available width.
-     */
-    void updateLabelText();
-
-    /**
-     * Is invoked by m_resetToDefaultTextTimer and clears
-     * m_text so that the default text will be shown. This
-     * prevents that information-messages will be cleared
-     * too fast.
-     */
-    void slotResetToDefaultText();
-
-    /**
-     * Updates the text of the zoom slider tooltip to show
-     * the currently used size.
-     */
-    void updateZoomSliderToolTip(int zoomLevel);
 
 private:
     /**
@@ -137,22 +152,32 @@ private:
      */
     void setExtensionsVisible(bool visible);
 
+    /**
+     * Updates the text of the zoom slider tooltip to show
+     * the currently used size.
+     */
+    void updateZoomSliderToolTip(int zoomLevel);
+
 private:
-    QString m_text;
-    QString m_defaultText;
-    QLabel* m_label;
+    DolphinView* m_view;
+    KonqStatusBarMessageLabel* m_messageLabel;
     StatusBarSpaceInfo* m_spaceInfo;
 
+    QWidget* m_zoomWidget;
+    QToolButton* m_zoomOut;
     QSlider* m_zoomSlider;
+    QToolButton* m_zoomIn;
 
-    QLabel* m_progressTextLabel;
+    QLabel* m_progressText;
     QProgressBar* m_progressBar;
     QToolButton* m_stopButton;
     int m_progress;
     QTimer* m_showProgressBarTimer;
 
-    QTimer* m_resetToDefaultTextTimer;
-    QTime m_textTimestamp;
+    // Timestamp when the last message has been set that has not the type
+    // 'Default'. The timestamp is used to prevent that default messages
+    // hide more important messages after a very short delay.
+    QTime m_messageTimeStamp;
 };
 
 #endif

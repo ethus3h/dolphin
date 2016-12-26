@@ -20,36 +20,36 @@
 
 #include "statusbarspaceinfo.h"
 
-#include "spaceinfoobserver.h"
-
-#include <QMouseEvent>
-
-#include <KLocalizedString>
-#include <KNS3/KMoreToolsMenuFactory>
+#include <KDiskFreeSpaceInfo>
+#include <kmountpoint.h>
+#include <KLocale>
 #include <KIO/Job>
 
+#include <QTimer>
+#include <QKeyEvent>
 
 StatusBarSpaceInfo::StatusBarSpaceInfo(QWidget* parent) :
     KCapacityBar(KCapacityBar::DrawTextInline, parent),
-    m_observer(0)
+    m_kBSize(0),
+    m_timer(0)
 {
+    // Use a timer to update the space information. Polling is useful
+    // here, as files can be deleted/added outside the scope of Dolphin.
+    m_timer = new QTimer(this);
+    connect(m_timer, SIGNAL(timeout()), this, SLOT(refresh()));
 }
 
 StatusBarSpaceInfo::~StatusBarSpaceInfo()
 {
 }
 
-void StatusBarSpaceInfo::setUrl(const QUrl& url)
+void StatusBarSpaceInfo::setUrl(const KUrl& url)
 {
-    if (m_url != url) {
-        m_url = url;
-        if (m_observer) {
-            m_observer->setUrl(url);
-        }
-    }
+    m_url = url;
+    refresh();
 }
 
-QUrl StatusBarSpaceInfo::url() const
+KUrl StatusBarSpaceInfo::url() const
 {
     return m_url;
 }
@@ -57,51 +57,59 @@ QUrl StatusBarSpaceInfo::url() const
 void StatusBarSpaceInfo::showEvent(QShowEvent* event)
 {
     KCapacityBar::showEvent(event);
-    m_observer.reset(new SpaceInfoObserver(m_url, this));
-    slotValuesChanged();
-    connect(m_observer.data(), &SpaceInfoObserver::valuesChanged, this, &StatusBarSpaceInfo::slotValuesChanged);
+    if (!event->spontaneous()) {
+        refresh();
+        m_timer->start(10000);
+    }
 }
 
 void StatusBarSpaceInfo::hideEvent(QHideEvent* event)
 {
-    m_observer.reset();
+    m_timer->stop();
     KCapacityBar::hideEvent(event);
 }
 
-void StatusBarSpaceInfo::mousePressEvent(QMouseEvent* event)
+void StatusBarSpaceInfo::refresh()
 {
-    if (event->button() == Qt::LeftButton) {
-        // Creates a menu with tools that help to find out more about free
-        // disk space for the given url.
-
-        // Note that this object must live long enough in case the user opens
-        // the "Configure..." dialog
-        KMoreToolsMenuFactory menuFactory(QStringLiteral("dolphin/statusbar-diskspace-menu"));
-        auto menu = menuFactory.createMenuFromGroupingNames(
-            { "disk-usage", "more:", "disk-partitions" }, m_url);
-
-        menu->exec(QCursor::pos());
+    if (!isVisible()) {
+        return;
     }
-}
 
-void StatusBarSpaceInfo::slotValuesChanged()
-{
-    Q_ASSERT(m_observer);
-    const quint64 size = m_observer->size();
-    if (size == 0) {
+    // KDiskFreeSpace is for local paths only
+    if (!m_url.isLocalFile()) {
         setText(i18nc("@info:status", "Unknown size"));
         setValue(0);
         update();
-    } else {
-        const quint64 available = m_observer->available();
-        const quint64 used = size - available;
-        const int percentUsed = qRound(100.0 * qreal(used) / qreal(size));
+        return;
+    }
 
-        setText(i18nc("@info:status Free disk space", "%1 free", KIO::convertSize(available)));
+    KMountPoint::Ptr mp = KMountPoint::currentMountPoints().findByPath(m_url.toLocalFile());
+    if (!mp) {
+        return;
+    }
+
+    KDiskFreeSpaceInfo job = KDiskFreeSpaceInfo::freeSpaceInfo(mp->mountPoint());
+    if (!job.isValid()) {
+        setText(i18nc("@info:status", "Unknown size"));
+        setValue(0);
+        update();
+        return;
+    }
+
+    KIO::filesize_t kBSize = job.size() / 1024;
+    KIO::filesize_t kBUsed = job.used() / 1024;
+
+    const bool valuesChanged = (kBUsed != static_cast<quint64>(value())) || (kBSize != m_kBSize);
+    if (valuesChanged) {
+        setText(i18nc("@info:status Free disk space", "%1 free",
+                KIO::convertSize(job.available())));
+
         setUpdatesEnabled(false);
-        setValue(percentUsed);
+        m_kBSize = kBSize;
+        setValue(kBSize > 0 ? (kBUsed * 100) / kBSize : 0);
         setUpdatesEnabled(true);
         update();
     }
 }
 
+#include "statusbarspaceinfo.moc"

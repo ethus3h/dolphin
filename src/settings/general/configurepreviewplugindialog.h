@@ -20,12 +20,14 @@
 #ifndef CONFIGUREPREVIEWPLUGINDIALOG_H
 #define CONFIGUREPREVIEWPLUGINDIALOG_H
 
-#include <QDialog>
+#include <KDialog>
+
+class ThumbCreatorV2;
 
 /**
  * @brief Dialog for configuring preview-plugins.
  */
-class ConfigurePreviewPluginDialog : public QDialog
+class ConfigurePreviewPluginDialog : public KDialog
 {
     Q_OBJECT
 
@@ -37,10 +39,17 @@ public:
      *                         widget.
      * @param parent           Parent widget.
      */
-    ConfigurePreviewPluginDialog(const QString& pluginName,
-                                 const QString& desktopEntryName,
-                                 QWidget* parent);
-    virtual ~ConfigurePreviewPluginDialog() = default;
+    explicit ConfigurePreviewPluginDialog(const QString& pluginName,
+                                          const QString& desktopEntryName,
+                                          QWidget* parent = 0);
+    virtual ~ConfigurePreviewPluginDialog();
+
+private slots:
+    void slotOk();
+
+private:
+    QWidget* m_configurationWidget;
+    ThumbCreatorV2* m_previewPlugin;
 };
 
 #endif

@@ -17,9 +17,10 @@
  *   51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA            *
  ***************************************************************************/
 
-#include "search/dolphinsearchbox.h"
+#include <qtest_kde.h>
 
-#include <QTest>
+#include "search/dolphinsearchbox.h"
+#include <qtestkeyboard.h>
 
 class DolphinSearchBoxTest : public QObject
 {
@@ -64,6 +65,6 @@ void DolphinSearchBoxTest::testTextClearing()
     QVERIFY(m_searchBox->text().isEmpty());
 }
 
-QTEST_MAIN(DolphinSearchBoxTest)
+QTEST_KDEMAIN(DolphinSearchBoxTest, GUI)
 
 #include "dolphinsearchboxtest.moc"

@@ -25,7 +25,11 @@
 
 #include <KFileItem>
 
+class DolphinModel;
+class DolphinSortFilterProxyModel;
 class FileMetaDataToolTip;
+class QAbstractItemView;
+class QModelIndex;
 class QTimer;
 
 /**
@@ -40,23 +44,23 @@ class ToolTipManager : public QObject
     Q_OBJECT
 
 public:
-    explicit ToolTipManager(QWidget* parent);
+    explicit ToolTipManager(QAbstractItemView* parent,
+                            DolphinSortFilterProxyModel* model);
     virtual ~ToolTipManager();
 
+public slots:
     /**
-     * Triggers the showing of the tooltip for the item \p item
-     * where the item has the maximum boundaries of \p itemRect.
-     * The tooltip manager takes care that the tooltip is shown
-     * slightly delayed.
-     */
-    void showToolTip(const KFileItem& item, const QRectF& itemRect);
-
-    /**
-     * Hides the currently shown tooltip.
+     * Hides the currently shown tooltip. Invoking this method is
+     * only needed when the tooltip should be hidden although
+     * an item is hovered.
      */
     void hideToolTip();
 
+protected:
+    virtual bool eventFilter(QObject* watched, QEvent* event);
+
 private slots:
+    void requestToolTip(const QModelIndex& index);
     void startContentRetrieval();
     void setPreviewPix(const KFileItem& item, const QPixmap& pix);
     void previewFailed();
@@ -64,6 +68,10 @@ private slots:
     void showToolTip();
 
 private:
+    QAbstractItemView* m_view;
+    DolphinModel* m_dolphinModel;
+    DolphinSortFilterProxyModel* m_proxyModel;
+
     /// Timeout from requesting a tooltip until the tooltip
     /// should be shown
     QTimer* m_showToolTipTimer;
@@ -77,7 +85,6 @@ private:
     bool m_toolTipRequested;
     bool m_metaDataRequested;
     bool m_appliedWaitCursor;
-    int m_margin;
     KFileItem m_item;
     QRect m_itemRect;
 };

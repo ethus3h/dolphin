@@ -23,28 +23,33 @@
 #include "configurepreviewplugindialog.h"
 
 #include <KConfigGroup>
-#include <KLocalizedString>
+#include <KDialog>
+#include <KGlobal>
+#include <KLocale>
+#include <KNumInput>
 #include <KServiceTypeTrader>
 #include <KService>
 
+#include <settings/dolphinsettings.h>
 #include <settings/serviceitemdelegate.h>
 #include <settings/servicemodel.h>
 
 #include <QCheckBox>
 #include <QGroupBox>
-#include <QHBoxLayout>
 #include <QLabel>
 #include <QListView>
 #include <QPainter>
 #include <QScrollBar>
 #include <QShowEvent>
 #include <QSlider>
-#include <QSpinBox>
 #include <QSortFilterProxyModel>
+#include <QGridLayout>
 #include <QVBoxLayout>
 
 // default settings
 namespace {
+    const bool UseThumbnails = true;
+    const int MaxLocalPreviewSize = 5;  // 5 MB
     const int MaxRemotePreviewSize = 0; // 0 MB
 }
 
@@ -53,17 +58,21 @@ PreviewsSettingsPage::PreviewsSettingsPage(QWidget* parent) :
     m_initialized(false),
     m_listView(0),
     m_enabledPreviewPlugins(),
+    m_localFileSizeBox(0),
     m_remoteFileSizeBox(0)
 {
     QVBoxLayout* topLayout = new QVBoxLayout(this);
+    topLayout->setSpacing(KDialog::spacingHint());
+    topLayout->setMargin(KDialog::marginHint());
 
-    QLabel* showPreviewsLabel = new QLabel(i18nc("@title:group", "Show previews for:"), this);
+    // Create group box "Show previews for:"
+    QGroupBox* listBox = new QGroupBox(i18nc("@title:group", "Show previews for"), this);
 
     m_listView = new QListView(this);
 
     ServiceItemDelegate* delegate = new ServiceItemDelegate(m_listView, m_listView);
-    connect(delegate, &ServiceItemDelegate::requestServiceConfiguration,
-            this, &PreviewsSettingsPage::configureService);
+    connect(delegate, SIGNAL(requestServiceConfiguration(QModelIndex)),
+            this, SLOT(configureService(QModelIndex)));
 
     ServiceModel* serviceModel = new ServiceModel(this);
     QSortFilterProxyModel* proxyModel = new QSortFilterProxyModel(this);
@@ -74,25 +83,42 @@ PreviewsSettingsPage::PreviewsSettingsPage(QWidget* parent) :
     m_listView->setItemDelegate(delegate);
     m_listView->setVerticalScrollMode(QListView::ScrollPerPixel);
 
-    QLabel* remoteFileSizeLabel = new QLabel(i18nc("@label", "Skip previews for remote files above:"), this);
+    QVBoxLayout* listBoxLayout = new QVBoxLayout(listBox);
+    listBoxLayout->addWidget(m_listView);
 
-    m_remoteFileSizeBox = new QSpinBox(this);
+    // Create group box "Don't create previews for"
+    QGroupBox* fileSizeBox = new QGroupBox(i18nc("@title:group", "Do not create previews for"), this);
+
+    QLabel* localFileSizeLabel = new QLabel(i18nc("@label Don't create previews for: <Local files above:> XX MByte",
+                                                  "Local files above:"), this);
+
+    m_localFileSizeBox = new KIntSpinBox(this);
+    m_localFileSizeBox->setSingleStep(1);
+    m_localFileSizeBox->setSuffix(QLatin1String(" MB"));
+    m_localFileSizeBox->setRange(0, 9999); /* MB */
+
+    QLabel* remoteFileSizeLabel = new QLabel(i18nc("@label Don't create previews for: <Remote files above:> XX MByte",
+                                                   "Remote files above:"), this);
+
+    m_remoteFileSizeBox = new KIntSpinBox(this);
     m_remoteFileSizeBox->setSingleStep(1);
-    m_remoteFileSizeBox->setSuffix(QStringLiteral(" MB"));
-    m_remoteFileSizeBox->setRange(0, 9999999); /* MB */
+    m_remoteFileSizeBox->setSuffix(QLatin1String(" MB"));
+    m_remoteFileSizeBox->setRange(0, 9999); /* MB */
 
-    QHBoxLayout* fileSizeBoxLayout = new QHBoxLayout(this);
-    fileSizeBoxLayout->addWidget(remoteFileSizeLabel, 0, Qt::AlignRight);
-    fileSizeBoxLayout->addWidget(m_remoteFileSizeBox);
+    QGridLayout* fileSizeBoxLayout = new QGridLayout(fileSizeBox);
+    fileSizeBoxLayout->addWidget(localFileSizeLabel, 0, 0, Qt::AlignRight);
+    fileSizeBoxLayout->addWidget(m_localFileSizeBox, 0, 1);
+    fileSizeBoxLayout->addWidget(remoteFileSizeLabel, 1, 0, Qt::AlignRight);
+    fileSizeBoxLayout->addWidget(m_remoteFileSizeBox, 1, 1);
 
-    topLayout->addWidget(showPreviewsLabel);
-    topLayout->addWidget(m_listView);
-    topLayout->addLayout(fileSizeBoxLayout);
+    topLayout->addWidget(listBox);
+    topLayout->addWidget(fileSizeBox);
 
     loadSettings();
 
-    connect(m_listView, &QListView::clicked, this, &PreviewsSettingsPage::changed);
-    connect(m_remoteFileSizeBox, static_cast<void(QSpinBox::*)(int)>(&QSpinBox::valueChanged), this, &PreviewsSettingsPage::changed);
+    connect(m_listView, SIGNAL(clicked(QModelIndex)), this, SIGNAL(changed()));
+    connect(m_localFileSizeBox, SIGNAL(valueChanged(int)), this, SIGNAL(changed()));
+    connect(m_remoteFileSizeBox, SIGNAL(valueChanged(int)), this, SIGNAL(changed()));
 }
 
 PreviewsSettingsPage::~PreviewsSettingsPage()
@@ -115,18 +141,21 @@ void PreviewsSettingsPage::applySettings()
         }
     }
 
-    KConfigGroup globalConfig(KSharedConfig::openConfig(), QStringLiteral("PreviewSettings"));
+    KConfigGroup globalConfig(KGlobal::config(), QLatin1String("PreviewSettings"));
     globalConfig.writeEntry("Plugins", m_enabledPreviewPlugins);
 
-    const qulonglong maximumRemoteSize = static_cast<qulonglong>(m_remoteFileSizeBox->value()) * 1024 * 1024;
+    globalConfig.writeEntry("MaximumSize",
+                            m_localFileSizeBox->value() * 1024 * 1024,
+                            KConfigBase::Normal | KConfigBase::Global);
     globalConfig.writeEntry("MaximumRemoteSize",
-                            maximumRemoteSize,
+                            m_remoteFileSizeBox->value() * 1024 * 1024,
                             KConfigBase::Normal | KConfigBase::Global);
     globalConfig.sync();
 }
 
 void PreviewsSettingsPage::restoreDefaults()
 {
+    m_localFileSizeBox->setValue(MaxLocalPreviewSize);
     m_remoteFileSizeBox->setValue(MaxRemotePreviewSize);
 }
 
@@ -154,9 +183,9 @@ void PreviewsSettingsPage::loadPreviewPlugins()
 {
     QAbstractItemModel* model = m_listView->model();
 
-    const KService::List plugins = KServiceTypeTrader::self()->query(QStringLiteral("ThumbCreator"));
-    foreach (const KService::Ptr& service, plugins) {
-        const bool configurable = service->property(QStringLiteral("Configurable"), QVariant::Bool).toBool();
+    const KService::List plugins = KServiceTypeTrader::self()->query(QLatin1String("ThumbCreator"));
+    foreach (const KSharedPtr<KService>& service, plugins) {
+        const bool configurable = service->property("Configurable", QVariant::Bool).toBool();
         const bool show = m_enabledPreviewPlugins.contains(service->desktopEntryName());
 
         model->insertRow(0);
@@ -172,15 +201,32 @@ void PreviewsSettingsPage::loadPreviewPlugins()
 
 void PreviewsSettingsPage::loadSettings()
 {
-    KConfigGroup globalConfig(KSharedConfig::openConfig(), "PreviewSettings");
+    KConfigGroup globalConfig(KGlobal::config(), "PreviewSettings");
     m_enabledPreviewPlugins = globalConfig.readEntry("Plugins", QStringList()
-                                                     << QStringLiteral("directorythumbnail")
-                                                     << QStringLiteral("imagethumbnail")
-                                                     << QStringLiteral("jpegthumbnail"));
+                                                     << QLatin1String("directorythumbnail")
+                                                     << QLatin1String("imagethumbnail")
+                                                     << QLatin1String("jpegthumbnail"));
 
-    const qulonglong defaultRemotePreview = static_cast<qulonglong>(MaxRemotePreviewSize) * 1024 * 1024;
-    const qulonglong maxRemoteByteSize = globalConfig.readEntry("MaximumRemoteSize", defaultRemotePreview);
+    // If the user is upgrading from KDE <= 4.6, we must check if he had the 'jpegrotatedthumbnail' plugin enabled.
+    // This plugin does not exist any more in KDE >= 4.7, so we have to replace it with the 'jpegthumbnail' plugin.
+    //
+    // Note that the upgrade to the correct plugin is done already in KFilePreviewGenerator. However, if Konqueror is
+    // opened in web browsing mode and the Settings dialog is opened, we might end up here before KFilePreviewGenerator's
+    // constructor is ever called -> the plugin replacement should be done here as well.
+    if(m_enabledPreviewPlugins.contains(QLatin1String("jpegrotatedthumbnail"))) {
+        m_enabledPreviewPlugins.removeAll(QLatin1String("jpegrotatedthumbnail"));
+        m_enabledPreviewPlugins.append(QLatin1String("jpegthumbnail"));
+        globalConfig.writeEntry("Plugins", m_enabledPreviewPlugins);
+        globalConfig.sync();
+    }
+
+    const int maxLocalByteSize = globalConfig.readEntry("MaximumSize", MaxLocalPreviewSize * 1024 * 1024);
+    const int maxLocalMByteSize = maxLocalByteSize / (1024 * 1024);
+    m_localFileSizeBox->setValue(maxLocalMByteSize);
+
+    const int maxRemoteByteSize = globalConfig.readEntry("MaximumRemoteSize", MaxRemotePreviewSize * 1024 * 1024);
     const int maxRemoteMByteSize = maxRemoteByteSize / (1024 * 1024);
     m_remoteFileSizeBox->setValue(maxRemoteMByteSize);
 }
 
+#include "previewssettingspage.moc"

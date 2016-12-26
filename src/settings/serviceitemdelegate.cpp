@@ -19,9 +19,8 @@
 
 #include "serviceitemdelegate.h"
 
-#include "dolphindebug.h"
-#include <QPushButton>
-#include <QIcon>
+#include <KDebug>
+#include <KPushButton>
 
 #include "servicemodel.h"
 
@@ -66,18 +65,15 @@ void ServiceItemDelegate::paint(QPainter* painter, const QStyleOptionViewItem& o
     painter->restore();
 }
 
-QList<QWidget*> ServiceItemDelegate::createItemWidgets(const QModelIndex&) const
+QList<QWidget*> ServiceItemDelegate::createItemWidgets() const
 {
     QCheckBox* checkBox = new QCheckBox();
-    QPalette palette = checkBox->palette();
-    palette.setColor(QPalette::WindowText, palette.color(QPalette::Text));
-    checkBox->setPalette(palette);
-    connect(checkBox, &QCheckBox::clicked, this, &ServiceItemDelegate::slotCheckBoxClicked);
+    connect(checkBox, SIGNAL(clicked(bool)), this, SLOT(slotCheckBoxClicked(bool)));
 
-    QPushButton* configureButton = new QPushButton();
-    connect(configureButton, &QPushButton::clicked, this, &ServiceItemDelegate::slotConfigureButtonClicked);
+    KPushButton* configureButton = new KPushButton();
+    connect(configureButton, SIGNAL(clicked()), this, SLOT(slotConfigureButtonClicked()));
 
-    return {checkBox, configureButton};
+    return QList<QWidget*>() << checkBox << configureButton;
 }
 
 void ServiceItemDelegate::updateItemWidgets(const QList<QWidget*> widgets,
@@ -85,7 +81,7 @@ void ServiceItemDelegate::updateItemWidgets(const QList<QWidget*> widgets,
                                               const QPersistentModelIndex& index) const
 {
     QCheckBox* checkBox = static_cast<QCheckBox*>(widgets[0]);
-    QPushButton *configureButton = static_cast<QPushButton*>(widgets[1]);
+    KPushButton *configureButton = static_cast<KPushButton*>(widgets[1]);
 
     const int itemHeight = sizeHint(option, index).height();
 
@@ -94,7 +90,7 @@ void ServiceItemDelegate::updateItemWidgets(const QList<QWidget*> widgets,
     checkBox->setText(model->data(index).toString());
     const QString iconName = model->data(index, Qt::DecorationRole).toString();
     if (!iconName.isEmpty()) {
-        checkBox->setIcon(QIcon::fromTheme(iconName));
+        checkBox->setIcon(KIcon(iconName));
     }
     checkBox->setChecked(model->data(index, Qt::CheckStateRole).toBool());
 
@@ -110,7 +106,7 @@ void ServiceItemDelegate::updateItemWidgets(const QList<QWidget*> widgets,
     // Update the configuration button
     if (configurable) {
         configureButton->setEnabled(checkBox->isChecked());
-        configureButton->setIcon(QIcon::fromTheme(QStringLiteral("configure")));
+        configureButton->setIcon(KIcon("configure"));
         configureButton->resize(configureButton->sizeHint());
         configureButton->move(option.rect.right() - configureButton->width(),
                               (itemHeight - configureButton->height()) / 2);
@@ -129,3 +125,4 @@ void ServiceItemDelegate::slotConfigureButtonClicked()
     emit requestServiceConfiguration(focusedIndex());
 }
 
+#include "serviceitemdelegate.moc"

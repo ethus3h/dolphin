@@ -19,30 +19,29 @@
 
 #include "renamedialog.h"
 
-#include <KLocalizedString>
-#include <KJobWidgets>
-#include <KIO/CopyJob>
-#include <KIO/FileUndoManager>
-#include <KJobUiDelegate>
+#include <KLineEdit>
+#include <KLocale>
+#include <konq_operations.h>
+#include <KStringHandler>
 
-#include <QHBoxLayout>
 #include <QLabel>
 #include <QVBoxLayout>
-#include <QMimeDatabase>
-#include <QDialogButtonBox>
-#include <QPushButton>
-#include <QLineEdit>
-#include <QSpinBox>
-#include <KGuiItem>
+
+/**
+ * Helper function for sorting items with qSort() in
+ * DolphinView::renameSelectedItems().
+ */
+bool lessThan(const KFileItem& item1, const KFileItem& item2)
+{
+    return KStringHandler::naturalCompare(item1.name(), item2.name()) < 0;
+}
 
 RenameDialog::RenameDialog(QWidget *parent, const KFileItemList& items) :
-    QDialog(parent),
+    KDialog(parent),
     m_renameOneItem(false),
     m_newName(),
     m_lineEdit(0),
-    m_items(items),
-    m_allExtensionsDifferent(true),
-    m_spinBox(0)
+    m_items(items)
 {
     const QSize minSize = minimumSize();
     setMinimumSize(QSize(320, minSize.height()));
@@ -51,33 +50,24 @@ RenameDialog::RenameDialog(QWidget *parent, const KFileItemList& items) :
     Q_ASSERT(itemCount >= 1);
     m_renameOneItem = (itemCount == 1);
 
-    setWindowTitle(m_renameOneItem ?
+    setCaption(m_renameOneItem ?
                i18nc("@title:window", "Rename Item") :
                i18nc("@title:window", "Rename Items"));
-    QDialogButtonBox *buttonBox = new QDialogButtonBox(QDialogButtonBox::Ok|QDialogButtonBox::Cancel);
-    QVBoxLayout *mainLayout = new QVBoxLayout;
-    setLayout(mainLayout);
-    m_okButton = buttonBox->button(QDialogButtonBox::Ok);
-    m_okButton->setDefault(true);
-    m_okButton->setShortcut(Qt::CTRL | Qt::Key_Return);
-    connect(buttonBox, &QDialogButtonBox::accepted, this, &RenameDialog::slotAccepted);
-    connect(buttonBox, &QDialogButtonBox::rejected, this, &RenameDialog::reject);
-    m_okButton->setDefault(true);
+    setButtons(Ok | Cancel);
+    setDefaultButton(Ok);
 
-    KGuiItem::assign(m_okButton, KGuiItem(i18nc("@action:button", "&Rename"), QStringLiteral("dialog-ok-apply")));
+    setButtonGuiItem(Ok, KGuiItem(i18nc("@action:button", "&Rename"), "dialog-ok-apply"));
 
     QWidget* page = new QWidget(this);
-    mainLayout->addWidget(page);
-    mainLayout->addWidget(buttonBox);
+    setMainWidget(page);
 
     QVBoxLayout* topLayout = new QVBoxLayout(page);
 
     QLabel* editLabel = 0;
     if (m_renameOneItem) {
         m_newName = items.first().name();
-        editLabel = new QLabel(xi18nc("@label:textbox", "Rename the item <filename>%1</filename> to:", m_newName),
+        editLabel = new QLabel(i18nc("@label:textbox", "Rename the item <filename>%1</filename> to:", m_newName),
                                page);
-        editLabel->setTextFormat(Qt::PlainText);
     } else {
         m_newName = i18nc("@info:status", "New name #");
         editLabel = new QLabel(i18ncp("@label:textbox",
@@ -86,61 +76,50 @@ RenameDialog::RenameDialog(QWidget *parent, const KFileItemList& items) :
                                page);
     }
 
-    m_lineEdit = new QLineEdit(page);
-    mainLayout->addWidget(m_lineEdit);
-    connect(m_lineEdit, &QLineEdit::textChanged, this, &RenameDialog::slotTextChanged);
+    m_lineEdit = new KLineEdit(page);
+    connect(m_lineEdit, SIGNAL(textChanged(QString)), this, SLOT(slotTextChanged(QString)));
+
+    QString fileName = items[0].url().prettyUrl();
+    QString extension = KMimeType::extractKnownExtension(fileName.toLower());
+    if (!extension.isEmpty()) {
+        extension.insert(0, '.');
+        // The first item seems to have a extension (e. g. '.jpg' or '.txt'). Now
+        // check whether all other URLs have the same extension. If this is the
+        // case, add this extension to the name suggestion.
+        for (int i = 1; i < itemCount; ++i) {
+            fileName = items[i].url().prettyUrl().toLower();
+            if (!fileName.endsWith(extension)) {
+                // at least one item does not have the same extension
+                extension.truncate(0);
+                break;
+            }
+        }
+    }
 
     int selectionLength = m_newName.length();
-    if (m_renameOneItem) {
-        const QString fileName = items.first().url().toDisplayString();
-        QMimeDatabase db;
-        const QString extension = db.suffixForFileName(fileName.toLower());
+    if (!m_renameOneItem) {
+        --selectionLength; // don't select the # character
+    }
 
-        // If the current item is a directory, select the whole file name.
-        if ((extension.length() > 0) && !items.first().isDir()) {
-            // Don't select the extension
-            selectionLength -= extension.length() + 1;
+    const int extensionLength = extension.length();
+    if (extensionLength > 0) {
+        if (m_renameOneItem) {
+            selectionLength -= extensionLength;
+        } else {
+            m_newName.append(extension);
         }
-    } else {
-         // Don't select the # character
-        --selectionLength;
     }
 
     m_lineEdit->setText(m_newName);
     m_lineEdit->setSelection(0, selectionLength);
+    m_lineEdit->setFocus();
 
     topLayout->addWidget(editLabel);
     topLayout->addWidget(m_lineEdit);
 
     if (!m_renameOneItem) {
-        QSet<QString> extensions;
-        foreach (const KFileItem& item, m_items) {
-            QMimeDatabase db;
-            const QString extension = db.suffixForFileName(item.url().toDisplayString().toLower());
-
-            if (extensions.contains(extension)) {
-                m_allExtensionsDifferent = false;
-                break;
-            }
-
-            extensions.insert(extension);
-        }
-
-        QLabel* infoLabel = new QLabel(i18nc("@info", "# will be replaced by ascending numbers starting with:"), page);
-        mainLayout->addWidget(infoLabel);
-        m_spinBox = new QSpinBox(page);
-        m_spinBox->setMaximum(10000);
-        m_spinBox->setMinimum(0);
-        m_spinBox->setSingleStep(1);
-        m_spinBox->setValue(1);
-        m_spinBox->setDisplayIntegerBase(10);
-
-        QHBoxLayout* horizontalLayout = new QHBoxLayout(page);
-        horizontalLayout->setMargin(0);
-        horizontalLayout->addWidget(infoLabel);
-        horizontalLayout->addWidget(m_spinBox);
-
-        topLayout->addLayout(horizontalLayout);
+        QLabel* infoLabel = new QLabel(i18nc("@info", "(# will be replaced by ascending numbers)"), page);
+        topLayout->addWidget(infoLabel);
     }
 }
 
@@ -148,79 +127,66 @@ RenameDialog::~RenameDialog()
 {
 }
 
-void RenameDialog::renameItem(const KFileItem &item, const QString& newName)
+void RenameDialog::slotButtonClicked(int button)
 {
-    const QUrl oldUrl = item.url();
-    QUrl newUrl = oldUrl.adjusted(QUrl::RemoveFilename);
-    newUrl.setPath(newUrl.path() + KIO::encodeFileName(newName));
+    if (button == KDialog::Ok) {
+        m_newName = m_lineEdit->text();
 
-    QWidget* widget = parentWidget();
-    if (!widget) {
-        widget = this;
+        if (m_renameOneItem) {
+            Q_ASSERT(m_items.count() == 1);
+            const KUrl oldUrl = m_items.first().url();
+            KUrl newUrl = oldUrl;
+            newUrl.setFileName(KIO::encodeFileName(m_newName));
+            KonqOperations::rename(this, oldUrl, newUrl);
+        } else {
+            renameItems();
+        }
     }
 
-    KIO::Job * job = KIO::moveAs(oldUrl, newUrl);
-    KJobWidgets::setWindow(job, widget);
-    KIO::FileUndoManager::self()->recordJob(KIO::FileUndoManager::Rename, {oldUrl}, newUrl, job);
-    job->ui()->setAutoErrorHandlingEnabled(true);
-}
-
-void RenameDialog::slotAccepted()
-{
-    m_newName = m_lineEdit->text();
-
-    if (m_renameOneItem) {
-        Q_ASSERT(m_items.count() == 1);
-        renameItem(m_items.first(), m_newName);
-    } else {
-        renameItems();
-    }
-    accept();
+    KDialog::slotButtonClicked(button);
 }
 
 void RenameDialog::slotTextChanged(const QString& newName)
 {
     bool enable = !newName.isEmpty() && (newName != QLatin1String("..")) && (newName != QLatin1String("."));
-    if (enable && !m_renameOneItem) {
-        const int count = newName.count(QLatin1Char('#'));
-        if (count == 0) {
-            // Renaming multiple files without '#' will only work if all extensions are different.
-            enable = m_allExtensionsDifferent;
+    if (enable) {
+        if (m_renameOneItem) {
+            enable = enable && (newName != m_newName);
         } else {
             // Assure that the new name contains exactly one # (or a connected sequence of #'s)
-            const int first = newName.indexOf(QLatin1Char('#'));
-            const int last = newName.lastIndexOf(QLatin1Char('#'));
-            enable = (last - first + 1 == count);
+            const int minSplitCount = 1;
+            int maxSplitCount = 2;
+            if (newName.startsWith(QLatin1Char('#'))) {
+                --maxSplitCount;
+            }
+            if (newName.endsWith(QLatin1Char('#'))) {
+                --maxSplitCount;
+            }
+            const int splitCount = newName.split(QLatin1Char('#'), QString::SkipEmptyParts).count();
+            enable = enable && (splitCount >= minSplitCount) && (splitCount <= maxSplitCount);
         }
     }
-    m_okButton->setEnabled(enable);
-}
-
-void RenameDialog::showEvent(QShowEvent* event)
-{
-    m_lineEdit->setFocus();
-
-    QDialog::showEvent(event);
+    enableButtonOk(enable);
 }
 
 void RenameDialog::renameItems()
 {
+    // Currently the items are sorted by the selection order, resort
+    // them by the filename. This assures that the new sort order is similar to
+    // the current filename sort order.
+    qSort(m_items.begin(), m_items.end(), lessThan);
+
     // Iterate through all items and rename them...
-    int index = m_spinBox->value();
+    int index = 1;
     foreach (const KFileItem& item, m_items) {
-        QString newName = indexedName(m_newName, index, QLatin1Char('#'));
+        const QString newName = indexedName(m_newName, index, QLatin1Char('#'));
         ++index;
 
-        const QUrl oldUrl = item.url();
-        QMimeDatabase db;
-        const QString extension = db.suffixForFileName(oldUrl.path().toLower());
-        if (!extension.isEmpty()) {
-            newName.append(QLatin1Char('.'));
-            newName.append(extension);
-        }
-
+        const KUrl oldUrl = item.url();
         if (oldUrl.fileName() != newName) {
-            renameItem(item, newName);
+            KUrl newUrl = oldUrl;
+            newUrl.setFileName(KIO::encodeFileName(newName));
+            KonqOperations::rename(this, oldUrl, newUrl);
         }
     }
 }
@@ -244,3 +210,4 @@ QString RenameDialog::indexedName(const QString& name, int index, const QChar& i
     return newName;
 }
 
+#include "renamedialog.moc"

@@ -21,34 +21,25 @@
 #include "treeviewcontextmenu.h"
 
 #include <KFileItem>
-#include <KIO/CopyJob>
+#include <KIconLoader>
 #include <KIO/DeleteJob>
-#include <KIO/JobUiDelegate>
-#include <QMenu>
-#include <QIcon>
-#include <KJobWidgets>
-#include <KSharedConfig>
-#include <KConfigGroup>
-#include <KUrlMimeData>
+#include <KMenu>
+#include <konqmimedata.h>
 #include <KFileItemListProperties>
-#include <KLocalizedString>
-#include <KIO/PasteJob>
-#include <KIO/Paste>
-#include <KIO/FileUndoManager>
+#include <konq_operations.h>
+#include <KLocale>
 #include <KPropertiesDialog>
 
 #include "folderspanel.h"
 
 #include <QApplication>
 #include <QClipboard>
-#include <QMimeData>
-#include <QPointer>
 
 TreeViewContextMenu::TreeViewContextMenu(FoldersPanel* parent,
                                          const KFileItem& fileInfo) :
     QObject(parent),
     m_parent(parent),
-    m_fileItem(fileInfo)
+    m_fileInfo(fileInfo)
 {
 }
 
@@ -58,25 +49,24 @@ TreeViewContextMenu::~TreeViewContextMenu()
 
 void TreeViewContextMenu::open()
 {
-    QMenu* popup = new QMenu(m_parent);
+    KMenu* popup = new KMenu(m_parent);
 
-    if (!m_fileItem.isNull()) {
-        KFileItemListProperties capabilities(KFileItemList() << m_fileItem);
+    if (!m_fileInfo.isNull()) {
+        KFileItemListProperties capabilities(KFileItemList() << m_fileInfo);
 
         // insert 'Cut', 'Copy' and 'Paste'
-        QAction* cutAction = new QAction(QIcon::fromTheme(QStringLiteral("edit-cut")), i18nc("@action:inmenu", "Cut"), this);
+        QAction* cutAction = new QAction(KIcon("edit-cut"), i18nc("@action:inmenu", "Cut"), this);
         cutAction->setEnabled(capabilities.supportsMoving());
-        connect(cutAction, &QAction::triggered, this, &TreeViewContextMenu::cut);
+        connect(cutAction, SIGNAL(triggered()), this, SLOT(cut()));
 
-        QAction* copyAction = new QAction(QIcon::fromTheme(QStringLiteral("edit-copy")), i18nc("@action:inmenu", "Copy"), this);
-        connect(copyAction, &QAction::triggered, this, &TreeViewContextMenu::copy);
+        QAction* copyAction = new QAction(KIcon("edit-copy"), i18nc("@action:inmenu", "Copy"), this);
+        connect(copyAction, SIGNAL(triggered()), this, SLOT(copy()));
 
-        const QMimeData *mimeData = QApplication::clipboard()->mimeData();
-        bool canPaste;
-        const QString text = KIO::pasteActionText(mimeData, &canPaste, m_fileItem);
-        QAction* pasteAction = new QAction(QIcon::fromTheme(QStringLiteral("edit-paste")), text, this);
-        connect(pasteAction, &QAction::triggered, this, &TreeViewContextMenu::paste);
-        pasteAction->setEnabled(canPaste);
+        QAction* pasteAction = new QAction(KIcon("edit-paste"), i18nc("@action:inmenu", "Paste"), this);
+        const QMimeData* mimeData = QApplication::clipboard()->mimeData();
+        const KUrl::List pasteData = KUrl::List::fromMimeData(mimeData);
+        connect(pasteAction, SIGNAL(triggered()), this, SLOT(paste()));
+        pasteAction->setEnabled(!pasteData.isEmpty() && capabilities.supportsWriting());
 
         popup->addAction(cutAction);
         popup->addAction(copyAction);
@@ -86,85 +76,74 @@ void TreeViewContextMenu::open()
         // insert 'Rename'
         QAction* renameAction = new QAction(i18nc("@action:inmenu", "Rename..."), this);
         renameAction->setEnabled(capabilities.supportsMoving());
-        renameAction->setIcon(QIcon::fromTheme(QStringLiteral("edit-rename")));
-        connect(renameAction, &QAction::triggered, this, &TreeViewContextMenu::rename);
+        renameAction->setIcon(KIcon("edit-rename"));
+        connect(renameAction, SIGNAL(triggered()), this, SLOT(rename()));
         popup->addAction(renameAction);
 
         // insert 'Move to Trash' and (optionally) 'Delete'
-        KSharedConfig::Ptr globalConfig = KSharedConfig::openConfig(QStringLiteral("kdeglobals"), KConfig::IncludeGlobals);
+        KSharedConfig::Ptr globalConfig = KSharedConfig::openConfig("kdeglobals", KConfig::IncludeGlobals);
         KConfigGroup configGroup(globalConfig, "KDE");
         bool showDeleteCommand = configGroup.readEntry("ShowDeleteCommand", false);
 
-        const QUrl url = m_fileItem.url();
+        const KUrl url = m_fileInfo.url();
         if (url.isLocalFile()) {
-            QAction* moveToTrashAction = new QAction(QIcon::fromTheme(QStringLiteral("user-trash")),
+            QAction* moveToTrashAction = new QAction(KIcon("user-trash"),
                                                     i18nc("@action:inmenu", "Move to Trash"), this);
             const bool enableMoveToTrash = capabilities.isLocal() && capabilities.supportsMoving();
             moveToTrashAction->setEnabled(enableMoveToTrash);
-            connect(moveToTrashAction, &QAction::triggered, this, &TreeViewContextMenu::moveToTrash);
+            connect(moveToTrashAction, SIGNAL(triggered()), this, SLOT(moveToTrash()));
             popup->addAction(moveToTrashAction);
         } else {
             showDeleteCommand = true;
         }
 
         if (showDeleteCommand) {
-            QAction* deleteAction = new QAction(QIcon::fromTheme(QStringLiteral("edit-delete")), i18nc("@action:inmenu", "Delete"), this);
+            QAction* deleteAction = new QAction(KIcon("edit-delete"), i18nc("@action:inmenu", "Delete"), this);
             deleteAction->setEnabled(capabilities.supportsDeleting());
-            connect(deleteAction, &QAction::triggered, this, &TreeViewContextMenu::deleteItem);
+            connect(deleteAction, SIGNAL(triggered()), this, SLOT(deleteItem()));
             popup->addAction(deleteAction);
         }
 
         popup->addSeparator();
+
+        // insert 'Properties' entry
+        QAction* propertiesAction = new QAction(i18nc("@action:inmenu", "Properties"), this);
+        propertiesAction->setIcon(KIcon("document-properties"));
+        connect(propertiesAction, SIGNAL(triggered()), this, SLOT(showProperties()));
+        popup->addAction(propertiesAction);
+
+        popup->addSeparator();
     }
 
-    // insert 'Show Hidden Files'
     QAction* showHiddenFilesAction = new QAction(i18nc("@action:inmenu", "Show Hidden Files"), this);
     showHiddenFilesAction->setCheckable(true);
     showHiddenFilesAction->setChecked(m_parent->showHiddenFiles());
     popup->addAction(showHiddenFilesAction);
-    connect(showHiddenFilesAction, &QAction::toggled, this, &TreeViewContextMenu::setShowHiddenFiles);
+    connect(showHiddenFilesAction, SIGNAL(toggled(bool)), this, SLOT(setShowHiddenFiles(bool)));
 
-    // insert 'Automatic Scrolling'
     QAction* autoScrollingAction = new QAction(i18nc("@action:inmenu", "Automatic Scrolling"), this);
     autoScrollingAction->setCheckable(true);
     autoScrollingAction->setChecked(m_parent->autoScrolling());
-    // TODO: Temporary disabled. Horizontal autoscrolling will be implemented later either
-    // in KItemViews or manually as part of the FoldersPanel
-    //popup->addAction(autoScrollingAction);
-    connect(autoScrollingAction, &QAction::toggled, this, &TreeViewContextMenu::setAutoScrolling);
+    popup->addAction(autoScrollingAction);
+    connect(autoScrollingAction, SIGNAL(toggled(bool)), this, SLOT(setAutoScrolling(bool)));
 
-    if (!m_fileItem.isNull()) {
-        // insert 'Properties' entry
-        QAction* propertiesAction = new QAction(i18nc("@action:inmenu", "Properties"), this);
-        propertiesAction->setIcon(QIcon::fromTheme(QStringLiteral("document-properties")));
-        connect(propertiesAction, &QAction::triggered, this, &TreeViewContextMenu::showProperties);
-        popup->addAction(propertiesAction);
+    popup->addSeparator();
+    foreach (QAction* action, m_parent->customContextMenuActions()) {
+        popup->addAction(action);
     }
 
-    QList<QAction*> customActions = m_parent->customContextMenuActions();
-    if (!customActions.isEmpty()) {
-        popup->addSeparator();
-        foreach (QAction* action, customActions) {
-            popup->addAction(action);
-        }
-    }
-
-    QPointer<QMenu> popupPtr = popup;
     popup->exec(QCursor::pos());
-    if (popupPtr.data()) {
-        popupPtr.data()->deleteLater();
-    }
+    popup->deleteLater();
 }
 
 void TreeViewContextMenu::populateMimeData(QMimeData* mimeData, bool cut)
 {
-    QList<QUrl> kdeUrls;
-    kdeUrls.append(m_fileItem.url());
-    QList<QUrl> mostLocalUrls;
+    KUrl::List kdeUrls;
+    kdeUrls.append(m_fileInfo.url());
+    KUrl::List mostLocalUrls;
     bool dummy;
-    mostLocalUrls.append(m_fileItem.mostLocalUrl(dummy));
-    KIO::setClipboardDataCut(mimeData, cut);
-    KUrlMimeData::setUrls(kdeUrls, mostLocalUrls, mimeData);
+    mostLocalUrls.append(m_fileInfo.mostLocalUrl(dummy));
+    KonqMimeData::populateMimeData(mimeData, kdeUrls, mostLocalUrls, cut);
 }
 
 void TreeViewContextMenu::cut()
@@ -183,43 +162,37 @@ void TreeViewContextMenu::copy()
 
 void TreeViewContextMenu::paste()
 {
-    KIO::PasteJob *job = KIO::paste(QApplication::clipboard()->mimeData(), m_fileItem.url());
-    KJobWidgets::setWindow(job, m_parent);
+    QClipboard* clipboard = QApplication::clipboard();
+    const QMimeData* mimeData = clipboard->mimeData();
+
+    const KUrl::List source = KUrl::List::fromMimeData(mimeData);
+    const KUrl& dest = m_fileInfo.url();
+    if (KonqMimeData::decodeIsCutSelection(mimeData)) {
+        KonqOperations::copy(m_parent, KonqOperations::MOVE, source, dest);
+        clipboard->clear();
+    } else {
+        KonqOperations::copy(m_parent, KonqOperations::COPY, source, dest);
+    }
 }
 
 void TreeViewContextMenu::rename()
 {
-    m_parent->rename(m_fileItem);
+    m_parent->rename(m_fileInfo);
 }
 
 void TreeViewContextMenu::moveToTrash()
 {
-    const QList<QUrl> list{m_fileItem.url()};
-    KIO::JobUiDelegate uiDelegate;
-    uiDelegate.setWindow(m_parent);
-    if (uiDelegate.askDeleteConfirmation(list, KIO::JobUiDelegate::Trash, KIO::JobUiDelegate::DefaultConfirmation)) {
-        KIO::Job* job = KIO::trash(list);
-        KIO::FileUndoManager::self()->recordJob(KIO::FileUndoManager::Trash, list, QUrl(QStringLiteral("trash:/")), job);
-        KJobWidgets::setWindow(job, m_parent);
-        job->ui()->setAutoErrorHandlingEnabled(true);
-    }
+    KonqOperations::del(m_parent, KonqOperations::TRASH, m_fileInfo.url());
 }
 
 void TreeViewContextMenu::deleteItem()
 {
-    const QList<QUrl> list{m_fileItem.url()};
-    KIO::JobUiDelegate uiDelegate;
-    uiDelegate.setWindow(m_parent);
-    if (uiDelegate.askDeleteConfirmation(list, KIO::JobUiDelegate::Delete, KIO::JobUiDelegate::DefaultConfirmation)) {
-        KIO::Job* job = KIO::del(list);
-        KJobWidgets::setWindow(job, m_parent);
-        job->ui()->setAutoErrorHandlingEnabled(true);
-    }
+    KonqOperations::del(m_parent, KonqOperations::DEL, m_fileInfo.url());
 }
 
 void TreeViewContextMenu::showProperties()
 {
-    KPropertiesDialog* dialog = new KPropertiesDialog(m_fileItem.url(), m_parent);
+    KPropertiesDialog* dialog = new KPropertiesDialog(m_fileInfo.url(), m_parent);
     dialog->setAttribute(Qt::WA_DeleteOnClose);
     dialog->show();
 }
@@ -234,3 +207,4 @@ void TreeViewContextMenu::setAutoScrolling(bool enable)
     m_parent->setAutoScrolling(enable);
 }
 
+#include "treeviewcontextmenu.moc"

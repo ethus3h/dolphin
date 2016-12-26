@@ -22,20 +22,20 @@
 
 #include <QStringList>
 #include <QAction>
-#include <QUrl>
-#include "dolphin_export.h"
+#include <KUrl>
+#include "libdolphin_export.h"
 
 
 class KActionMenu;
 class DolphinViewActionHandler;
 
 /**
- * @brief Allows to change character encoding for remote urls like ftp.
+ * @brief Allows to chnage character encoding for remote urls like ftp.
  *
  * When browsing remote url, its possible to change encoding from Tools Menu.
  */
 
-class DOLPHIN_EXPORT DolphinRemoteEncoding: public QObject
+class LIBDOLPHINPRIVATE_EXPORT DolphinRemoteEncoding: public QObject
 {
   Q_OBJECT
 public:
@@ -59,7 +59,7 @@ private:
 
   KActionMenu* m_menu;
   QStringList m_encodingDescriptions;
-  QUrl m_currentURL;
+  KUrl m_currentURL;
   DolphinViewActionHandler* m_actionHandler;
 
   bool m_loaded;

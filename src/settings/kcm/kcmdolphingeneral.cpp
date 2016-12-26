@@ -19,52 +19,56 @@
 
 #include "kcmdolphingeneral.h"
 
-#include <KLocalizedString>
+#include <KTabWidget>
+#include <KDialog>
+#include <KLocale>
 #include <KPluginFactory>
 #include <KPluginLoader>
 
 #include <settings/general/behaviorsettingspage.h>
 #include <settings/general/previewssettingspage.h>
-#include <settings/general/confirmationssettingspage.h>
+#include <settings/general/contextmenusettingspage.h>
 
 #include <QDir>
 #include <QVBoxLayout>
-#include <QTabWidget>
 
-K_PLUGIN_FACTORY(KCMDolphinGeneralConfigFactory, registerPlugin<DolphinGeneralConfigModule>(QStringLiteral("dolphingeneral"));)
+K_PLUGIN_FACTORY(KCMDolphinGeneralConfigFactory, registerPlugin<DolphinGeneralConfigModule>("dolphingeneral");)
 K_EXPORT_PLUGIN(KCMDolphinGeneralConfigFactory("kcmdolphingeneral"))
 
 DolphinGeneralConfigModule::DolphinGeneralConfigModule(QWidget* parent, const QVariantList& args) :
-    KCModule(parent),
+    KCModule(KCMDolphinGeneralConfigFactory::componentData(), parent),
     m_pages()
 {
     Q_UNUSED(args);
+
+    KGlobal::locale()->insertCatalog("dolphin");
 
     setButtons(KCModule::Default | KCModule::Help);
 
     QVBoxLayout* topLayout = new QVBoxLayout(this);
     topLayout->setMargin(0);
+    topLayout->setSpacing(KDialog::spacingHint());
 
-    QTabWidget* tabWidget = new QTabWidget(this);
+    KTabWidget* tabWidget = new KTabWidget(this);
 
     // initialize 'Behavior' tab
-    BehaviorSettingsPage* behaviorPage = new BehaviorSettingsPage(QUrl::fromLocalFile(QDir::homePath()), tabWidget);
+    BehaviorSettingsPage* behaviorPage = new BehaviorSettingsPage(QDir::homePath(), tabWidget);
     tabWidget->addTab(behaviorPage, i18nc("@title:tab Behavior settings", "Behavior"));
-    connect(behaviorPage, &BehaviorSettingsPage::changed, this, static_cast<void(DolphinGeneralConfigModule::*)()>(&DolphinGeneralConfigModule::changed));
+    connect(behaviorPage, SIGNAL(changed()), this, SLOT(changed()));
 
     // initialize 'Previews' tab
     PreviewsSettingsPage* previewsPage = new PreviewsSettingsPage(tabWidget);
     tabWidget->addTab(previewsPage, i18nc("@title:tab Previews settings", "Previews"));
-    connect(previewsPage, &PreviewsSettingsPage::changed, this, static_cast<void(DolphinGeneralConfigModule::*)()>(&DolphinGeneralConfigModule::changed));
+    connect(previewsPage, SIGNAL(changed()), this, SLOT(changed()));
 
-    // initialize 'Confirmations' tab
-    ConfirmationsSettingsPage* confirmationsPage = new ConfirmationsSettingsPage(tabWidget);
-    tabWidget->addTab(confirmationsPage,  i18nc("@title:tab Confirmations settings", "Confirmations"));
-    connect(confirmationsPage, &ConfirmationsSettingsPage::changed, this, static_cast<void(DolphinGeneralConfigModule::*)()>(&DolphinGeneralConfigModule::changed));
+    // initialize 'Context Menu' tab
+    ContextMenuSettingsPage *contextMenuPage = new ContextMenuSettingsPage(tabWidget);
+    tabWidget->addTab(contextMenuPage,  i18nc("@title:tab Context Menu settings", "Context Menu"));
+    connect(contextMenuPage, SIGNAL(changed()), this, SLOT(changed()));
 
     m_pages.append(behaviorPage);
     m_pages.append(previewsPage);
-    m_pages.append(confirmationsPage);
+    m_pages.append(contextMenuPage);
 
     topLayout->addWidget(tabWidget, 0, 0);
 }

@@ -1,6 +1,5 @@
 /***************************************************************************
  *   Copyright (C) 2008 by David Faure <faure@kde.org>                     *
- *   Copyright (C) 2012 by Peter Penz <peter.penz19@gmail.com>             *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
  *   it under the terms of the GNU General Public License as published by  *
@@ -22,7 +21,9 @@
 #ifndef DOLPHINVIEWACTIONHANDLER_H
 #define DOLPHINVIEWACTIONHANDLER_H
 
-#include "dolphin_export.h"
+#include "libdolphin_export.h"
+#include <KActionMenu>
+#include <KSelectAction>
 #include "views/dolphinview.h"
 #include <QObject>
 
@@ -46,7 +47,7 @@ class KActionCollection;
  * @see DolphinMainWindow
  * @see DolphinPart
  */
-class DOLPHIN_EXPORT DolphinViewActionHandler : public QObject
+class LIBDOLPHINPRIVATE_EXPORT DolphinViewActionHandler : public QObject
 {
     Q_OBJECT
 
@@ -110,7 +111,7 @@ private Q_SLOTS:
      * Moves the selected items of the active view to the trash.
      * This methods adds "shift means del" handling.
      */
-    void slotTrashActivated();
+    void slotTrashActivated(Qt::MouseButtons, Qt::KeyboardModifiers);
 
     /**
      * Deletes the selected items of the active view.
@@ -123,7 +124,7 @@ private Q_SLOTS:
     void togglePreview(bool);
 
     /** Updates the state of the 'Show preview' menu action. */
-    void slotPreviewsShownChanged(bool shown);
+    void slotShowPreviewChanged();
 
     /** Increases the size of the current set view mode. */
     void zoomIn();
@@ -150,18 +151,18 @@ private Q_SLOTS:
     /**
      * Updates the state of the 'Sort by' actions.
      */
-    void slotSortRoleChanged(const QByteArray& role);
+    void slotSortingChanged(DolphinView::Sorting sorting);
 
     /**
      * Updates the state of the 'Zoom In' and 'Zoom Out' actions.
      */
-    void slotZoomLevelChanged(int current, int previous);
+    void slotZoomLevelChanged(int level);
 
     /**
      * Switches on or off the displaying of additional information
      * as specified by \a action.
      */
-    void toggleVisibleRole(QAction* action);
+    void toggleAdditionalInfo(QAction* action);
 
     /**
      * Changes the sorting of the current view.
@@ -171,18 +172,17 @@ private Q_SLOTS:
     /**
      * Updates the state of the 'Additional Information' actions.
      */
-    void slotVisibleRolesChanged(const QList<QByteArray>& current,
-                                 const QList<QByteArray>& previous);
+    void slotAdditionalInfoChanged();
 
     /**
-     * Switches between sorting by groups or not.
+     * Switches between sorting by categories or not.
      */
-    void toggleGroupedSorting(bool);
+    void toggleSortCategorization(bool);
 
     /**
      * Updates the state of the 'Categorized sorting' menu action.
      */
-    void slotGroupedSortingChanged(bool sortCategorized);
+    void slotCategorizedSortingChanged();
 
     /**
      * Switches between showing and hiding of hidden marked files
@@ -192,12 +192,7 @@ private Q_SLOTS:
     /**
      * Updates the state of the 'Show hidden files' menu action.
      */
-    void slotHiddenFilesShownChanged(bool shown);
-
-    /**
-     * Updates the state of the 'Create Folder...' action.
-     */
-    void slotWriteStateChanged(bool isFolderWritable);
+    void slotShowHiddenFilesChanged();
 
     /**
      * Opens the view properties dialog, which allows to modify the properties
@@ -221,14 +216,16 @@ private:
     void createActions();
 
     /**
-     * Creates an action-group out of all roles from KFileItemModel.
-     * Dependent on the group-prefix either a radiobutton-group is
-     * created for sorting (prefix is "sort_by_") or a checkbox-group
-     * is created for additional information (prefix is "show_").
-     * The changes of actions are reported to slotSortTriggered() or
-     * toggleAdditionalInfo().
+     * Creates an action group with all the "show additional information" actions in it.
+     * Helper method for createActions();
      */
-    QActionGroup* createFileItemRolesActionGroup(const QString& groupPrefix);
+    QActionGroup* createAdditionalInformationActionGroup();
+
+    /**
+     * Creates an action group with all the "sort by" actions in it.
+     * Helper method for createActions();
+     */
+    QActionGroup* createSortByActionGroup();
 
     /**
      * Returns the "switch to icons mode" action.
@@ -237,22 +234,19 @@ private:
     KToggleAction* iconsModeAction();
 
     /**
-     * Returns the "switch to compact mode" action.
-     * Helper method for createActions();
-     */
-    KToggleAction* compactModeAction();
-
-    /**
      * Returns the "switch to details mode" action.
      * Helper method for createActions();
      */
     KToggleAction* detailsModeAction();
 
+    /**
+     * Returns the "switch to columns mode" action.
+     * Helper method for createActions();
+     */
+    KToggleAction* columnsModeAction();
+
     KActionCollection* m_actionCollection;
     DolphinView* m_currentView;
-
-    QHash<QByteArray, KToggleAction*> m_sortByActions;
-    QHash<QByteArray, KToggleAction*> m_visibleRoles;
 };
 
 #endif /* DOLPHINVIEWACTIONHANDLER_H */

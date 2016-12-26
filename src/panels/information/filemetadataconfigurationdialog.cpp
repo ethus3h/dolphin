@@ -19,67 +19,45 @@
 
 #include "filemetadataconfigurationdialog.h"
 
-#ifndef HAVE_BALOO
 #include <kfilemetadataconfigurationwidget.h>
-#else
-#include <Baloo/FileMetaDataConfigWidget>
-#endif
-#include <KSharedConfig>
-#include <KLocalizedString>
+#include <KLocale>
 #include <QLabel>
 #include <QVBoxLayout>
-#include <KConfigGroup>
-#include <KWindowConfig>
-#include <QDialogButtonBox>
-#include <QPushButton>
 
 FileMetaDataConfigurationDialog::FileMetaDataConfigurationDialog(QWidget* parent) :
-    QDialog(parent),
+    KDialog(parent),
     m_descriptionLabel(0),
     m_configWidget(0)
 
 {
-    setWindowTitle(i18nc("@title:window", "Configure Shown Data"));
-    QDialogButtonBox *buttonBox = new QDialogButtonBox(QDialogButtonBox::Ok|QDialogButtonBox::Cancel);
-    QVBoxLayout *mainLayout = new QVBoxLayout;
-    setLayout(mainLayout);
-    QPushButton *okButton = buttonBox->button(QDialogButtonBox::Ok);
-    okButton->setDefault(true);
-    okButton->setShortcut(Qt::CTRL | Qt::Key_Return);
-    connect(buttonBox, &QDialogButtonBox::accepted, this, &FileMetaDataConfigurationDialog::slotAccepted);
-    connect(buttonBox, &QDialogButtonBox::rejected, this, &FileMetaDataConfigurationDialog::reject);
-    buttonBox->button(QDialogButtonBox::Ok)->setDefault(true);
+    setCaption(i18nc("@title:window", "Configure Shown Data"));
+    setButtons(KDialog::Ok | KDialog::Cancel);
+    setDefaultButton(KDialog::Ok);
+
 
     m_descriptionLabel = new QLabel(i18nc("@label::textbox",
                                           "Select which data should "
                                           "be shown:"), this);
     m_descriptionLabel->setWordWrap(true);
 
-#ifndef HAVE_BALOO
     m_configWidget = new KFileMetaDataConfigurationWidget(this);
-#else
-    m_configWidget = new Baloo::FileMetaDataConfigWidget(this);
-#endif
-
 
     QWidget* mainWidget = new QWidget(this);
     QVBoxLayout* topLayout = new QVBoxLayout(mainWidget);
     topLayout->addWidget(m_descriptionLabel);
     topLayout->addWidget(m_configWidget);
-    mainLayout->addWidget(mainWidget);
-    mainLayout->addWidget(buttonBox);
+    setMainWidget(mainWidget);
 
-
-    const KConfigGroup dialogConfig(KSharedConfig::openConfig(QStringLiteral("dolphinrc")),
+    const KConfigGroup dialogConfig(KSharedConfig::openConfig("dolphinrc"),
                                     "FileMetaDataConfigurationDialog");
-    KWindowConfig::restoreWindowSize(windowHandle(), dialogConfig);
+    restoreDialogSize(dialogConfig);
 }
 
 FileMetaDataConfigurationDialog::~FileMetaDataConfigurationDialog()
 {
-    KConfigGroup dialogConfig(KSharedConfig::openConfig(QStringLiteral("dolphinrc")),
+    KConfigGroup dialogConfig(KSharedConfig::openConfig("dolphinrc"),
                               "FileMetaDataConfigurationDialog");
-    KWindowConfig::saveWindowSize(windowHandle(), dialogConfig);
+    saveDialogSize(dialogConfig, KConfigBase::Persistent);
 }
 
 void FileMetaDataConfigurationDialog::setItems(const KFileItemList& items)
@@ -92,10 +70,14 @@ KFileItemList FileMetaDataConfigurationDialog::items() const
     return m_configWidget->items();
 }
 
-void FileMetaDataConfigurationDialog::slotAccepted()
+void FileMetaDataConfigurationDialog::slotButtonClicked(int button)
 {
-    m_configWidget->save();
-    accept();
+    if (button == KDialog::Ok) {
+        m_configWidget->save();
+        accept();
+    } else {
+        KDialog::slotButtonClicked(button);
+    }
 }
 
 void FileMetaDataConfigurationDialog::setDescription(const QString& description)
@@ -108,3 +90,4 @@ QString FileMetaDataConfigurationDialog::description() const
     return m_descriptionLabel->text();
 }
 
+#include "filemetadataconfigurationdialog.moc"

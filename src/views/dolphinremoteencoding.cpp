@@ -26,20 +26,23 @@
 #include "dolphinremoteencoding.h"
 #include "dolphinviewactionhandler.h"
 
-#include "dolphindebug.h"
+#include <KDebug>
 #include <KActionMenu>
 #include <KActionCollection>
-#include <QIcon>
-#include <KLocalizedString>
+#include <KIcon>
+#include <KLocale>
+#include <KGlobal>
+#include <KMimeType>
 #include <KConfig>
 #include <KCharsets>
-#include <QMenu>
+#include <KMenu>
 #include <KProtocolInfo>
 #include <KProtocolManager>
+#include <KIO/SlaveConfig>
 #include <KIO/Scheduler>
 #include <KConfigGroup>
 
-#define DATA_KEY        QStringLiteral("Charset")
+#define DATA_KEY        QLatin1String("Charset")
 
 DolphinRemoteEncoding::DolphinRemoteEncoding(QObject* parent, DolphinViewActionHandler* actionHandler)
    :QObject(parent),
@@ -47,10 +50,10 @@ DolphinRemoteEncoding::DolphinRemoteEncoding(QObject* parent, DolphinViewActionH
     m_loaded(false),
     m_idDefault(0)
 {
-    m_menu = new KActionMenu(QIcon::fromTheme(QStringLiteral("character-set")), i18n("Select Remote Charset"), this);
-    m_actionHandler->actionCollection()->addAction(QStringLiteral("change_remote_encoding"), m_menu);
-    connect(m_menu->menu(), &QMenu::aboutToShow,
-          this, &DolphinRemoteEncoding::slotAboutToShow);
+    m_menu = new KActionMenu(KIcon("character-set"), i18n("Select Remote Charset"), this);
+    m_actionHandler->actionCollection()->addAction("change_remote_encoding", m_menu);
+    connect(m_menu->menu(), SIGNAL(aboutToShow()),
+          this, SLOT(slotAboutToShow()));
 
     m_menu->setEnabled(false);
     m_menu->setDelayed(false);
@@ -68,17 +71,17 @@ void DolphinRemoteEncoding::slotReload()
 void DolphinRemoteEncoding::loadSettings()
 {
     m_loaded = true;
-    m_encodingDescriptions = KCharsets::charsets()->descriptiveEncodingNames();
+    m_encodingDescriptions = KGlobal::charsets()->descriptiveEncodingNames();
 
     fillMenu();
 }
 
 void DolphinRemoteEncoding::slotAboutToOpenUrl()
 {
-    QUrl oldURL = m_currentURL;
+    KUrl oldURL = m_currentURL;
     m_currentURL = m_actionHandler->currentView()->url();
 
-    if (m_currentURL.scheme() != oldURL.scheme()) {
+    if (m_currentURL.protocol() != oldURL.protocol()) {
         // This plugin works on ftp, fish, etc.
         // everything whose type is T_FILESYSTEM except for local files
         if (!m_currentURL.isLocalFile() &&
@@ -99,7 +102,7 @@ void DolphinRemoteEncoding::slotAboutToOpenUrl()
 
 void DolphinRemoteEncoding::fillMenu()
 {
-    QMenu* menu = m_menu->menu();
+    KMenu* menu = m_menu->menu();
     menu->clear();
 
 
@@ -115,7 +118,7 @@ void DolphinRemoteEncoding::fillMenu()
     menu->addAction(i18n("Default"), this, SLOT(slotDefault()), 0)->setCheckable(true);
     m_idDefault = m_encodingDescriptions.size() + 2;
 
-    connect(menu, &QMenu::triggered, this, &DolphinRemoteEncoding::slotItemSelected);
+    connect(menu, SIGNAL(triggered(QAction*)), this, SLOT(slotItemSelected(QAction*)));
 }
 
 void DolphinRemoteEncoding::updateMenu()
@@ -129,22 +132,24 @@ void DolphinRemoteEncoding::updateMenu()
         m_menu->menu()->actions().at(i)->setChecked(false);
     }
 
-    const QString charset = KCharsets::charsets()->descriptionForEncoding(KProtocolManager::charsetFor(m_currentURL));
+    QString charset = KIO::SlaveConfig::self()->configData(m_currentURL.protocol(),
+                                                           m_currentURL.host(), DATA_KEY);
+
     if (!charset.isEmpty()) {
         int id = 0;
         bool isFound = false;
         for (int i = 0; i < m_encodingDescriptions.size(); i++) {
-            if (m_encodingDescriptions.at(i) == charset) {
+            if (m_encodingDescriptions.at(i).contains(charset)) {
                 isFound = true;
                 id = i;
                 break;
             }
         }
 
-        qCDebug(DolphinDebug) << "URL=" << m_currentURL << " charset=" << charset;
+        kDebug() << "URL=" << m_currentURL << " charset=" << charset;
 
         if (!isFound) {
-            qCWarning(DolphinDebug) << "could not find entry for charset=" << charset ;
+            kWarning() << "could not find entry for charset=" << charset ;
         } else {
             m_menu->menu()->actions().at(id)->setChecked(true);
         }
@@ -167,10 +172,10 @@ void DolphinRemoteEncoding::slotItemSelected(QAction* action)
     if (action) {
         int id = action->data().toInt();
 
-        KConfig config(("kio_" + m_currentURL.scheme() + "rc").toLatin1());
+        KConfig config(("kio_" + m_currentURL.protocol() + "rc").toLatin1());
         QString host = m_currentURL.host();
         if (m_menu->menu()->actions().at(id)->isChecked()) {
-            QString charset = KCharsets::charsets()->encodingForName(m_encodingDescriptions.at(id));
+            QString charset = KGlobal::charsets()->encodingForName(m_encodingDescriptions.at(id));
             KConfigGroup cg(&config, host);
             cg.writeEntry(DATA_KEY, charset);
             config.sync();
@@ -185,7 +190,7 @@ void DolphinRemoteEncoding::slotDefault()
 {
     // We have no choice but delete all higher domain level
     // settings here since it affects what will be matched.
-    KConfig config(("kio_" + m_currentURL.scheme() + "rc").toLatin1());
+    KConfig config(("kio_" + m_currentURL.protocol() + "rc").toLatin1());
 
     QStringList partList = m_currentURL.host().split('.', QString::SkipEmptyParts);
     if (!partList.isEmpty()) {
@@ -206,12 +211,12 @@ void DolphinRemoteEncoding::slotDefault()
                 break;
             }
 
-            domains << partList.join(QLatin1Char('.'));
+            domains << partList.join(".");
             partList.erase(partList.begin());
         }
 
         for (QStringList::const_iterator it = domains.constBegin(); it != domains.constEnd();++it) {
-            qCDebug(DolphinDebug) << "Domain to remove: " << *it;
+            kDebug() << "Domain to remove: " << *it;
             if (config.hasGroup(*it)) {
                 config.deleteGroup(*it);
             } else if (config.group("").hasKey(*it)) {
@@ -233,3 +238,4 @@ void DolphinRemoteEncoding::updateView()
     m_actionHandler->currentView()->reload();
 }
 
+#include "dolphinremoteencoding.moc"

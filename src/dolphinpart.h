@@ -20,21 +20,25 @@
 #ifndef DOLPHINPART_H
 #define DOLPHINPART_H
 
-#include <KParts/ReadOnlyPart>
-#include <QUrl>
+#include <kparts/part.h>
+#include <kparts/browserextension.h>
+#include <kparts/fileinfoextension.h>
 
+#include <QItemSelectionModel>
 
-class DolphinNewFileMenu;
+class KNewFileMenu;
 class DolphinViewActionHandler;
 class QActionGroup;
+class KAction;
 class KFileItemList;
 class KFileItem;
 class DolphinPartBrowserExtension;
+class DolphinSortFilterProxyModel;
 class DolphinRemoteEncoding;
+class DolphinModel;
 class KDirLister;
 class DolphinView;
 class KAboutData;
-class DolphinRemoveAction;
 
 class DolphinPart : public KParts::ReadOnlyPart
 {
@@ -50,7 +54,7 @@ class DolphinPart : public KParts::ReadOnlyPart
     Q_PROPERTY( QString nameFilter READ nameFilter WRITE setNameFilter )
 
     // Used by konqueror to implement the --select command-line option
-    Q_PROPERTY( QList<QUrl> filesToSelect READ filesToSelect WRITE setFilesToSelect )
+    Q_PROPERTY( KUrl::List filesToSelect READ filesToSelect WRITE setFilesToSelect )
 
 public:
     explicit DolphinPart(QWidget* parentWidget, QObject* parent, const QVariantList& args);
@@ -62,7 +66,7 @@ public:
      * Standard KParts::ReadOnlyPart openUrl method.
      * Called by Konqueror to view a directory in DolphinPart.
      */
-    virtual bool openUrl(const QUrl& url) Q_DECL_OVERRIDE;
+    virtual bool openUrl(const KUrl& url);
 
     /// see the supportsUndo property
     bool supportsUndo() const { return true; }
@@ -98,7 +102,7 @@ protected:
     /**
      * We reimplement openUrl so no need to implement openFile.
      */
-    virtual bool openFile() override { return true; }
+    virtual bool openFile() { return true; }
 
 Q_SIGNALS:
     /**
@@ -113,6 +117,7 @@ Q_SIGNALS:
     void aboutToOpenURL();
 
 private Q_SLOTS:
+    void slotCompleted(const KUrl& url);
     void slotMessage(const QString& msg);
     void slotErrorMessage(const QString& msg);
     /**
@@ -123,27 +128,21 @@ private Q_SLOTS:
     /**
      * Handles clicking on an item
      */
-    void slotItemActivated(const KFileItem& item);
-    /**
-     * Handles activation of multiple items
-     */
-    void slotItemsActivated(const KFileItemList& items);
+    void slotItemTriggered(const KFileItem& item);
     /**
      * Creates a new window showing the content of \a url.
      */
-    void createNewWindow(const QUrl &url);
+    void createNewWindow(const KUrl& url);
     /**
      * Opens the context menu on the current mouse position.
-     * @pos           Position in screen coordinates.
      * @item          File item context. If item is null, the context menu
      *                should be applied to \a url.
      * @url           URL which contains \a item.
      * @customActions Actions that should be added to the context menu,
      *                if the file item is null.
      */
-    void slotOpenContextMenu(const QPoint& pos,
-                             const KFileItem& item,
-                             const QUrl& url,
+    void slotOpenContextMenu(const KFileItem& item,
+                             const KUrl& url,
                              const QList<QAction*>& customActions);
 
     /**
@@ -152,7 +151,7 @@ private Q_SLOTS:
      * Testcase 1: fish://localhost
      * Testcase 2: showing a directory that is being renamed by another window (#180156)
      */
-    void slotDirectoryRedirection(const QUrl& oldUrl, const QUrl& newUrl);
+    void slotRedirection(const KUrl& oldUrl, const KUrl& newUrl);
 
     /**
      * Updates the state of the 'Edit' menu actions and emits
@@ -220,10 +219,8 @@ private Q_SLOTS:
     /**
      * Called by konqueror --select
      */
-    void setFilesToSelect(const QList<QUrl> &files);
-    QList<QUrl> filesToSelect() const { return QList<QUrl>(); } // silence moc
-
-    virtual bool eventFilter(QObject*, QEvent*) Q_DECL_OVERRIDE;
+    void setFilesToSelect(const KUrl::List& files);
+    KUrl::List filesToSelect() const { return KUrl::List(); } // silence moc
 
 private:
     void createActions();
@@ -239,12 +236,46 @@ private:
     DolphinViewActionHandler* m_actionHandler;
     DolphinRemoteEncoding* m_remoteEncoding;
     DolphinPartBrowserExtension* m_extension;
-    DolphinNewFileMenu* m_newFileMenu;
-    QAction* m_findFileAction;
-    QAction* m_openTerminalAction;
+    KNewFileMenu* m_newFileMenu;
     QString m_nameFilter;
-    DolphinRemoveAction* m_removeAction;
     Q_DISABLE_COPY(DolphinPart)
+};
+
+class DolphinPartBrowserExtension : public KParts::BrowserExtension
+{
+    Q_OBJECT
+public:
+    DolphinPartBrowserExtension( DolphinPart* part )
+        : KParts::BrowserExtension( part ), m_part(part) {}
+
+    virtual void restoreState(QDataStream &stream);
+    virtual void saveState(QDataStream &stream);
+
+public Q_SLOTS:
+    void cut();
+    void copy();
+    void paste();
+    void pasteTo(const KUrl&);
+    void reparseConfiguration();
+
+private:
+    DolphinPart* m_part;
+};
+
+
+class DolphinPartFileInfoExtension : public KParts::FileInfoExtension
+{
+    Q_OBJECT
+
+public:
+    DolphinPartFileInfoExtension(DolphinPart* part);
+
+    virtual QueryModes supportedQueryModes() const;
+    virtual bool hasSelection() const;
+
+    virtual KFileItemList queryFor(QueryMode mode) const;
+protected:
+    DolphinPart* part() const;
 };
 
 #endif /* DOLPHINPART_H */

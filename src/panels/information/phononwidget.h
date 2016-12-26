@@ -21,7 +21,8 @@
 #ifndef PHONONWIDGET_H
 #define PHONONWIDGET_H
 
-#include <QUrl>
+#include <KUrl>
+
 #include <QSize>
 #include <QWidget>
 
@@ -29,7 +30,6 @@
 
 namespace Phonon
 {
-    class AudioOutput;
     class MediaObject;
     class SeekSlider;
     class VideoPlayer;
@@ -43,49 +43,51 @@ class PhononWidget : public QWidget
 {
     Q_OBJECT
     public:
+        enum Mode
+        {
+            Audio,
+            Video
+        };
+
         PhononWidget(QWidget *parent = 0);
 
-        void setUrl(const QUrl &url);
-        QUrl url() const;
+        void setUrl(const KUrl &url);
+        KUrl url() const;
+
+        void setMode(Mode mode);
+        Mode mode() const;
 
         void setVideoSize(const QSize& size);
         QSize videoSize() const;
 
     signals:
-        /**
-         * Is emitted whenever the video-state
-         * has changed: If true is returned, a video
-         * including control-buttons will be shown.
-         * If false is returned, no video is shown
-         * and the control-buttons are available for
-         * audio only.
-         */
-        void hasVideoChanged(bool hasVideo);
+        void playingStarted();
+        void playingStopped();
 
     protected:
-        virtual void showEvent(QShowEvent *event) Q_DECL_OVERRIDE;
-        virtual void hideEvent(QHideEvent *event) Q_DECL_OVERRIDE;
+        virtual void showEvent(QShowEvent *event);
+        virtual void hideEvent(QHideEvent *event);
 
     private slots:
         void stateChanged(Phonon::State);
         void play();
         void stop();
-        void slotHasVideoChanged(bool);
 
     private:
         void applyVideoSize();
 
     private:
-        QUrl m_url;
+        Mode m_mode;
+        KUrl m_url;
         QSize m_videoSize;
 
         QToolButton *m_playButton;
         QToolButton *m_stopButton;
 
         QVBoxLayout *m_topLayout;
+        Phonon::MediaObject *m_audioMedia;
         Phonon::MediaObject *m_media;
         Phonon::SeekSlider *m_seekSlider;
-        Phonon::AudioOutput *m_audioOutput;
         EmbeddedVideoPlayer *m_videoPlayer;
 };
 

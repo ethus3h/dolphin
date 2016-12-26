@@ -1,7 +1,6 @@
 /***************************************************************************
  *   Copyright (C) 2006 by Peter Penz <peter.penz19@gmail.com>             *
  *   Copyright (C) 2006 by Stefan Monov <logixoul@gmail.com>               *
- *   Copyright (C) 2015 by Mathieu Tarral <mathieu.tarral@gmail.com>       *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
  *   it under the terms of the GNU General Public License as published by  *
@@ -19,133 +18,71 @@
  *   51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA            *
  ***************************************************************************/
 
-#include "dolphin_version.h"
+#include "dolphinapplication.h"
+
 #include "dolphinmainwindow.h"
-#include "dolphin_generalsettings.h"
-#include "dbusinterface.h"
-#include "global.h"
-#include "dolphindebug.h"
 
-#include <KDBusService>
 #include <KAboutData>
-#include <KCrash>
-#include <QCommandLineParser>
-#include <QCommandLineOption>
-#include <QApplication>
-#include <KLocalizedString>
-#include <Kdelibs4ConfigMigrator>
+#include <KCmdLineArgs>
+#include <KLocale>
+#include <kmainwindow.h>
+#include <KDebug>
 
-extern "C" Q_DECL_EXPORT int kdemain(int argc, char **argv)
+extern "C"
+KDE_EXPORT int kdemain(int argc, char **argv)
 {
-    QApplication app(argc, argv);
-    app.setAttribute(Qt::AA_UseHighDpiPixmaps, true);
-    app.setWindowIcon(QIcon::fromTheme(QStringLiteral("system-file-manager"), app.windowIcon()));
+    KAboutData about("dolphin", 0,
+                     ki18nc("@title", "Dolphin"),
+                     "1.7",
+                     ki18nc("@title", "File Manager"),
+                     KAboutData::License_GPL,
+                     ki18nc("@info:credit", "(C) 2006-2011 Peter Penz"));
+    about.setHomepage("http://dolphin.kde.org");
+    about.addAuthor(ki18nc("@info:credit", "Peter Penz"),
+                    ki18nc("@info:credit", "Maintainer and developer"),
+                    "peter.penz19@gmail.com");
+    about.addAuthor(ki18nc("@info:credit", "David Faure"),
+                    ki18nc("@info:credit", "Developer"),
+                    "faure@kde.org");
+    about.addAuthor(ki18nc("@info:credit", "Aaron J. Seigo"),
+                    ki18nc("@info:credit", "Developer"),
+                    "aseigo@kde.org");
+    about.addAuthor(ki18nc("@info:credit", "Rafael Fernández López"),
+                    ki18nc("@info:credit", "Developer"),
+                    "ereslibre@kde.org");
+    about.addAuthor(ki18nc("@info:credit", "Kevin Ottens"),
+                    ki18nc("@info:credit", "Developer"),
+                    "ervin@kde.org");
+    about.addAuthor(ki18nc("@info:credit", "Holger Freyther"),
+                    ki18nc("@info:credit", "Developer"),
+                    "freyther@gmx.net");
+    about.addAuthor(ki18nc("@info:credit", "Max Blazejak"),
+                    ki18nc("@info:credit", "Developer"),
+                    "m43ksrocks@gmail.com");
+    about.addAuthor(ki18nc("@info:credit", "Michael Austin"),
+                    ki18nc("@info:credit", "Documentation"),
+                    "tuxedup@users.sourceforge.net");
+    // the .desktop file is not taken into account when launching manually, so
+    // set the icon precautionally:
+    about.setProgramIconName("system-file-manager");
 
-    KCrash::initialize();
+    KCmdLineArgs::init(argc, argv, &about);
 
-    Kdelibs4ConfigMigrator migrate(QStringLiteral("dolphin"));
-    migrate.setConfigFiles(QStringList() << QStringLiteral("dolphinrc"));
-    migrate.setUiFiles(QStringList() << QStringLiteral("dolphinpart.rc") << QStringLiteral("dolphinui.rc"));
-    migrate.migrate();
+    KCmdLineOptions options;
 
-    KLocalizedString::setApplicationDomain("dolphin");
+    options.add("select", ki18nc("@info:shell", "The files and directories passed as arguments "
+                                                "will be selected."));
+    options.add("split", ki18nc("@info:shell", "Dolphin will get started with a split view."));
+    options.add("+[Url]", ki18nc("@info:shell", "Document to open"));
+    KCmdLineArgs::addCmdLineOptions(options);
 
-    KAboutData aboutData(QStringLiteral("dolphin"), i18n("Dolphin"), QStringLiteral(DOLPHIN_VERSION_STRING),
-                         i18nc("@title", "File Manager"),
-                         KAboutLicense::GPL,
-                         i18nc("@info:credit", "(C) 2006-2016 Peter Penz, Frank Reininghaus, and Emmanuel Pescosta"));
-    aboutData.setHomepage(QStringLiteral("http://dolphin.kde.org"));
-    aboutData.addAuthor(i18nc("@info:credit", "Emmanuel Pescosta"),
-                        i18nc("@info:credit", "Maintainer (since 2014) and developer"),
-                        QStringLiteral("emmanuelpescosta099@gmail.com"));
-    aboutData.addAuthor(i18nc("@info:credit", "Frank Reininghaus"),
-                        i18nc("@info:credit", "Maintainer (2012-2014) and developer"),
-                        QStringLiteral("frank78ac@googlemail.com"));
-    aboutData.addAuthor(i18nc("@info:credit", "Peter Penz"),
-                        i18nc("@info:credit", "Maintainer and developer (2006-2012)"),
-                        QStringLiteral("peter.penz19@gmail.com"));
-    aboutData.addAuthor(i18nc("@info:credit", "Sebastian Trüg"),
-                        i18nc("@info:credit", "Developer"),
-                        QStringLiteral("trueg@kde.org"));
-    aboutData.addAuthor(i18nc("@info:credit", "David Faure"),
-                        i18nc("@info:credit", "Developer"),
-                        QStringLiteral("faure@kde.org"));
-    aboutData.addAuthor(i18nc("@info:credit", "Aaron J. Seigo"),
-                        i18nc("@info:credit", "Developer"),
-                        QStringLiteral("aseigo@kde.org"));
-    aboutData.addAuthor(i18nc("@info:credit", "Rafael Fernández López"),
-                        i18nc("@info:credit", "Developer"),
-                        QStringLiteral("ereslibre@kde.org"));
-    aboutData.addAuthor(i18nc("@info:credit", "Kevin Ottens"),
-                        i18nc("@info:credit", "Developer"),
-                        QStringLiteral("ervin@kde.org"));
-    aboutData.addAuthor(i18nc("@info:credit", "Holger Freyther"),
-                        i18nc("@info:credit", "Developer"),
-                        QStringLiteral("freyther@gmx.net"));
-    aboutData.addAuthor(i18nc("@info:credit", "Max Blazejak"),
-                        i18nc("@info:credit", "Developer"),
-                        QStringLiteral("m43ksrocks@gmail.com"));
-    aboutData.addAuthor(i18nc("@info:credit", "Michael Austin"),
-                        i18nc("@info:credit", "Documentation"),
-                        QStringLiteral("tuxedup@users.sourceforge.net"));
-
-    KAboutData::setApplicationData(aboutData);
-
-    KDBusService dolphinDBusService;
-    DBusInterface interface;
-
-    QCommandLineParser parser;
-    parser.addVersionOption();
-    parser.addHelpOption();
-    aboutData.setupCommandLine(&parser);
-
-    // command line options
-    parser.addOption(QCommandLineOption(QStringList() << QStringLiteral("select"), i18nc("@info:shell", "The files and folders passed as arguments "
-                                                                                        "will be selected.")));
-    parser.addOption(QCommandLineOption(QStringList() << QStringLiteral("split"), i18nc("@info:shell", "Dolphin will get started with a split view.")));
-    parser.addOption(QCommandLineOption(QStringList() << QStringLiteral("daemon"), i18nc("@info:shell", "Start Dolphin Daemon (only required for DBus Interface)")));
-    parser.addPositionalArgument(QStringLiteral("+[Url]"), i18nc("@info:shell", "Document to open"));
-
-    parser.process(app);
-    aboutData.processCommandLine(&parser);
-
-    if (parser.isSet(QStringLiteral("daemon"))) {
-        return app.exec();
-    }
-
-    const QStringList args = parser.positionalArguments();
-    QList<QUrl> urls = Dolphin::validateUris(args);
-
-    if (urls.isEmpty()) {
-        // We need at least one URL to open Dolphin
-        urls.append(Dolphin::homeUrl());
-    }
-
-    const bool splitView = parser.isSet(QStringLiteral("split")) || GeneralSettings::splitView();
-    if (splitView && urls.size() < 2) {
-        // Split view does only make sense if we have at least 2 URLs
-        urls.append(urls.last());
-    }
-
-    DolphinMainWindow* mainWindow = new DolphinMainWindow();
-    mainWindow->setAttribute(Qt::WA_DeleteOnClose);
-
-    if (parser.isSet(QStringLiteral("select"))) {
-        mainWindow->openFiles(urls, splitView);
-    } else {
-        mainWindow->openDirectories(urls, splitView);
-    }
-
-    mainWindow->show();
+    DolphinApplication app;
+    KGlobal::locale()->insertCatalog("libkonq"); // needed for applications using libkonq
 
     if (app.isSessionRestored()) {
-        const QString className = KXmlGuiWindow::classNameOfToplevel(1);
-        if (className == QLatin1String("DolphinMainWindow")) {
-            mainWindow->restore(1);
-        } else {
-           qCWarning(DolphinDebug) << "Unknown class " << className << " in session saved data!";
-        }
+        app.restoreSession();
     }
+    app.exec(); // krazy:exclude=crashy
 
-    return app.exec(); // krazy:exclude=crash;
+    return 0;
 }

@@ -19,7 +19,7 @@
  ***************************************************************************/
 
 #include "panel.h"
-#include <QUrl>
+#include <KUrl>
 
 Panel::Panel(QWidget* parent) :
     QWidget(parent),
@@ -32,7 +32,7 @@ Panel::~Panel()
 {
 }
 
-QUrl Panel::url() const
+KUrl Panel::url() const
 {
     return m_url;
 }
@@ -57,13 +57,13 @@ QSize Panel::sizeHint() const
     return QSize(180, 180);
 }
 
-void Panel::setUrl(const QUrl& url)
+void Panel::setUrl(const KUrl& url)
 {
-    if (url.matches(m_url, QUrl::StripTrailingSlash)) {
+    if (url.equals(m_url, KUrl::CompareWithoutTrailingSlash)) {
         return;
     }
 
-    const QUrl oldUrl = m_url;
+    const KUrl oldUrl = m_url;
     m_url = url;
     const bool accepted = urlChanged();
     if (!accepted) {
@@ -71,8 +71,4 @@ void Panel::setUrl(const QUrl& url)
     }
 }
 
-void Panel::readSettings()
-{
-
-}
-
+#include "panel.moc"

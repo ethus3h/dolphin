@@ -1,7 +1,6 @@
 /***************************************************************************
  *   Copyright (C) 2010 by Peter Penz <peter.penz19@gmail.com>             *
  *   Copyright (C) 2008 by Fredrik Höglund <fredrik@kde.org>               *
- *   Copyright (C) 2012 by Mark Gaiser <markg85@gmail.com>                 *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
  *   it under the terms of the GNU General Public License as published by  *
@@ -23,18 +22,10 @@
 #define FILEMETADATATOOLTIP_H
 
 #include <QWidget>
-#include "config-baloo.h"
 
 class KFileItemList;
-class QLabel;
-
-#ifndef HAVE_BALOO
 class KFileMetaDataWidget;
-#else
-namespace Baloo {
-    class FileMetaDataWidget;
-}
-#endif
+class QLabel;
 
 /**
  * @brief Tooltip, that shows the meta information and a preview of one
@@ -70,17 +61,12 @@ signals:
     void metaDataRequestFinished(const KFileItemList& items);
 
 protected:
-    virtual void paintEvent(QPaintEvent* event) Q_DECL_OVERRIDE;
-    virtual void showEvent(QShowEvent *) Q_DECL_OVERRIDE;
+    virtual void paintEvent(QPaintEvent* event);
 
 private:
     QLabel* m_preview;
     QLabel* m_name;
-#ifndef HAVE_BALOO
     KFileMetaDataWidget* m_fileMetaDataWidget;
-#else
-    Baloo::FileMetaDataWidget* m_fileMetaDataWidget;
-#endif
 };
 
 #endif

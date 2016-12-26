@@ -1,5 +1,6 @@
 /***************************************************************************
- *   Copyright (C) 2006-2012 by Peter Penz <peter.penz19@gmail.com>        *
+ *   Copyright (C) 2006 by Peter Penz                                      *
+ *   peter.penz@gmx.at                                                     *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
  *   it under the terms of the GNU General Public License as published by  *
@@ -21,116 +22,127 @@
 
 #include "dolphin_generalsettings.h"
 
-#include <QIcon>
-#include <KLocalizedString>
-#include <QMenu>
+#include <KIconLoader>
+#include <KIcon>
+#include <KLocale>
+#include <KMenu>
+#include <KVBox>
 
+#include "settings/dolphinsettings.h"
 #include "statusbarspaceinfo.h"
 
 #include <QApplication>
+#include <QClipboard>
 #include <QHBoxLayout>
 #include <QLabel>
 #include <QProgressBar>
 #include <QToolButton>
 #include <QTime>
 #include <QTimer>
-#include <QSlider>
-#include <QTextDocument>
-#include <QHelpEvent>
 
 #include <views/dolphinview.h>
 #include <views/zoomlevelinfo.h>
 
-namespace {
-    const int ResetToDefaultTimeout = 1000;
-}
-
-DolphinStatusBar::DolphinStatusBar(QWidget* parent) :
+DolphinStatusBar::DolphinStatusBar(QWidget* parent, DolphinView* view) :
     QWidget(parent),
-    m_text(),
-    m_defaultText(),
-    m_label(0),
+    m_view(view),
+    m_messageLabel(0),
     m_spaceInfo(0),
+    m_zoomWidget(0),
+    m_zoomOut(0),
     m_zoomSlider(0),
+    m_zoomIn(0),
     m_progressBar(0),
     m_stopButton(0),
     m_progress(100),
     m_showProgressBarTimer(0),
-    m_resetToDefaultTextTimer(0),
-    m_textTimestamp()
+    m_messageTimeStamp()
 {
-    // Initialize text label
-    m_label = new QLabel(this);
-    m_label->setWordWrap(true);
-    m_label->setTextFormat(Qt::PlainText);
-    m_label->installEventFilter(this);
+    connect(m_view, SIGNAL(urlChanged(const KUrl&)),
+            this, SLOT(updateSpaceInfoContent(const KUrl&)));
 
-    // Initialize zoom widget
-    m_zoomSlider = new QSlider(Qt::Horizontal, this);
-    m_zoomSlider->setAccessibleName(i18n("Zoom"));
-    m_zoomSlider->setAccessibleDescription(i18nc("Description for zoom-slider (accessibility)", "Sets the size of the file icons."));
+    // Initialize message label
+    m_messageLabel = new KonqStatusBarMessageLabel(this);
+
+    // Initialize zoom slider
+    m_zoomWidget = new QWidget(this);
+
+    m_zoomOut = new QToolButton(m_zoomWidget);
+    m_zoomOut->setIcon(KIcon("file-zoom-out"));
+    m_zoomOut->setAutoRaise(true);
+
+    m_zoomSlider = new QSlider(Qt::Horizontal, m_zoomWidget);
     m_zoomSlider->setPageStep(1);
-    m_zoomSlider->setRange(ZoomLevelInfo::minimumLevel(), ZoomLevelInfo::maximumLevel());
 
-    connect(m_zoomSlider, &QSlider::valueChanged, this, &DolphinStatusBar::zoomLevelChanged);
-    connect(m_zoomSlider, &QSlider::valueChanged, this, &DolphinStatusBar::updateZoomSliderToolTip);
-    connect(m_zoomSlider, &QSlider::sliderMoved, this, &DolphinStatusBar::showZoomSliderToolTip);
+    const int min = ZoomLevelInfo::minimumLevel();
+    const int max = ZoomLevelInfo::maximumLevel();
+    m_zoomSlider->setRange(min, max);
+    m_zoomSlider->setValue(view->zoomLevel());
+    updateZoomSliderToolTip(view->zoomLevel());
+
+    m_zoomIn = new QToolButton(m_zoomWidget);
+    m_zoomIn->setIcon(KIcon("file-zoom-in"));
+    m_zoomIn->setAutoRaise(true);
+
+    // Initialize zoom widget layout
+    QHBoxLayout* zoomWidgetLayout = new QHBoxLayout(m_zoomWidget);
+    zoomWidgetLayout->setSpacing(0);
+    zoomWidgetLayout->setMargin(0);
+    zoomWidgetLayout->addWidget(m_zoomOut);
+    zoomWidgetLayout->addWidget(m_zoomSlider);
+    zoomWidgetLayout->addWidget(m_zoomIn);
+
+    connect(m_zoomSlider, SIGNAL(valueChanged(int)), this, SLOT(setZoomLevel(int)));
+    connect(m_zoomSlider, SIGNAL(sliderMoved(int)), this, SLOT(showZoomSliderToolTip(int)));
+    connect(m_view, SIGNAL(zoomLevelChanged(int)), m_zoomSlider, SLOT(setValue(int)));
+    connect(m_zoomOut, SIGNAL(clicked()), this, SLOT(zoomOut()));
+    connect(m_zoomIn, SIGNAL(clicked()), this, SLOT(zoomIn()));
 
     // Initialize space information
     m_spaceInfo = new StatusBarSpaceInfo(this);
+    m_spaceInfo->setUrl(m_view->url());
 
     // Initialize progress information
     m_stopButton = new QToolButton(this);
-    m_stopButton->setIcon(QIcon::fromTheme(QStringLiteral("process-stop")));
-    m_stopButton->setAccessibleName(i18n("Stop"));
+    m_stopButton->setIcon(KIcon("process-stop"));
+    // TODO: Add tooltip for KDE SC 4.7.0, if new strings are allowed again
     m_stopButton->setAutoRaise(true);
-    m_stopButton->setToolTip(i18nc("@tooltip", "Stop loading"));
     m_stopButton->hide();
-    connect(m_stopButton, &QToolButton::clicked, this, &DolphinStatusBar::stopPressed);
+    connect(m_stopButton, SIGNAL(clicked()), this, SIGNAL(stopPressed()));
 
-    m_progressTextLabel = new QLabel(this);
-    m_progressTextLabel->hide();
+    m_progressText = new QLabel(this);
+    m_progressText->hide();
 
     m_progressBar = new QProgressBar(this);
     m_progressBar->hide();
 
     m_showProgressBarTimer = new QTimer(this);
-    m_showProgressBarTimer->setInterval(500);
+    m_showProgressBarTimer->setInterval(1000);
     m_showProgressBarTimer->setSingleShot(true);
-    connect(m_showProgressBarTimer, &QTimer::timeout, this, &DolphinStatusBar::updateProgressInfo);
-
-    m_resetToDefaultTextTimer = new QTimer(this);
-    m_resetToDefaultTextTimer->setInterval(ResetToDefaultTimeout);
-    m_resetToDefaultTextTimer->setSingleShot(true);
-    connect(m_resetToDefaultTextTimer, &QTimer::timeout, this, &DolphinStatusBar::slotResetToDefaultText);
+    connect(m_showProgressBarTimer, SIGNAL(timeout()), this, SLOT(updateProgressInfo()));
 
     // Initialize top layout and size policies
-    const int fontHeight = QFontMetrics(m_label->font()).height();
-    const int zoomSliderHeight = m_zoomSlider->minimumSizeHint().height();
-    const int contentHeight = qMax(fontHeight, zoomSliderHeight);
+    const int fontHeight = QFontMetrics(m_messageLabel->font()).height();
+    const int zoomWidgetHeight = m_zoomWidget->minimumSizeHint().height();
+    const int contentHeight = qMax(fontHeight, zoomWidgetHeight);
 
-    QFontMetrics fontMetrics(m_label->font());
+    m_messageLabel->setMinimumTextHeight(contentHeight);
 
-    m_label->setFixedHeight(contentHeight);
-    m_label->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Fixed);
-
-    m_zoomSlider->setMaximumWidth(fontMetrics.averageCharWidth() * 25);
-
-    m_spaceInfo->setFixedHeight(contentHeight);
-    m_spaceInfo->setMaximumWidth(fontMetrics.averageCharWidth() * 25);
+    m_spaceInfo->setMaximumSize(200, contentHeight - 5);
     m_spaceInfo->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Fixed);
 
-    m_progressBar->setFixedHeight(contentHeight);
-    m_progressBar->setMaximumWidth(fontMetrics.averageCharWidth() * 25);
+    m_progressBar->setMaximumSize(200, contentHeight);
+    m_zoomWidget->setMaximumSize(150, contentHeight);
+    m_zoomSlider->setMinimumWidth(30);
 
     QHBoxLayout* topLayout = new QHBoxLayout(this);
     topLayout->setMargin(0);
     topLayout->setSpacing(4);
-    topLayout->addWidget(m_label);
-    topLayout->addWidget(m_zoomSlider);
+    topLayout->addWidget(m_messageLabel);
+    topLayout->addWidget(m_zoomWidget);
     topLayout->addWidget(m_spaceInfo);
     topLayout->addWidget(m_stopButton);
-    topLayout->addWidget(m_progressTextLabel);
+    topLayout->addWidget(m_progressText);
     topLayout->addWidget(m_progressBar);
 
     setExtensionsVisible(true);
@@ -140,42 +152,70 @@ DolphinStatusBar::~DolphinStatusBar()
 {
 }
 
-void DolphinStatusBar::setText(const QString& text)
+void DolphinStatusBar::setMessage(const QString& msg,
+                                  Type type)
 {
-    if (m_text == text) {
+    int timeout = 1000; // Timeout in milliseconds until default
+                        // messages may overwrite other messages.
+
+    QString message = msg;
+    if (message.isEmpty()) {
+        // Show the default text as fallback. An empty text indicates
+        // a clearing of the information message.
+        if (m_messageLabel->defaultText().isEmpty()) {
+            return;
+        }
+        message = m_messageLabel->defaultText();
+        type = Default;
+        timeout = 0;
+    }
+
+    KonqStatusBarMessageLabel::Type konqType = static_cast<KonqStatusBarMessageLabel::Type>(type);
+    if ((message == m_messageLabel->text()) && (konqType == m_messageLabel->type())) {
+        // the message is already shown
         return;
     }
 
-    m_textTimestamp = QTime::currentTime();
+    const QTime currentTime = QTime::currentTime();
+    const bool skipMessage = (type == Default) &&
+                             m_messageTimeStamp.isValid() &&
+                             (m_messageTimeStamp.msecsTo(currentTime) < timeout);
+    if (skipMessage) {
+        // A non-default message is shown just for a very short time. Don't hide
+        // the message by a default message, so that the user gets the chance to
+        // read the information.
+        return;
+    }
 
-    if (text.isEmpty()) {
-        // Assure that the previous set text won't get
-        // cleared immediatelly.
-        m_resetToDefaultTextTimer->start();
-    } else {
-        m_text = text;
-
-        if (m_resetToDefaultTextTimer->isActive()) {
-            m_resetToDefaultTextTimer->start();
-        }
-
-        updateLabelText();
+    m_messageLabel->setMessage(message, konqType);
+    if (type != Default) {
+        m_messageTimeStamp = currentTime;
     }
 }
 
-QString DolphinStatusBar::text() const
+DolphinStatusBar::Type DolphinStatusBar::type() const
 {
-    return m_text;
+    return static_cast<Type>(m_messageLabel->type());
+}
+
+QString DolphinStatusBar::message() const
+{
+    return m_messageLabel->text();
 }
 
 void DolphinStatusBar::setProgressText(const QString& text)
 {
-    m_progressTextLabel->setText(text);
+    m_progressText->setText(text);
+}
+
+int DolphinStatusBar::progress() const
+{
+    return m_progress;
 }
 
 QString DolphinStatusBar::progressText() const
 {
-    return m_progressTextLabel->text();
+    return m_progressText->text();
 }
 
 void DolphinStatusBar::setProgress(int percent)
@@ -183,9 +223,20 @@ void DolphinStatusBar::setProgress(int percent)
     // Show a busy indicator if a value < 0 is provided:
     m_progressBar->setMaximum((percent < 0) ? 0 : 100);
 
-    percent = qBound(0, percent, 100);
+    if (percent < 0) {
+        percent = 0;
+    } else if (percent > 100) {
+        percent = 100;
+    }
+
     const bool progressRestarted = (percent < 100) && (percent < m_progress);
     m_progress = percent;
+    if (m_messageLabel->type() == KonqStatusBarMessageLabel::Error) {
+        // Don't update any widget or status bar text if an
+        // error message is shown
+        return;
+    }
+
     if (progressRestarted && !m_progressBar->isVisible()) {
         // Show the progress bar delayed: In the case if 100 % are reached within
         // a short time, no progress bar will be shown at all.
@@ -199,58 +250,32 @@ void DolphinStatusBar::setProgress(int percent)
         m_showProgressBarTimer->stop();
         updateProgressInfo();
     }
-}
 
-int DolphinStatusBar::progress() const
-{
-    return m_progress;
-}
-
-void DolphinStatusBar::resetToDefaultText()
-{
-    QTime currentTime;
-    if (currentTime.msecsTo(m_textTimestamp) < ResetToDefaultTimeout) {
-        m_resetToDefaultTextTimer->start();
-    } else {
-        m_resetToDefaultTextTimer->stop();
-        slotResetToDefaultText();
+    const QString defaultText = m_messageLabel->defaultText();
+    const QString msg(m_messageLabel->text());
+    if ((percent == 0) && !msg.isEmpty()) {
+        setMessage(QString(), Default);
+    } else if ((percent == 100) && (msg != defaultText)) {
+        setMessage(defaultText, Default);
     }
+}
+
+void DolphinStatusBar::clear()
+{
+    setMessage(m_messageLabel->defaultText(), Default);
 }
 
 void DolphinStatusBar::setDefaultText(const QString& text)
 {
-    m_defaultText = text;
-    updateLabelText();
+    m_messageLabel->setDefaultText(text);
 }
 
 QString DolphinStatusBar::defaultText() const
 {
-    return m_defaultText;
+    return m_messageLabel->defaultText();
 }
 
-void DolphinStatusBar::setUrl(const QUrl& url)
-{
-    m_spaceInfo->setUrl(url);
-}
-
-QUrl DolphinStatusBar::url() const
-{
-    return m_spaceInfo->url();
-}
-
-void DolphinStatusBar::setZoomLevel(int zoomLevel)
-{
-    if (zoomLevel != m_zoomSlider->value()) {
-        m_zoomSlider->setValue(zoomLevel);
-    }
-}
-
-int DolphinStatusBar::zoomLevel() const
-{
-    return m_zoomSlider->value();
-}
-
-void DolphinStatusBar::readSettings()
+void DolphinStatusBar::refresh()
 {
     setExtensionsVisible(true);
 }
@@ -259,34 +284,70 @@ void DolphinStatusBar::contextMenuEvent(QContextMenuEvent* event)
 {
     Q_UNUSED(event);
 
-    QMenu menu(this);
+    KMenu menu(this);
+
+    QAction* copyAction = 0;
+    switch (type()) {
+    case Default:
+    case OperationCompleted:
+    case Information:
+        copyAction = menu.addAction(i18nc("@action:inmenu", "Copy Information Message"));
+        break;
+    case Error:
+        copyAction = menu.addAction(i18nc("@action:inmenu", "Copy Error Message"));
+        break;
+    default: break;
+    }
+
+    GeneralSettings* settings = DolphinSettings::instance().generalSettings();
 
     QAction* showZoomSliderAction = menu.addAction(i18nc("@action:inmenu", "Show Zoom Slider"));
     showZoomSliderAction->setCheckable(true);
-    showZoomSliderAction->setChecked(GeneralSettings::showZoomSlider());
+    showZoomSliderAction->setChecked(settings->showZoomSlider());
 
     QAction* showSpaceInfoAction = menu.addAction(i18nc("@action:inmenu", "Show Space Information"));
     showSpaceInfoAction->setCheckable(true);
-    showSpaceInfoAction->setChecked(GeneralSettings::showSpaceInfo());
+    showSpaceInfoAction->setChecked(settings->showSpaceInfo());
 
     const QAction* action = menu.exec(QCursor::pos());
-    if (action == showZoomSliderAction) {
+    if (action == copyAction) {
+        QMimeData* mimeData = new QMimeData();
+        mimeData->setText(message());
+        QApplication::clipboard()->setMimeData(mimeData);
+    } else if (action == showZoomSliderAction) {
         const bool visible = showZoomSliderAction->isChecked();
-        GeneralSettings::setShowZoomSlider(visible);
-        m_zoomSlider->setVisible(visible);
+        settings->setShowZoomSlider(visible);
+        m_zoomWidget->setVisible(visible);
     } else if (action == showSpaceInfoAction) {
         const bool visible = showSpaceInfoAction->isChecked();
-        GeneralSettings::setShowSpaceInfo(visible);
+        settings->setShowSpaceInfo(visible);
         m_spaceInfo->setVisible(visible);
     }
 }
 
-bool DolphinStatusBar::eventFilter(QObject* obj, QEvent* event)
+void DolphinStatusBar::updateSpaceInfoContent(const KUrl& url)
 {
-    if (obj == m_label && event->type() == QEvent::Resize) {
-        updateLabelText();
-    }
-    return QWidget::eventFilter(obj, event);
+    m_spaceInfo->setUrl(url);
+}
+
+void DolphinStatusBar::setZoomLevel(int zoomLevel)
+{
+    m_zoomOut->setEnabled(zoomLevel > m_zoomSlider->minimum());
+    m_zoomIn->setEnabled(zoomLevel < m_zoomSlider->maximum());
+    m_view->setZoomLevel(zoomLevel);
+    updateZoomSliderToolTip(zoomLevel);
+}
+
+void DolphinStatusBar::zoomOut()
+{
+    const int value = m_zoomSlider->value();
+    m_zoomSlider->setValue(value - 1);
+}
+
+void DolphinStatusBar::zoomIn()
+{
+    const int value = m_zoomSlider->value();
+    m_zoomSlider->setValue(value + 1);
 }
 
 void DolphinStatusBar::showZoomSliderToolTip(int zoomLevel)
@@ -301,42 +362,35 @@ void DolphinStatusBar::showZoomSliderToolTip(int zoomLevel)
 
 void DolphinStatusBar::updateProgressInfo()
 {
+    const bool isErrorShown = (m_messageLabel->type() == KonqStatusBarMessageLabel::Error);
     if (m_progress < 100) {
         // Show the progress information and hide the extensions
-        m_stopButton->show();
-        m_progressTextLabel->show();
-        m_progressBar->show();
         setExtensionsVisible(false);
+        if (!isErrorShown) {
+            m_stopButton->show();
+            m_progressText->show();
+            m_progressBar->show();
+        }
     } else {
         // Hide the progress information and show the extensions
         m_stopButton->hide();
-        m_progressTextLabel->hide();
+        m_progressText->hide();
         m_progressBar->hide();
         setExtensionsVisible(true);
     }
 }
 
-void DolphinStatusBar::updateLabelText()
+void DolphinStatusBar::setExtensionsVisible(bool visible)
 {
-    const QString text = m_text.isEmpty() ? m_defaultText : m_text;
-
-    // Set status bar text and elide it if too long
-    QFontMetrics fontMetrics(m_label->font());
-    const QString elidedText = fontMetrics.elidedText(text, Qt::ElideRight, m_label->width());
-    m_label->setText(elidedText);
-
-    // If the text has been elided, set the original text as tooltip
-    if (text != elidedText) {
-        m_label->setToolTip(Qt::convertFromPlainText(text));
-    } else {
-        m_label->setToolTip(QString());
+    bool showSpaceInfo = visible;
+    bool showZoomWidget = visible;
+    if (visible) {
+        const GeneralSettings* settings = DolphinSettings::instance().generalSettings();
+        showSpaceInfo = settings->showSpaceInfo();
+        showZoomWidget = settings->showZoomSlider();
     }
-}
-
-void DolphinStatusBar::slotResetToDefaultText()
-{
-    m_text.clear();
-    updateLabelText();
+    m_spaceInfo->setVisible(showSpaceInfo);
+    m_zoomWidget->setVisible(showZoomWidget);
 }
 
 void DolphinStatusBar::updateZoomSliderToolTip(int zoomLevel)
@@ -345,15 +399,4 @@ void DolphinStatusBar::updateZoomSliderToolTip(int zoomLevel)
     m_zoomSlider->setToolTip(i18ncp("@info:tooltip", "Size: 1 pixel", "Size: %1 pixels", size));
 }
 
-void DolphinStatusBar::setExtensionsVisible(bool visible)
-{
-    bool showSpaceInfo = visible;
-    bool showZoomSlider = visible;
-    if (visible) {
-        showSpaceInfo = GeneralSettings::showSpaceInfo();
-        showZoomSlider = GeneralSettings::showZoomSlider();
-    }
-    m_spaceInfo->setVisible(showSpaceInfo);
-    m_zoomSlider->setVisible(showZoomSlider);
-}
-
+#include "dolphinstatusbar.moc"

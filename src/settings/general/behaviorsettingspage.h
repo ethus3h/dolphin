@@ -21,8 +21,7 @@
 #define BEHAVIORSETTINGSPAGE_H
 
 #include <settings/settingspagebase.h>
-#include <QUrl>
-#include "dolphin_generalsettings.h"
+#include <KUrl>
 
 class QCheckBox;
 class QLabel;
@@ -36,36 +35,33 @@ class BehaviorSettingsPage : public SettingsPageBase
     Q_OBJECT
 
 public:
-    BehaviorSettingsPage(const QUrl &url, QWidget* parent);
+    BehaviorSettingsPage(const KUrl& url, QWidget* parent);
     virtual ~BehaviorSettingsPage();
 
     /** @see SettingsPageBase::applySettings() */
-    virtual void applySettings() Q_DECL_OVERRIDE;
+    virtual void applySettings();
 
     /** @see SettingsPageBase::restoreDefaults() */
-    virtual void restoreDefaults() Q_DECL_OVERRIDE;
+    virtual void restoreDefaults();
 
 private:
     void loadSettings();
-    void setSortingChoiceValue(GeneralSettings* settings);
-    void loadSortingChoiceSettings();
 
 private:
-    QUrl m_url;
+    KUrl m_url;
 
-    QRadioButton* m_localViewProps;
-    QRadioButton* m_globalViewProps;
+    QRadioButton* m_localProps;
+    QRadioButton* m_globalProps;
 
+    QCheckBox* m_confirmMoveToTrash;
+    QCheckBox* m_confirmDelete;
+    QCheckBox* m_confirmClosingMultipleTabs;
+
+    QCheckBox* m_renameInline;
     QCheckBox* m_showToolTips;
     QLabel* m_configureToolTips;
     QCheckBox* m_showSelectionToggle;
-
-    QRadioButton* m_naturalSorting;
-    QRadioButton* m_caseSensitiveSorting;
-    QRadioButton* m_caseInsensitiveSorting;
-
-    QCheckBox* m_renameInline;
-    QCheckBox* m_useTabForSplitViewSwitch;
+    QCheckBox* m_naturalSorting;
 };
 
 #endif

@@ -18,217 +18,194 @@
 */
 
 #include "dolphinpart.h"
-#include "dolphinremoveaction.h"
 
 #include <KFileItemListProperties>
+#include <konq_operations.h>
 
 #include <KAboutData>
 #include <KActionCollection>
-#include "dolphindebug.h"
+#include <KConfigGroup>
+#include <KDebug>
+#include <KGlobalSettings>
 #include <KIconLoader>
-#include <KLocalizedString>
+#include <KLocale>
 #include <KMessageBox>
 #include <KPluginFactory>
 #include <KRun>
+#include <KToggleAction>
+#include <KIO/NetAccess>
 #include <KToolInvocation>
-#include <KAuthorized>
-#include <QMenu>
-#include <KSharedConfig>
-#include <KConfigGroup>
-#include <KMimeTypeEditor>
-#include <KJobWidgets>
+#include <kauthorized.h>
+#include <KNewFileMenu>
+#include <KMenu>
+#include <KInputDialog>
+#include <KProtocolInfo>
 
-#include "dolphinpart_ext.h"
-#include "dolphinnewfilemenu.h"
+#include "settings/dolphinsettings.h"
 #include "views/dolphinview.h"
 #include "views/dolphinviewactionhandler.h"
+#include "views/dolphinsortfilterproxymodel.h"
+#include "views/dolphinmodel.h"
 #include "views/dolphinnewfilemenuobserver.h"
 #include "views/dolphinremoteencoding.h"
-#include "kitemviews/kfileitemmodel.h"
-#include "kitemviews/private/kfileitemmodeldirlister.h"
+#include "views/dolphindirlister.h"
 
-#include <QStandardPaths>
 #include <QActionGroup>
-#include <QTextDocument>
 #include <QApplication>
 #include <QClipboard>
-#include <QDir>
-#include <QKeyEvent>
-#include <QInputDialog>
 
 K_PLUGIN_FACTORY(DolphinPartFactory, registerPlugin<DolphinPart>();)
+K_EXPORT_PLUGIN(DolphinPartFactory("dolphinpart", "dolphin"))
 
 DolphinPart::DolphinPart(QWidget* parentWidget, QObject* parent, const QVariantList& args)
     : KParts::ReadOnlyPart(parent)
-      ,m_openTerminalAction(0)
-      ,m_removeAction(0)
 {
     Q_UNUSED(args)
-    setComponentData(*createAboutData(), false);
+    setComponentData(DolphinPartFactory::componentData(), false);
     m_extension = new DolphinPartBrowserExtension(this);
+    new DolphinPartFileInfoExtension(this);
 
     // make sure that other apps using this part find Dolphin's view-file-columns icons
-    KIconLoader::global()->addAppDir(QStringLiteral("dolphin"));
+    KIconLoader::global()->addAppDir("dolphin");
 
-    m_view = new DolphinView(QUrl(), parentWidget);
+    m_view = new DolphinView(KUrl(), parentWidget);
     m_view->setTabsForFilesEnabled(true);
     setWidget(m_view);
 
-    connect(&DolphinNewFileMenuObserver::instance(), &DolphinNewFileMenuObserver::errorMessage,
-            this, &DolphinPart::slotErrorMessage);
+    connect(m_view, SIGNAL(finishedPathLoading(KUrl)), this, SLOT(slotCompleted(KUrl)));
+    connect(m_view, SIGNAL(pathLoadingProgress(int)), this, SLOT(updateProgress(int)));
+    connect(m_view, SIGNAL(errorMessage(QString)), this, SLOT(slotErrorMessage(QString)));
 
-    connect(m_view, &DolphinView::directoryLoadingCompleted, this, static_cast<void(DolphinPart::*)()>(&DolphinPart::completed));
-    connect(m_view, &DolphinView::directoryLoadingCompleted, this, &DolphinPart::updatePasteAction);
-    connect(m_view, &DolphinView::directoryLoadingProgress, this, &DolphinPart::updateProgress);
-    connect(m_view, &DolphinView::errorMessage, this, &DolphinPart::slotErrorMessage);
+    setXMLFile("dolphinpart.rc");
 
-    setXMLFile(QStringLiteral("dolphinpart.rc"));
-
-    connect(m_view, &DolphinView::infoMessage,
-            this, &DolphinPart::slotMessage);
-    connect(m_view, &DolphinView::operationCompletedMessage,
-            this, &DolphinPart::slotMessage);
-    connect(m_view, &DolphinView::errorMessage,
-            this, &DolphinPart::slotErrorMessage);
-    connect(m_view, &DolphinView::itemActivated,
-            this, &DolphinPart::slotItemActivated);
-    connect(m_view, &DolphinView::itemsActivated,
-            this, &DolphinPart::slotItemsActivated);
-    connect(m_view, &DolphinView::tabRequested,
-            this, &DolphinPart::createNewWindow);
-    connect(m_view, &DolphinView::requestContextMenu,
-            this, &DolphinPart::slotOpenContextMenu);
-    connect(m_view, &DolphinView::selectionChanged,
-            m_extension, static_cast<void(DolphinPartBrowserExtension::*)(const KFileItemList&)>(&DolphinPartBrowserExtension::selectionInfo));
-    connect(m_view, &DolphinView::selectionChanged,
-            this, &DolphinPart::slotSelectionChanged);
-    connect(m_view, &DolphinView::requestItemInfo,
-            this, &DolphinPart::slotRequestItemInfo);
-    connect(m_view, &DolphinView::modeChanged,
-            this, &DolphinPart::viewModeChanged); // relay signal
-    connect(m_view, &DolphinView::redirection,
-            this, &DolphinPart::slotDirectoryRedirection);
+    connect(m_view, SIGNAL(infoMessage(QString)),
+            this, SLOT(slotMessage(QString)));
+    connect(m_view, SIGNAL(operationCompletedMessage(QString)),
+            this, SLOT(slotMessage(QString)));
+    connect(m_view, SIGNAL(errorMessage(QString)),
+            this, SLOT(slotErrorMessage(QString)));
+    connect(m_view, SIGNAL(itemTriggered(KFileItem)),
+            this, SLOT(slotItemTriggered(KFileItem)));
+    connect(m_view, SIGNAL(tabRequested(KUrl)),
+            this, SLOT(createNewWindow(KUrl)));
+    connect(m_view, SIGNAL(requestContextMenu(KFileItem,KUrl,QList<QAction*>)),
+            this, SLOT(slotOpenContextMenu(KFileItem,KUrl,QList<QAction*>)));
+    connect(m_view, SIGNAL(selectionChanged(KFileItemList)),
+            m_extension, SIGNAL(selectionInfo(KFileItemList)));
+    connect(m_view, SIGNAL(selectionChanged(KFileItemList)),
+            this, SLOT(slotSelectionChanged(KFileItemList)));
+    connect(m_view, SIGNAL(requestItemInfo(KFileItem)),
+            this, SLOT(slotRequestItemInfo(KFileItem)));
+    connect(m_view, SIGNAL(modeChanged()),
+            this, SIGNAL(viewModeChanged())); // relay signal
+    connect(m_view, SIGNAL(redirection(KUrl, KUrl)),
+            this, SLOT(slotRedirection(KUrl, KUrl)));
 
     // Watch for changes that should result in updates to the
     // status bar text.
-    connect(m_view, &DolphinView::itemCountChanged, this, &DolphinPart::updateStatusBar);
-    connect(m_view,  &DolphinView::selectionChanged, this, &DolphinPart::updateStatusBar);
+    connect(m_view, SIGNAL(itemCountChanged()), this, SLOT(updateStatusBar()));
+    connect(m_view,  SIGNAL(selectionChanged(const KFileItemList)), this, SLOT(updateStatusBar()));
 
     m_actionHandler = new DolphinViewActionHandler(actionCollection(), this);
     m_actionHandler->setCurrentView(m_view);
-    connect(m_actionHandler, &DolphinViewActionHandler::createDirectory, this, &DolphinPart::createDirectory);
+    connect(m_actionHandler, SIGNAL(createDirectory()), SLOT(createDirectory()));
 
     m_remoteEncoding = new DolphinRemoteEncoding(this, m_actionHandler);
-    connect(this, &DolphinPart::aboutToOpenURL,
-            m_remoteEncoding, &DolphinRemoteEncoding::slotAboutToOpenUrl);
+    connect(this, SIGNAL(aboutToOpenURL()),
+            m_remoteEncoding, SLOT(slotAboutToOpenUrl()));
 
     QClipboard* clipboard = QApplication::clipboard();
-    connect(clipboard, &QClipboard::dataChanged,
-            this, &DolphinPart::updatePasteAction);
-
-    // Create file info and listing filter extensions.
-    // NOTE: Listing filter needs to be instantiated after the creation of the view.
-    new DolphinPartFileInfoExtension(this);
-
-    new DolphinPartListingFilterExtension(this);
-
-    KDirLister* lister = m_view->m_model->m_dirLister;
-    if (lister) {
-        DolphinPartListingNotificationExtension* notifyExt = new DolphinPartListingNotificationExtension(this);
-        connect(lister, &KDirLister::newItems, notifyExt, &DolphinPartListingNotificationExtension::slotNewItems);
-        connect(lister, &KDirLister::itemsDeleted, notifyExt, &DolphinPartListingNotificationExtension::slotItemsDeleted);
-    } else {
-        qCWarning(DolphinDebug) << "NULL KDirLister object! KParts::ListingNotificationExtension will NOT be supported";
-    }
+    connect(clipboard, SIGNAL(dataChanged()),
+            this, SLOT(updatePasteAction()));
 
     createActions();
     m_actionHandler->updateViewActions();
     slotSelectionChanged(KFileItemList()); // initially disable selection-dependent actions
 
-    // Listen to events from the app so we can update the remove key by
-    // checking for a Shift key press.
-    qApp->installEventFilter(this);
-
     // TODO there was a "always open a new window" (when clicking on a directory) setting in konqueror
     // (sort of spacial navigation)
 
     loadPlugins(this, this, componentData());
+
 }
 
 DolphinPart::~DolphinPart()
 {
+    DolphinSettings::instance().save();
+    DolphinNewFileMenuObserver::instance().detach(m_newFileMenu);
 }
 
 void DolphinPart::createActions()
 {
     // Edit menu
 
-    m_newFileMenu = new DolphinNewFileMenu(actionCollection(), this);
+    m_newFileMenu = new KNewFileMenu(actionCollection(), "new_menu", this);
     m_newFileMenu->setParentWidget(widget());
-    connect(m_newFileMenu->menu(), &QMenu::aboutToShow,
-            this, &DolphinPart::updateNewMenu);
+    DolphinNewFileMenuObserver::instance().attach(m_newFileMenu);
+    connect(m_newFileMenu->menu(), SIGNAL(aboutToShow()),
+            this, SLOT(updateNewMenu()));
 
-    QAction *editMimeTypeAction = actionCollection()->addAction( QStringLiteral("editMimeType") );
+    KAction *editMimeTypeAction = actionCollection()->addAction( "editMimeType" );
     editMimeTypeAction->setText( i18nc("@action:inmenu Edit", "&Edit File Type..." ) );
-    connect(editMimeTypeAction, &QAction::triggered, this, &DolphinPart::slotEditMimeType);
+    connect(editMimeTypeAction, SIGNAL(triggered()), SLOT(slotEditMimeType()));
 
-    QAction* selectItemsMatching = actionCollection()->addAction(QStringLiteral("select_items_matching"));
+    KAction* selectItemsMatching = actionCollection()->addAction("select_items_matching");
     selectItemsMatching->setText(i18nc("@action:inmenu Edit", "Select Items Matching..."));
-    actionCollection()->setDefaultShortcut(selectItemsMatching, Qt::CTRL | Qt::Key_S);
-    connect(selectItemsMatching, &QAction::triggered, this, &DolphinPart::slotSelectItemsMatchingPattern);
+    selectItemsMatching->setShortcut(Qt::CTRL | Qt::Key_S);
+    connect(selectItemsMatching, SIGNAL(triggered()), this, SLOT(slotSelectItemsMatchingPattern()));
 
-    QAction* unselectItemsMatching = actionCollection()->addAction(QStringLiteral("unselect_items_matching"));
+    KAction* unselectItemsMatching = actionCollection()->addAction("unselect_items_matching");
     unselectItemsMatching->setText(i18nc("@action:inmenu Edit", "Unselect Items Matching..."));
-    connect(unselectItemsMatching, &QAction::triggered, this, &DolphinPart::slotUnselectItemsMatchingPattern);
+    connect(unselectItemsMatching, SIGNAL(triggered()), this, SLOT(slotUnselectItemsMatchingPattern()));
 
-    actionCollection()->addAction(KStandardAction::SelectAll, QStringLiteral("select_all"), m_view, SLOT(selectAll()));
+    actionCollection()->addAction(KStandardAction::SelectAll, "select_all", m_view, SLOT(selectAll()));
 
-    QAction* unselectAll = actionCollection()->addAction(QStringLiteral("unselect_all"));
+    KAction* unselectAll = actionCollection()->addAction("unselect_all");
     unselectAll->setText(i18nc("@action:inmenu Edit", "Unselect All"));
-    connect(unselectAll, &QAction::triggered, m_view, &DolphinView::clearSelection);
+    connect(unselectAll, SIGNAL(triggered()), m_view, SLOT(clearSelection()));
 
-    QAction* invertSelection = actionCollection()->addAction(QStringLiteral("invert_selection"));
+    KAction* invertSelection = actionCollection()->addAction("invert_selection");
     invertSelection->setText(i18nc("@action:inmenu Edit", "Invert Selection"));
-    actionCollection()->setDefaultShortcut(invertSelection, Qt::CTRL | Qt::SHIFT | Qt::Key_A);
-    connect(invertSelection, &QAction::triggered, m_view, &DolphinView::invertSelection);
+    invertSelection->setShortcut(Qt::CTRL | Qt::SHIFT | Qt::Key_A);
+    connect(invertSelection, SIGNAL(triggered()), m_view, SLOT(invertSelection()));
 
     // View menu: all done by DolphinViewActionHandler
 
     // Go menu
 
     QActionGroup* goActionGroup = new QActionGroup(this);
-    connect(goActionGroup, &QActionGroup::triggered,
-            this, &DolphinPart::slotGoTriggered);
+    connect(goActionGroup, SIGNAL(triggered(QAction*)),
+            this, SLOT(slotGoTriggered(QAction*)));
 
     createGoAction("go_applications", "start-here-kde",
-                   i18nc("@action:inmenu Go", "App&lications"), QStringLiteral("programs:/"),
+                   i18nc("@action:inmenu Go", "App&lications"), QString("programs:/"),
                    goActionGroup);
     createGoAction("go_network_folders", "folder-remote",
-                   i18nc("@action:inmenu Go", "&Network Folders"), QStringLiteral("remote:/"),
+                   i18nc("@action:inmenu Go", "&Network Folders"), QString("remote:/"),
                    goActionGroup);
     createGoAction("go_settings", "preferences-system",
-                   i18nc("@action:inmenu Go", "Sett&ings"), QStringLiteral("settings:/"),
+                   i18nc("@action:inmenu Go", "Sett&ings"), QString("settings:/"),
                    goActionGroup);
     createGoAction("go_trash", "user-trash",
-                   i18nc("@action:inmenu Go", "Trash"), QStringLiteral("trash:/"),
+                   i18nc("@action:inmenu Go", "Trash"), QString("trash:/"),
                    goActionGroup);
     createGoAction("go_autostart", "",
-                   i18nc("@action:inmenu Go", "Autostart"), QStandardPaths::writableLocation(QStandardPaths::GenericConfigLocation) + "/autostart",
+                   i18nc("@action:inmenu Go", "Autostart"), KGlobalSettings::autostartPath(),
                    goActionGroup);
 
     // Tools menu
-    m_findFileAction = actionCollection()->addAction(QStringLiteral("find_file"));
-    m_findFileAction->setText(i18nc("@action:inmenu Tools", "Find File..."));
-    actionCollection()->setDefaultShortcut(m_findFileAction, Qt::CTRL | Qt::Key_F);
-    m_findFileAction->setIcon(QIcon::fromTheme(QStringLiteral("edit-find")));
-    connect(m_findFileAction, &QAction::triggered, this, &DolphinPart::slotFindFile);
+    KAction* findFile = actionCollection()->addAction("find_file");
+    findFile->setText(i18nc("@action:inmenu Tools", "Find File..."));
+    findFile->setShortcut(Qt::CTRL | Qt::Key_F);
+    findFile->setIcon(KIcon("edit-find"));
+    connect(findFile, SIGNAL(triggered()), this, SLOT(slotFindFile()));
 
-    if (KAuthorized::authorize(QStringLiteral("shell_access"))) {
-        m_openTerminalAction = actionCollection()->addAction(QStringLiteral("open_terminal"));
-        m_openTerminalAction->setIcon(QIcon::fromTheme(QStringLiteral("utilities-terminal")));
-        m_openTerminalAction->setText(i18nc("@action:inmenu Tools", "Open &Terminal"));
-        connect(m_openTerminalAction, &QAction::triggered, this, &DolphinPart::slotOpenTerminal);
-        actionCollection()->setDefaultShortcut(m_openTerminalAction, Qt::Key_F4);
+    if (KAuthorized::authorizeKAction("shell_access")) {
+        KAction* action = actionCollection()->addAction("open_terminal");
+        action->setIcon(KIcon("utilities-terminal"));
+        action->setText(i18nc("@action:inmenu Tools", "Open &Terminal"));
+        connect(action, SIGNAL(triggered()), SLOT(slotOpenTerminal()));
+        action->setShortcut(Qt::Key_F4);
     }
 }
 
@@ -236,8 +213,8 @@ void DolphinPart::createGoAction(const char* name, const char* iconName,
                                  const QString& text, const QString& url,
                                  QActionGroup* actionGroup)
 {
-    QAction* action = actionCollection()->addAction(name);
-    action->setIcon(QIcon::fromTheme(iconName));
+    KAction* action = actionCollection()->addAction(name);
+    action->setIcon(KIcon(iconName));
     action->setText(text);
     action->setData(url);
     action->setActionGroup(actionGroup);
@@ -246,29 +223,29 @@ void DolphinPart::createGoAction(const char* name, const char* iconName,
 void DolphinPart::slotGoTriggered(QAction* action)
 {
     const QString url = action->data().toString();
-    emit m_extension->openUrlRequest(QUrl(url));
+    emit m_extension->openUrlRequest(KUrl(url));
 }
 
 void DolphinPart::slotSelectionChanged(const KFileItemList& selection)
 {
     const bool hasSelection = !selection.isEmpty();
 
-    QAction* renameAction  = actionCollection()->action(QStringLiteral("rename"));
-    QAction* moveToTrashAction = actionCollection()->action(QStringLiteral("move_to_trash"));
-    QAction* deleteAction = actionCollection()->action(QStringLiteral("delete"));
-    QAction* editMimeTypeAction = actionCollection()->action(QStringLiteral("editMimeType"));
-    QAction* propertiesAction = actionCollection()->action(QStringLiteral("properties"));
-    QAction* deleteWithTrashShortcut = actionCollection()->action(QStringLiteral("delete_shortcut")); // see DolphinViewActionHandler
+    QAction* renameAction  = actionCollection()->action("rename");
+    QAction* moveToTrashAction = actionCollection()->action("move_to_trash");
+    QAction* deleteAction = actionCollection()->action("delete");
+    QAction* editMimeTypeAction = actionCollection()->action("editMimeType");
+    QAction* propertiesAction = actionCollection()->action("properties");
+    QAction* deleteWithTrashShortcut = actionCollection()->action("delete_shortcut"); // see DolphinViewActionHandler
 
     if (!hasSelection) {
-        stateChanged(QStringLiteral("has_no_selection"));
+        stateChanged("has_no_selection");
 
         emit m_extension->enableAction("cut", false);
         emit m_extension->enableAction("copy", false);
         deleteWithTrashShortcut->setEnabled(false);
         editMimeTypeAction->setEnabled(false);
     } else {
-        stateChanged(QStringLiteral("has_selection"));
+        stateChanged("has_selection");
 
         // TODO share this code with DolphinMainWindow::updateEditActions (and the desktop code)
         // in libkonq
@@ -295,10 +272,10 @@ void DolphinPart::updatePasteAction()
 
 KAboutData* DolphinPart::createAboutData()
 {
-    return new KAboutData(QStringLiteral("dolphinpart"), i18nc("@title", "Dolphin Part"), QStringLiteral("0.1"));
+    return new KAboutData("dolphinpart", "dolphin", ki18nc("@title", "Dolphin Part"), "0.1");
 }
 
-bool DolphinPart::openUrl(const QUrl &url)
+bool DolphinPart::openUrl(const KUrl& url)
 {
     bool reload = arguments().reload();
     // A bit of a workaround so that changing the namefilter works: force reload.
@@ -309,11 +286,11 @@ bool DolphinPart::openUrl(const QUrl &url)
         return true;
     }
     setUrl(url); // remember it at the KParts level
-    QUrl visibleUrl(url);
+    KUrl visibleUrl(url);
     if (!m_nameFilter.isEmpty()) {
-        visibleUrl.setPath(visibleUrl.path() + '/' + m_nameFilter);
+        visibleUrl.addPath(m_nameFilter);
     }
-    QString prettyUrl = visibleUrl.toDisplayString(QUrl::PreferLocalFile);
+    QString prettyUrl = visibleUrl.pathOrUrl();
     emit setWindowCaption(prettyUrl);
     emit m_extension->setLocationBarUrl(prettyUrl);
     emit started(0); // get the wheel to spin
@@ -323,14 +300,13 @@ bool DolphinPart::openUrl(const QUrl &url)
     emit aboutToOpenURL();
     if (reload)
         m_view->reload();
-    // Disable "Find File" and "Open Terminal" actions for non-file URLs,
-    // e.g. ftp, smb, etc. #279283
-    const bool isLocalUrl = url.isLocalFile();
-    m_findFileAction->setEnabled(isLocalUrl);
-    if (m_openTerminalAction) {
-        m_openTerminalAction->setEnabled(isLocalUrl);
-    }
     return true;
+}
+
+void DolphinPart::slotCompleted(const KUrl& url)
+{
+    Q_UNUSED(url)
+    emit completed();
 }
 
 void DolphinPart::slotMessage(const QString& msg)
@@ -340,7 +316,7 @@ void DolphinPart::slotMessage(const QString& msg)
 
 void DolphinPart::slotErrorMessage(const QString& msg)
 {
-    qCDebug(DolphinDebug) << msg;
+    kDebug() << msg;
     emit canceled(msg);
     //KMessageBox::error(m_view, msg);
 }
@@ -351,12 +327,11 @@ void DolphinPart::slotRequestItemInfo(const KFileItem& item)
     if (item.isNull()) {
         updateStatusBar();
     } else {
-        const QString escapedText = Qt::convertFromPlainText(item.getStatusBarInfo());
-        ReadOnlyPart::setStatusBarText(QStringLiteral("<qt>%1</qt>").arg(escapedText));
+        ReadOnlyPart::setStatusBarText(item.getStatusBarInfo());
     }
 }
 
-void DolphinPart::slotItemActivated(const KFileItem& item)
+void DolphinPart::slotItemTriggered(const KFileItem& item)
 {
     KParts::OpenUrlArguments args;
     // Forget about the known mimetype if a target URL is used.
@@ -372,23 +347,15 @@ void DolphinPart::slotItemActivated(const KFileItem& item)
     emit m_extension->openUrlRequest(item.targetUrl(), args, browserArgs);
 }
 
-void DolphinPart::slotItemsActivated(const KFileItemList& items)
-{
-    foreach (const KFileItem& item, items) {
-        slotItemActivated(item);
-    }
-}
-
-void DolphinPart::createNewWindow(const QUrl& url)
+void DolphinPart::createNewWindow(const KUrl& url)
 {
     // TODO: Check issue N176832 for the missing QAIV signal; task 177399 - maybe this code
-    // should be moved into DolphinPart::slotItemActivated()
+    // should be moved into DolphinPart::slotItemTriggered()
     emit m_extension->createNewWindow(url);
 }
 
-void DolphinPart::slotOpenContextMenu(const QPoint& pos,
-                                      const KFileItem& _item,
-                                      const QUrl &,
+void DolphinPart::slotOpenContextMenu(const KFileItem& _item,
+                                      const KUrl&,
                                       const QList<QAction*>& customActions)
 {
     KParts::BrowserExtension::PopupFlags popupFlags = KParts::BrowserExtension::DefaultPopupItems
@@ -398,9 +365,10 @@ void DolphinPart::slotOpenContextMenu(const QPoint& pos,
     KFileItem item(_item);
 
     if (item.isNull()) { // viewport context menu
+        popupFlags |= KParts::BrowserExtension::ShowNavigationItems | KParts::BrowserExtension::ShowUp;
         item = m_view->rootItem();
         if (item.isNull())
-            item = KFileItem(url());
+            item = KFileItem( S_IFDIR, (mode_t)-1, url() );
         else
             item.setUrl(url()); // ensure we use the view url, not the canonical path (#213799)
     }
@@ -422,33 +390,37 @@ void DolphinPart::slotOpenContextMenu(const QPoint& pos,
     editActions += customActions;
 
     if (!_item.isNull()) { // only for context menu on one or more items
-        const bool supportsMoving = capabilities.supportsMoving();
+        bool supportsDeleting = capabilities.supportsDeleting();
+        bool supportsMoving = capabilities.supportsMoving();
 
-        if (capabilities.supportsDeleting()) {
-            const bool showDeleteAction = (KSharedConfig::openConfig()->group("KDE").readEntry("ShowDeleteCommand", false) ||
-                                           !item.isLocalFile());
-            const bool showMoveToTrashAction = capabilities.isLocal() && supportsMoving;
-
-            if (showDeleteAction && showMoveToTrashAction) {
-                delete m_removeAction;
-                m_removeAction = 0;
-                editActions.append(actionCollection()->action(QStringLiteral("move_to_trash")));
-                editActions.append(actionCollection()->action(QStringLiteral("delete")));
-            } else if (showDeleteAction && !showMoveToTrashAction) {
-                editActions.append(actionCollection()->action(QStringLiteral("delete")));
-            } else {
-                if (!m_removeAction)
-                    m_removeAction = new DolphinRemoveAction(this, actionCollection());
-                editActions.append(m_removeAction);
-                m_removeAction->update();
-            }
-        } else {
+        if (!supportsDeleting) {
             popupFlags |= KParts::BrowserExtension::NoDeletion;
         }
 
         if (supportsMoving) {
-            editActions.append(actionCollection()->action(QStringLiteral("rename")));
+            editActions.append(actionCollection()->action("rename"));
         }
+
+        bool addTrash = capabilities.isLocal() && supportsMoving;
+        bool addDel = false;
+        if (supportsDeleting) {
+            if ( !item.isLocalFile() )
+                addDel = true;
+            else if (QApplication::keyboardModifiers() & Qt::ShiftModifier) {
+                addTrash = false;
+                addDel = true;
+            }
+            else {
+                KSharedConfig::Ptr globalConfig = KSharedConfig::openConfig("kdeglobals", KConfig::IncludeGlobals);
+                KConfigGroup configGroup(globalConfig, "KDE");
+                addDel = configGroup.readEntry("ShowDeleteCommand", false);
+            }
+        }
+
+        if (addTrash)
+            editActions.append(actionCollection()->action("move_to_trash"));
+        if (addDel)
+            editActions.append(actionCollection()->action("delete"));
 
         // Normally KonqPopupMenu only shows the "Create new" submenu in the current view
         // since otherwise the created file would not be visible.
@@ -458,9 +430,9 @@ void DolphinPart::slotOpenContextMenu(const QPoint& pos,
 
     }
 
-    actionGroups.insert(QStringLiteral("editactions"), editActions);
+    actionGroups.insert("editactions", editActions);
 
-    emit m_extension->popupMenu(pos,
+    emit m_extension->popupMenu(QCursor::pos(),
                                 items,
                                 KParts::OpenUrlArguments(),
                                 KParts::BrowserArguments(),
@@ -468,12 +440,12 @@ void DolphinPart::slotOpenContextMenu(const QPoint& pos,
                                 actionGroups);
 }
 
-void DolphinPart::slotDirectoryRedirection(const QUrl &oldUrl, const QUrl &newUrl)
+void DolphinPart::slotRedirection(const KUrl& oldUrl, const KUrl& newUrl)
 {
-    qCDebug(DolphinDebug) << oldUrl << newUrl << "currentUrl=" << url();
-    if (oldUrl.matches(url(), QUrl::StripTrailingSlash /* #207572 */)) {
+    //kDebug() << oldUrl << newUrl << "currentUrl=" << url();
+    if (oldUrl.equals(url(), KUrl::CompareWithoutTrailingSlash /* #207572 */)) {
         KParts::ReadOnlyPart::setUrl(newUrl);
-        const QString prettyUrl = newUrl.toDisplayString(QUrl::PreferLocalFile);
+        const QString prettyUrl = newUrl.pathOrUrl();
         emit m_extension->setLocationBarUrl(prettyUrl);
     }
 }
@@ -483,7 +455,7 @@ void DolphinPart::slotEditMimeType()
 {
     const KFileItemList items = m_view->selectedItems();
     if (!items.isEmpty()) {
-        KMimeTypeEditor::editMimeType(items.first().mimetype(), m_view);
+        KonqOperations::editMimeType(items.first().mimetype(), m_view);
     }
 }
 
@@ -504,11 +476,11 @@ void DolphinPart::slotUnselectItemsMatchingPattern()
 void DolphinPart::openSelectionDialog(const QString& title, const QString& text, bool selectItems)
 {
     bool okClicked;
-    const QString pattern = QInputDialog::getText(m_view, title, text, QLineEdit::Normal, QStringLiteral("*"), &okClicked);
+    QString pattern = KInputDialog::getText(title, text, "*", &okClicked, m_view);
 
     if (okClicked && !pattern.isEmpty()) {
         QRegExp patternRegExp(pattern, Qt::CaseSensitive, QRegExp::Wildcard);
-        m_view->selectItems(patternRegExp, selectItems);
+        m_view->setItemSelectionEnabled(patternRegExp, selectItems);
     }
 }
 
@@ -536,14 +508,11 @@ void DolphinPart::slotOpenTerminal()
 {
     QString dir(QDir::homePath());
 
-    QUrl u(url());
+    KUrl u(url());
 
     // If the given directory is not local, it can still be the URL of an
     // ioslave using UDS_LOCAL_PATH which to be converted first.
-    KIO::StatJob* statJob = KIO::mostLocalUrl(u);
-    KJobWidgets::setWindow(statJob, widget());
-    statJob->exec();
-    u = statJob->mostLocalUrl();
+    u = KIO::NetAccess::mostLocalUrl(u, widget());
 
     //If the URL is local after the above conversion, set the directory.
     if (u.isLocalFile()) {
@@ -555,22 +524,21 @@ void DolphinPart::slotOpenTerminal()
 
 void DolphinPart::slotFindFile()
 {
-    KRun::run(QStringLiteral("kfind"), {url()}, widget());
+    KRun::run("kfind", url(), widget());
 }
 
 void DolphinPart::updateNewMenu()
 {
     // As requested by KNewFileMenu :
     m_newFileMenu->checkUpToDate();
-    m_newFileMenu->setViewShowsHiddenFiles(m_view->hiddenFilesShown());
+    m_newFileMenu->setViewShowsHiddenFiles(m_view->showHiddenFiles());
     // And set the files that the menu apply on :
     m_newFileMenu->setPopupFiles(url());
 }
 
 void DolphinPart::updateStatusBar()
 {
-    const QString escapedText = Qt::convertFromPlainText(m_view->statusBarText());
-    emit ReadOnlyPart::setStatusBarText(QStringLiteral("<qt>%1</qt>").arg(escapedText));
+    emit ReadOnlyPart::setStatusBarText(m_view->statusBarText());
 }
 
 void DolphinPart::updateProgress(int percent)
@@ -580,36 +548,99 @@ void DolphinPart::updateProgress(int percent)
 
 void DolphinPart::createDirectory()
 {
-    m_newFileMenu->setViewShowsHiddenFiles(m_view->hiddenFilesShown());
+    m_newFileMenu->setViewShowsHiddenFiles(m_view->showHiddenFiles());
     m_newFileMenu->setPopupFiles(url());
     m_newFileMenu->createDirectory();
 }
 
-void DolphinPart::setFilesToSelect(const QList<QUrl>& files)
+void DolphinPart::setFilesToSelect(const KUrl::List& files)
 {
-    if (files.isEmpty()) {
-        return;
-    }
-
     m_view->markUrlsAsSelected(files);
-    m_view->markUrlAsCurrent(files.at(0));
 }
 
-bool DolphinPart::eventFilter(QObject* obj, QEvent* event)
-{
-    const int type = event->type();
+////
 
-    if ((type == QEvent::KeyPress || type == QEvent::KeyRelease) && m_removeAction) {
-        QMenu* menu = qobject_cast<QMenu*>(obj);
-        if (menu && menu->parent() == m_view) {
-            QKeyEvent* ev = static_cast<QKeyEvent*>(event);
-            if (ev->key() == Qt::Key_Shift) {
-                m_removeAction->update();
-            }
-        }
+void DolphinPartBrowserExtension::restoreState(QDataStream &stream)
+{
+    KParts::BrowserExtension::restoreState(stream);
+    m_part->view()->restoreState(stream);
+}
+
+void DolphinPartBrowserExtension::saveState(QDataStream &stream)
+{
+    KParts::BrowserExtension::saveState(stream);
+    m_part->view()->saveState(stream);
+}
+
+void DolphinPartBrowserExtension::cut()
+{
+    m_part->view()->cutSelectedItems();
+}
+
+void DolphinPartBrowserExtension::copy()
+{
+    m_part->view()->copySelectedItems();
+}
+
+void DolphinPartBrowserExtension::paste()
+{
+    m_part->view()->paste();
+}
+
+void DolphinPartBrowserExtension::pasteTo(const KUrl&)
+{
+    m_part->view()->pasteIntoFolder();
+}
+
+void DolphinPartBrowserExtension::reparseConfiguration()
+{
+    m_part->view()->refresh();
+}
+
+////
+
+DolphinPartFileInfoExtension::DolphinPartFileInfoExtension(DolphinPart* part)
+                             : KParts::FileInfoExtension(part)
+{
+}
+
+DolphinPart* DolphinPartFileInfoExtension::part() const
+{
+    return static_cast<DolphinPart*>(parent());
+}
+
+bool DolphinPartFileInfoExtension::hasSelection() const
+{
+    return part()->view()->hasSelection();
+}
+
+KParts::FileInfoExtension::QueryModes DolphinPartFileInfoExtension::supportedQueryModes() const
+{
+    return (KParts::FileInfoExtension::AllItems | KParts::FileInfoExtension::SelectedItems);
+}
+
+KFileItemList DolphinPartFileInfoExtension::queryFor(KParts::FileInfoExtension::QueryMode mode) const
+{
+    KFileItemList list;
+
+    if (mode == KParts::FileInfoExtension::None)
+      return list;
+
+    if (!(supportedQueryModes() & mode))
+      return list;
+
+    switch (mode) {
+      case KParts::FileInfoExtension::SelectedItems:
+          if (hasSelection())
+              return part()->view()->selectedItems();
+          break;
+      case KParts::FileInfoExtension::AllItems:
+          return part()->view()->items();
+      default:
+          break;
     }
 
-    return KParts::ReadOnlyPart::eventFilter(obj, event);
+    return list;
 }
 
 #include "dolphinpart.moc"

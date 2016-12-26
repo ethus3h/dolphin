@@ -22,7 +22,7 @@
 
 #include <kcmodule.h>
 
-class ViewSettingsTab;
+class ViewSettingsPageBase;
 
 /**
  * @brief Allow to configure the Dolphin views.
@@ -35,17 +35,14 @@ public:
     DolphinViewModesConfigModule(QWidget* parent, const QVariantList& args);
     virtual ~DolphinViewModesConfigModule();
 
-    virtual void save() Q_DECL_OVERRIDE;
-    virtual void defaults() Q_DECL_OVERRIDE;
+    virtual void save();
+    virtual void defaults();
 
 private:
     void reparseConfiguration();
 
-private Q_SLOTS:
-   void viewModeChanged();
-
 private:
-    QList<ViewSettingsTab*> m_tabs;
+    QList<ViewSettingsPageBase*> m_pages;
 };
 
 #endif

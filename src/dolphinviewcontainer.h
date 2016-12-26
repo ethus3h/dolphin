@@ -21,7 +21,8 @@
 #define DOLPHINVIEWCONTAINER_H
 
 #include <KFileItem>
-#include <KCompletion>
+#include <KFileItemDelegate>
+#include <KGlobalSettings>
 #include <KIO/Job>
 
 #include <KUrlNavigator>
@@ -30,17 +31,9 @@
 #include <QWidget>
 
 #include <views/dolphinview.h>
-#include <config-dolphin.h>
-
-#ifdef KF5Activities_FOUND
-namespace KActivities {
-    class ResourceInstance;
-}
-#endif
 
 class FilterBar;
-class KMessageWidget;
-class QUrl;
+class KUrl;
 class KUrlNavigator;
 class DolphinSearchBox;
 class DolphinStatusBar;
@@ -49,7 +42,7 @@ class DolphinStatusBar;
  * @short Represents a view for the directory content
  *        including the navigation bar, filter bar and status bar.
  *
- * View modes for icons, compact and details are supported. Currently
+ * View modes for icons, details and columns are supported. Currently
  * Dolphin allows to have up to two views inside the main window.
  *
  * @see DolphinView
@@ -62,21 +55,14 @@ class DolphinViewContainer : public QWidget
     Q_OBJECT
 
 public:
-    enum MessageType
-    {
-        Information,
-        Warning,
-        Error
-    };
-
-    DolphinViewContainer(const QUrl& url, QWidget* parent);
+    DolphinViewContainer(const KUrl& url, QWidget* parent);
     virtual ~DolphinViewContainer();
 
     /**
      * Returns the current active URL, where all actions are applied.
      * The URL navigator is synchronized with this URL.
      */
-    QUrl url() const;
+    KUrl url() const;
 
     /**
      * If \a active is true, the view container will marked as active. The active
@@ -84,14 +70,6 @@ public:
      */
     void setActive(bool active);
     bool isActive() const;
-
-    /**
-     * If \a grab is set to true, the container automatically grabs the focus
-     * as soon as the URL has been changed. Per default the grabbing
-     * of the focus is enabled.
-     */
-    void setAutoGrabFocus(bool grab);
-    bool autoGrabFocus() const;
 
     const DolphinStatusBar* statusBar() const;
     DolphinStatusBar* statusBar();
@@ -102,16 +80,13 @@ public:
     const DolphinView* view() const;
     DolphinView* view();
 
-    /**
-     * Shows the message \msg with the given type non-modal above
-     * the view-content.
-     */
-    void showMessage(const QString& msg, MessageType type);
+    const DolphinSearchBox* searchBox() const;
+    DolphinSearchBox* searchBox();
 
     /**
      * Refreshes the view container to get synchronized with the (updated) Dolphin settings.
      */
-    void readSettings();
+    void refresh();
 
     /** Returns true, if the filter bar is visible. */
     bool isFilterBarVisible() const;
@@ -123,17 +98,6 @@ public:
     void setSearchModeEnabled(bool enabled);
     bool isSearchModeEnabled() const;
 
-    /**
-     * @return Text that should be used for the current URL when creating
-     *         a new place.
-     */
-    QString placesText() const;
-
-    /**
-     * Reload the view of this container. This will also hide messages in a messagewidget.
-     */
-    void reload();
-
 public slots:
     /**
      * Sets the current active URL, where all actions are applied. The
@@ -142,7 +106,7 @@ public slots:
      * are emitted.
      * @see DolphinViewContainer::urlNavigator()
      */
-    void setUrl(const QUrl& url);
+    void setUrl(const KUrl& url);
 
     /**
      * Popups the filter bar above the status bar if \a visible is true.
@@ -164,6 +128,13 @@ signals:
      */
     void writeStateChanged(bool isFolderWritable);
 
+    /**
+     * Is emitted if the search mode has been enabled or disabled.
+     * (see DolphinViewContainer::setSearchModeEnabled() and
+     * DolphinViewContainer::isSearchModeEnabled())
+     */
+    void searchModeChanged(bool enabled);
+
 private slots:
     /**
      * Updates the number of items (= number of files + number of
@@ -183,52 +154,48 @@ private slots:
      */
     void updateStatusBar();
 
-    void updateDirectoryLoadingProgress(int percent);
-
-    void updateDirectorySortingProgress(int percent);
+    void updateProgress(int percent);
 
     /**
      * Updates the statusbar to show an undetermined progress with the correct
      * context information whether a searching or a directory loading is done.
      */
-    void slotDirectoryLoadingStarted();
+    void slotStartedPathLoading();
 
     /**
      * Assures that the viewport position is restored and updates the
      * statusbar to reflect the current content.
      */
-    void slotDirectoryLoadingCompleted();
-
-    /**
-     * Updates the statusbar to show, that the directory loading has
-     * been canceled.
-     */
-    void slotDirectoryLoadingCanceled();
-
-    /**
-     * Is called if the URL set by DolphinView::setUrl() represents
-     * a file and not a directory. Takes care to activate the file.
-     */
-    void slotUrlIsFileError(const QUrl& url);
+    void slotFinishedPathLoading();
 
     /**
      * Handles clicking on an item. If the item is a directory, the
      * directory is opened in the view. If the item is a file, the file
      * gets started by the corresponding application.
      */
-    void slotItemActivated(const KFileItem& item);
+    void slotItemTriggered(const KFileItem& item);
 
     /**
-     * Handles activation of multiple files. The files get started by
-     * the corresponding applications.
+     * Opens a the file \a url by opening the corresponding application.
+     * Is connected with the signal urlIsFile() from DolphinDirLister and will
+     * get invoked if the user manually has entered a file into the URL navigator.
      */
-    void slotItemsActivated(const KFileItemList& items);
+    void openFile(const KUrl& url);
 
     /**
      * Shows the information for the item \a item inside the statusbar. If the
      * item is null, the default statusbar information is shown.
      */
     void showItemInfo(const KFileItem& item);
+
+    /** Shows the information \a msg inside the statusbar. */
+    void showInfoMessage(const QString& msg);
+
+    /** Shows the error message \a msg inside the statusbar. */
+    void showErrorMessage(const QString& msg);
+
+    /** Shows the "operation completed" message \a msg inside the statusbar. */
+    void showOperationCompletedMessage(const QString& msg);
 
     void closeFilterBar();
 
@@ -245,29 +212,29 @@ private slots:
     void activate();
 
     /**
-     * Is invoked if the signal urlAboutToBeChanged() from the DolphinView
-     * is emitted. Tries to save the view-state.
+     * Saves the state of the current view: contents position,
+     * root URL, ...
      */
-    void slotViewUrlAboutToBeChanged(const QUrl& url);
-
-    /**
-     * Is invoked if the signal urlAboutToBeChanged() from the URL navigator
-     * is emitted. Tries to save the view-state.
-     */
-    void slotUrlNavigatorLocationAboutToBeChanged(const QUrl& url);
+    void saveViewState();
 
     /**
      * Restores the current view to show \a url and assures
      * that the root URL of the view is respected.
      */
-    void slotUrlNavigatorLocationChanged(const QUrl& url);
+    void slotUrlNavigatorLocationChanged(const KUrl& url);
+
+    /**
+     * Is connected with the URL navigator and drops the URLs
+     * above the destination \a destination.
+     */
+    void dropUrls(const KUrl& destination, QDropEvent* event);
 
     /**
      * Is invoked when a redirection is done and changes the
      * URL of the URL navigator to \a newUrl without triggering
      * a reloading of the directory.
      */
-    void redirect(const QUrl& oldUrl, const QUrl& newUrl);
+    void redirect(const KUrl& oldUrl, const KUrl& newUrl);
 
     /** Requests the focus for the view \a m_view. */
     void requestFocus();
@@ -276,48 +243,33 @@ private slots:
      * Saves the currently used URL completion mode of
      * the URL navigator.
      */
-    void saveUrlCompletionMode(KCompletion::CompletionMode completion);
+    void saveUrlCompletionMode(KGlobalSettings::Completion completion);
 
     void slotHistoryChanged();
 
-    void slotReturnPressed();
-
     /**
      * Gets the search URL from the searchbox and starts searching.
+     * @param text Text the user has entered into the searchbox.
      */
-    void startSearching();
+    void startSearching(const QString& text);
     void closeSearchBox();
 
     /**
      * Stops the loading of a directory. Is connected with the "stopPressed" signal
      * from the statusbar.
      */
-    void stopDirectoryLoading();
-
-    void slotStatusBarZoomLevelChanged(int zoomLevel);
-
-    /**
-     * Slot that calls showMessage(msg, Error).
-     */
-    void showErrorMessage(const QString& msg);
+    void stopLoading();
 
 private:
     /**
-     * @return True if the URL protocol is a search URL (e. g. baloosearch:// or filenamesearch://).
+     * @return True if the URL protocol is a search URL (e. g. nepomuksearch:// or filenamesearch://).
      */
-    bool isSearchUrl(const QUrl& url) const;
-
-    /**
-     * Saves the state of the current view: contents position,
-     * root URL, ...
-     */
-    void saveViewState();
+    bool isSearchUrl(const KUrl& url) const;
 
 private:
     QVBoxLayout* m_topLayout;
     KUrlNavigator* m_urlNavigator;
     DolphinSearchBox* m_searchBox;
-    KMessageWidget* m_messageWidget;
 
     DolphinView* m_view;
 
@@ -326,12 +278,6 @@ private:
     DolphinStatusBar* m_statusBar;
     QTimer* m_statusBarTimer;            // Triggers a delayed update
     QElapsedTimer m_statusBarTimestamp;  // Time in ms since last update
-    bool m_autoGrabFocus;
-
-#ifdef KF5Activities_FOUND
-private:
-    KActivities::ResourceInstance * m_activityResourceInstance;
-#endif
 };
 
 #endif // DOLPHINVIEWCONTAINER_H
