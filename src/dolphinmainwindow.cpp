@@ -1610,7 +1610,7 @@ void DolphinMainWindow::setupActions()
     closeTab->setEnabled(false);
     connect(closeTab, SIGNAL(triggered()), this, SLOT(closeTab()));
 
-    QAction* qlookAction = infoDock->toggleQlookAction();
+    QAction* qlookAction = DolphinMainWindow->qlook();
     qlookAction->setShortcut(Qt::Key_Space);
 
     KStandardAction::quit(this, SLOT(quit()), actionCollection());
