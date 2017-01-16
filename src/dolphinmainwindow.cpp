@@ -832,11 +832,6 @@ void DolphinMainWindow::find()
     KRun::run("kfind", url(), widget());
 }
 
-void DolphinMainWindow::qlook()
-{
-    KRun::run("sushi", url(), widget());
-}
-
 void DolphinMainWindow::slotSearchLocationChanged()
 {
 #ifdef HAVE_NEPOMUK
@@ -1610,7 +1605,7 @@ void DolphinMainWindow::setupActions()
     closeTab->setEnabled(false);
     connect(closeTab, SIGNAL(triggered()), this, SLOT(closeTab()));
 
-    QAction* qlookAction = DolphinMainWindow->qlook();
+    QAction* qlookAction = DolphinView->qlookSelectedItems();
     qlookAction->setShortcut(Qt::Key_Space);
 
     KStandardAction::quit(this, SLOT(quit()), actionCollection());
