@@ -441,12 +441,14 @@ void DolphinMainWindow::updateHistory()
     const int index = urlNavigator->historyIndex();
 
     QAction* backAction = actionCollection()->action("go_back");
+    backAction->setText(i18nc("@action:intoolbar Back", "←"));
     backAction->setToolTip(i18nc("@info", "Go back"));
     if (backAction) {
         backAction->setEnabled(index < urlNavigator->historySize() - 1);
     }
 
     QAction* forwardAction = actionCollection()->action("go_forward");
+    forwardAction->setText(i18nc("@action:intoolbar Forward", "→"));
     forwardAction->setToolTip(i18nc("@info", "Go forward"));
     if (forwardAction) {
         forwardAction->setEnabled(index > 0);
@@ -1643,7 +1645,7 @@ void DolphinMainWindow::setupActions()
     connect(split, SIGNAL(triggered()), this, SLOT(toggleSplitView()));
 
     KAction* reload = actionCollection()->addAction("reload");
-    reload->setText(i18nc("@action:inmenu View", "Reload"));
+    reload->setText(i18nc("@action:inmenu View", "🗘"));
     reload->setShortcut(Qt::CTRL | Qt::Key_R);
     reload->setIcon(KIcon("view-refresh"));
     connect(reload, SIGNAL(triggered()), this, SLOT(reloadView()));
@@ -1688,6 +1690,7 @@ void DolphinMainWindow::setupActions()
     connect(forwardAction, SIGNAL(triggered(Qt::MouseButtons, Qt::KeyboardModifiers)), this, SLOT(goForward(Qt::MouseButtons)));
 
     KAction* upAction = KStandardAction::up(this, SLOT(goUp()), actionCollection());
+    upAction->setText(i18nc("@action:intoolbar Up", "↑"));
     connect(upAction, SIGNAL(triggered(Qt::MouseButtons, Qt::KeyboardModifiers)), this, SLOT(goUp(Qt::MouseButtons)));
 
     KStandardAction::home(this, SLOT(goHome()), actionCollection());
@@ -1932,6 +1935,7 @@ void DolphinMainWindow::updateEditActions()
 
         renameAction->setEnabled(capabilities.supportsMoving());
         moveToTrashAction->setEnabled(enableMoveToTrash);
+        moveToTrashAction->setText(i18nc("@action:intoolbar Move to Trash", "🗙"));
         deleteAction->setEnabled(capabilities.supportsDeleting());
         deleteWithTrashShortcut->setEnabled(capabilities.supportsDeleting() && !enableMoveToTrash);
         cutAction->setEnabled(capabilities.supportsMoving());
@@ -2144,16 +2148,16 @@ void DolphinMainWindow::updateSplitAction()
     QAction* splitAction = actionCollection()->action("split_view");
     if (m_viewTab[m_tabIndex].secondaryView) {
         if (m_activeViewContainer == m_viewTab[m_tabIndex].secondaryView) {
-            splitAction->setText(i18nc("@action:intoolbar Close right view", "Close"));
+            splitAction->setText(i18nc("@action:intoolbar Close right view", "⚞"));
             splitAction->setToolTip(i18nc("@info", "Close right view"));
             splitAction->setIcon(KIcon("view-right-close"));
         } else {
-            splitAction->setText(i18nc("@action:intoolbar Close left view", "Close"));
+            splitAction->setText(i18nc("@action:intoolbar Close left view", "⚟"));
             splitAction->setToolTip(i18nc("@info", "Close left view"));
             splitAction->setIcon(KIcon("view-left-close"));
         }
     } else {
-        splitAction->setText(i18nc("@action:intoolbar Split view", "Split"));
+        splitAction->setText(i18nc("@action:intoolbar Split view", "☷"));
         splitAction->setToolTip(i18nc("@info", "Split view"));
         splitAction->setIcon(KIcon("view-right-new"));
     }
