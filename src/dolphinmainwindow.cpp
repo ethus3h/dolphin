@@ -828,7 +828,13 @@ void DolphinMainWindow::paste()
 
 void DolphinMainWindow::find()
 {
-    m_activeViewContainer->setSearchModeEnabled(true);
+    //m_activeViewContainer->setSearchModeEnabled(true);
+    KRun::run("kfind", url(), widget());
+}
+
+void DolphinMainWindow::qlook()
+{
+    KRun::run("sushi", url(), widget());
 }
 
 void DolphinMainWindow::slotSearchLocationChanged()
@@ -1603,6 +1609,10 @@ void DolphinMainWindow::setupActions()
     closeTab->setShortcut(Qt::CTRL | Qt::Key_W);
     closeTab->setEnabled(false);
     connect(closeTab, SIGNAL(triggered()), this, SLOT(closeTab()));
+
+    QAction* infoAction = infoDock->toggleViewAction();
+    infoAction->setIcon(KIcon("dialog-information"));
+    infoAction->setShortcut(Qt::Key_F11);
 
     KStandardAction::quit(this, SLOT(quit()), actionCollection());
 
