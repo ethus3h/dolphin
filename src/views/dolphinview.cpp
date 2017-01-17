@@ -624,8 +624,8 @@ void DolphinView::trashSelectedItems()
 void DolphinView::qlookSelectedItems()
 {
     const KUrl::List list = simplifiedSelectedUrls();
-    KRun::run("kfind", url(), widget());
-    //KRun::run("sushi", url(), widget());
+    KRun::run("kfind", url(), QWidget* parentWidget);
+    //KRun::run("sushi", url(), QWidget* parentWidget);
 }
 
 void DolphinView::deleteSelectedItems()
