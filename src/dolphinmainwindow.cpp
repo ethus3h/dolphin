@@ -441,14 +441,12 @@ void DolphinMainWindow::updateHistory()
     const int index = urlNavigator->historyIndex();
 
     QAction* backAction = actionCollection()->action("go_back");
-    backAction->setText("←");
     backAction->setToolTip(i18nc("@info", "Go back"));
     if (backAction) {
         backAction->setEnabled(index < urlNavigator->historySize() - 1);
     }
 
     QAction* forwardAction = actionCollection()->action("go_forward");
-    forwardAction->setText("→");
     forwardAction->setToolTip(i18nc("@info", "Go forward"));
     if (forwardAction) {
         forwardAction->setEnabled(index > 0);
@@ -1220,7 +1218,7 @@ void DolphinMainWindow::openTabContextMenu(int index, const QPoint& pos)
 {
     KMenu menu(this);
 
-    QAction* newTabAction = menu.addAction(KIcon("tab-new"), "📑");
+    QAction* newTabAction = menu.addAction(KIcon("tab-new"), i18nc("@action:inmenu", "New Tab"));
     newTabAction->setShortcut(actionCollection()->action("new_tab")->shortcut());
 
     QAction* detachTabAction = menu.addAction(KIcon("tab-detach"), i18nc("@action:inmenu", "Detach Tab"));
@@ -1630,8 +1628,7 @@ void DolphinMainWindow::setupActions()
     // due to the long text, the text "Paste" is used:
     paste->setIconText(i18nc("@action:inmenu 📋", "📋"));
 
-    KAction* find = KStandardAction::find(this, SLOT(find()), actionCollection());
-    paste->setIconText(i18nc("@action:toolbar 🔍", "🔍"));
+    KStandardAction::find(this, SLOT(find()), actionCollection());
 
     KAction* selectAll = actionCollection()->addAction("select_all");
     selectAll->setText(i18nc("@action:inmenu Edit", "Select All"));
@@ -1652,7 +1649,7 @@ void DolphinMainWindow::setupActions()
     connect(split, SIGNAL(triggered()), this, SLOT(toggleSplitView()));
 
     KAction* reload = actionCollection()->addAction("reload");
-    reload->setText(i18nc("@action:inmenu View", "🗘"));
+    reload->setText(i18nc("@action:inmenu View", "Reload"));
     reload->setShortcut(Qt::CTRL | Qt::Key_R);
     reload->setIcon(KIcon("view-refresh"));
     connect(reload, SIGNAL(triggered()), this, SLOT(reloadView()));
@@ -1697,7 +1694,6 @@ void DolphinMainWindow::setupActions()
     connect(forwardAction, SIGNAL(triggered(Qt::MouseButtons, Qt::KeyboardModifiers)), this, SLOT(goForward(Qt::MouseButtons)));
 
     KAction* upAction = KStandardAction::up(this, SLOT(goUp()), actionCollection());
-    upAction->setText(i18nc("@action:intoolbar Up", "↑"));
     connect(upAction, SIGNAL(triggered(Qt::MouseButtons, Qt::KeyboardModifiers)), this, SLOT(goUp(Qt::MouseButtons)));
 
     KStandardAction::home(this, SLOT(goHome()), actionCollection());
@@ -1942,7 +1938,6 @@ void DolphinMainWindow::updateEditActions()
 
         renameAction->setEnabled(capabilities.supportsMoving());
         moveToTrashAction->setEnabled(enableMoveToTrash);
-        moveToTrashAction->setText("🗙");
         deleteAction->setEnabled(capabilities.supportsDeleting());
         deleteWithTrashShortcut->setEnabled(capabilities.supportsDeleting() && !enableMoveToTrash);
         cutAction->setEnabled(capabilities.supportsMoving());
@@ -2155,16 +2150,16 @@ void DolphinMainWindow::updateSplitAction()
     QAction* splitAction = actionCollection()->action("split_view");
     if (m_viewTab[m_tabIndex].secondaryView) {
         if (m_activeViewContainer == m_viewTab[m_tabIndex].secondaryView) {
-            splitAction->setText(i18nc("@action:intoolbar Close right view", "⚞"));
+            splitAction->setText(i18nc("@action:intoolbar Close right view", "Close"));
             splitAction->setToolTip(i18nc("@info", "Close right view"));
             splitAction->setIcon(KIcon("view-right-close"));
         } else {
-            splitAction->setText(i18nc("@action:intoolbar Close left view", "⚟"));
+            splitAction->setText(i18nc("@action:intoolbar Close left view", "Close"));
             splitAction->setToolTip(i18nc("@info", "Close left view"));
             splitAction->setIcon(KIcon("view-left-close"));
         }
     } else {
-        splitAction->setText(i18nc("@action:intoolbar Split view", "☷"));
+        splitAction->setText(i18nc("@action:intoolbar Split view", "Split"));
         splitAction->setToolTip(i18nc("@info", "Split view"));
         splitAction->setIcon(KIcon("view-right-new"));
     }

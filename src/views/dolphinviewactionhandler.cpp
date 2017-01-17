@@ -437,7 +437,7 @@ void DolphinViewActionHandler::slotShowHiddenFilesChanged()
 KToggleAction* DolphinViewActionHandler::iconsModeAction()
 {
     KToggleAction* iconsView = m_actionCollection->add<KToggleAction>("icons");
-    iconsView->setText(i18nc("@action:inmenu View Mode", "⚏"));
+    iconsView->setText(i18nc("@action:inmenu View Mode", "Icons"));
     iconsView->setToolTip(i18nc("@info", "Icons view mode"));
     iconsView->setShortcut(Qt::CTRL | Qt::Key_1);
     iconsView->setIcon(KIcon("view-list-icons"));
@@ -448,7 +448,7 @@ KToggleAction* DolphinViewActionHandler::iconsModeAction()
 KToggleAction* DolphinViewActionHandler::detailsModeAction()
 {
     KToggleAction* detailsView = m_actionCollection->add<KToggleAction>("details");
-    detailsView->setText(i18nc("@action:inmenu View Mode", "䷀"));
+    detailsView->setText(i18nc("@action:inmenu View Mode", "Details"));
     detailsView->setToolTip(i18nc("@info", "Details view mode"));
     detailsView->setShortcut(Qt::CTRL | Qt::Key_2);
     detailsView->setIcon(KIcon("view-list-details"));
@@ -459,7 +459,7 @@ KToggleAction* DolphinViewActionHandler::detailsModeAction()
 KToggleAction* DolphinViewActionHandler::columnsModeAction()
 {
     KToggleAction* columnView = m_actionCollection->add<KToggleAction>("columns");
-    columnView->setText(i18nc("@action:inmenu View Mode", "䷁"));
+    columnView->setText(i18nc("@action:inmenu View Mode", "Columns"));
     columnView->setToolTip(i18nc("@info", "Columns view mode"));
     columnView->setShortcut(Qt::CTRL | Qt::Key_3);
     columnView->setIcon(KIcon("view-file-columns"));
