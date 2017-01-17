@@ -375,7 +375,7 @@ public slots:
     /**
      * Shows a preview of selected items.
      */
-    void qlookSelectedItems();
+    // void qlookSelectedItems();
 
     /**
      * Deletes all selected items.
