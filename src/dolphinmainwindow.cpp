@@ -1220,7 +1220,7 @@ void DolphinMainWindow::openTabContextMenu(int index, const QPoint& pos)
 {
     KMenu menu(this);
 
-    QAction* newTabAction = menu.addAction(KIcon("tab-new"), 📑);
+    QAction* newTabAction = menu.addAction(KIcon("tab-new"), "📑");
     newTabAction->setShortcut(actionCollection()->action("new_tab")->shortcut());
 
     QAction* detachTabAction = menu.addAction(KIcon("tab-detach"), i18nc("@action:inmenu", "Detach Tab"));
