@@ -829,7 +829,7 @@ void DolphinMainWindow::paste()
 void DolphinMainWindow::find()
 {
     //m_activeViewContainer->setSearchModeEnabled(true);
-    KRun::run("kfind", url(), widget());
+    KRun::run("kfind", null, widget());
 }
 
 void DolphinMainWindow::slotSearchLocationChanged()
@@ -1605,7 +1605,7 @@ void DolphinMainWindow::setupActions()
     closeTab->setEnabled(false);
     connect(closeTab, SIGNAL(triggered()), this, SLOT(closeTab()));
 
-    QAction* qlookAction = container->view()->qlookSelectedItems();
+    QAction* qlookAction = m_activeViewContainer->view()->qlookSelectedItems();
     qlookAction->setShortcut(Qt::Key_Space);
 
     KStandardAction::quit(this, SLOT(quit()), actionCollection());
