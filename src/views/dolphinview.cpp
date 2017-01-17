@@ -45,6 +45,7 @@
 #include <konq_fileitemcapabilities.h>
 #include <konq_operations.h>
 #include <konqmimedata.h>
+#include <KRun>
 #include <KToggleAction>
 #include <KUrl>
 
