@@ -829,7 +829,7 @@ void DolphinMainWindow::paste()
 void DolphinMainWindow::find()
 {
     //m_activeViewContainer->setSearchModeEnabled(true);
-    KRun::run("kfind", 0, widget());
+    m_activeViewContainer->view()->searchSelectedItems();
 }
 
 void DolphinMainWindow::slotSearchLocationChanged()
