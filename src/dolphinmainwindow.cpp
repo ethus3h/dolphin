@@ -441,14 +441,14 @@ void DolphinMainWindow::updateHistory()
     const int index = urlNavigator->historyIndex();
 
     QAction* backAction = actionCollection()->action("go_back");
-    backAction->setText(i18nc("@action:intoolbar ←", "←"));
+    backAction->setText("←");
     backAction->setToolTip(i18nc("@info", "Go back"));
     if (backAction) {
         backAction->setEnabled(index < urlNavigator->historySize() - 1);
     }
 
     QAction* forwardAction = actionCollection()->action("go_forward");
-    forwardAction->setText(i18nc("@action:intoolbar →", "→"));
+    forwardAction->setText("→");
     forwardAction->setToolTip(i18nc("@info", "Go forward"));
     if (forwardAction) {
         forwardAction->setEnabled(index > 0);
@@ -1220,7 +1220,7 @@ void DolphinMainWindow::openTabContextMenu(int index, const QPoint& pos)
 {
     KMenu menu(this);
 
-    QAction* newTabAction = menu.addAction(KIcon("tab-new"), i18nc("@action:inmenu", "New Tab"));
+    QAction* newTabAction = menu.addAction(KIcon("tab-new"), 📑);
     newTabAction->setShortcut(actionCollection()->action("new_tab")->shortcut());
 
     QAction* detachTabAction = menu.addAction(KIcon("tab-detach"), i18nc("@action:inmenu", "Detach Tab"));
@@ -1621,14 +1621,17 @@ void DolphinMainWindow::setupActions()
     KShortcut cutShortcut = cut->shortcut();
     cutShortcut.remove(Qt::SHIFT | Qt::Key_Delete, KShortcut::KeepEmpty);
     cut->setShortcut(cutShortcut);
-    KStandardAction::copy(this, SLOT(copy()), actionCollection());
+    cut->setIconText(i18nc("@action:inmenu ✂", "✂"));
+    KAction* copy = KStandardAction::copy(this, SLOT(copy()), actionCollection());
+    copy->setIconText(i18nc("@action:inmenu 🗍", "🗍"));
     KAction* paste = KStandardAction::paste(this, SLOT(paste()), actionCollection());
     // The text of the paste-action is modified dynamically by Dolphin
     // (e. g. to "Paste One Folder"). To prevent that the size of the toolbar changes
     // due to the long text, the text "Paste" is used:
-    paste->setIconText(i18nc("@action:inmenu Edit", "Paste"));
+    paste->setIconText(i18nc("@action:inmenu 📋", "📋"));
 
-    KStandardAction::find(this, SLOT(find()), actionCollection());
+    KAction* find = KStandardAction::find(this, SLOT(find()), actionCollection());
+    paste->setIconText(i18nc("@action:toolbar 🔍", "🔍"));
 
     KAction* selectAll = actionCollection()->addAction("select_all");
     selectAll->setText(i18nc("@action:inmenu Edit", "Select All"));
@@ -1939,7 +1942,7 @@ void DolphinMainWindow::updateEditActions()
 
         renameAction->setEnabled(capabilities.supportsMoving());
         moveToTrashAction->setEnabled(enableMoveToTrash);
-        moveToTrashAction->setText(i18nc("@action:intoolbar Move to Trash", "🗙"));
+        moveToTrashAction->setText("🗙");
         deleteAction->setEnabled(capabilities.supportsDeleting());
         deleteWithTrashShortcut->setEnabled(capabilities.supportsDeleting() && !enableMoveToTrash);
         cutAction->setEnabled(capabilities.supportsMoving());

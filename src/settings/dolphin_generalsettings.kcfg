@@ -77,7 +77,7 @@
         </entry>
         <entry name="AutoExpandFolders" type="Bool">
             <label>Use auto-expanding folders for all view types</label>
-            <default>false</default>
+            <default>true</default>
         </entry>
         <entry name="ShowZoomSlider" type="Bool">
             <label>Show zoom slider in the statusbar</label>
