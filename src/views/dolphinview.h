@@ -373,6 +373,11 @@ public slots:
     void trashSelectedItems();
 
     /**
+     * Shows a preview of selected items.
+     */
+    void qlookSelectedItems();
+
+    /**
      * Deletes all selected items.
      */
     void deleteSelectedItems();
