@@ -2,7 +2,7 @@
  * ark -- archiver for the KDE project
  *
  * Copyright (C) 2008 Harald Hvaal <haraldhv@stud.ntnu.no>
- * Copyright (C) 2009-2010 Raphael Kubo da Costa <kubito@gmail.com>
+ * Copyright (C) 2009-2010 Raphael Kubo da Costa <rakuco@FreeBSD.org>
  *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions
@@ -92,8 +92,8 @@ void BatchExtract::addExtraction(Kerfuffle::Archive* archive)
 
     m_fileNames[job] = qMakePair(archive->fileName(), destination);
 
-    connect(job, SIGNAL(percent(KJob*, unsigned long)),
-            this, SLOT(forwardProgress(KJob *, unsigned long)));
+    connect(job, SIGNAL(percent(KJob*,ulong)),
+            this, SLOT(forwardProgress(KJob*,ulong)));
     connect(job, SIGNAL(userQuery(Kerfuffle::Query*)),
             this, SLOT(slotUserQuery(Kerfuffle::Query*)));
 }
@@ -206,8 +206,7 @@ void BatchExtract::forwardProgress(KJob *job, unsigned long percent)
 
 bool BatchExtract::addInput(const KUrl& url)
 {
-    // FIXME: this is being leaked
-    Kerfuffle::Archive *archive = Kerfuffle::factory(url.pathOrUrl());
+    Kerfuffle::Archive *archive = Kerfuffle::Archive::create(url.pathOrUrl(), this);
 
     if ((archive == NULL) || (!QFileInfo(url.pathOrUrl()).exists())) {
         m_failedFiles.append(url.fileName());
