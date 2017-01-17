@@ -94,14 +94,19 @@
         <Action name="columns" />
         <Action name="details" />
         <Action name="icons" />
-        <Separator name="separator_0" />
+        <Separator name="separator_2" />
         <Action name="new_tab" />
         <Action name="show_preview" />
         <Action name="split_view" />
         <Action name="edit_find"/>
-        <Separator name="separator_0" />
+        <Separator name="separator_3" />
+        <Action name="create_dir" />
+        <Separator name="separator_4" />
         <Action name="move_to_trash" />
         <Action name="rename" />
+        <Action name="cut" />
+        <Action name="copy" />
+        <Action name="paste" />
     </ToolBar>
     <ActionProperties scheme="Default">
         <Action priority="0" name="go_back"/>
