@@ -378,6 +378,11 @@ public slots:
     // void qlookSelectedItems();
 
     /**
+     * Open kfind at the selected items. FIXME: Make it open with current directory instead of currently selected items.
+     */
+    void searchSelectedItems();
+
+    /**
      * Deletes all selected items.
      */
     void deleteSelectedItems();
