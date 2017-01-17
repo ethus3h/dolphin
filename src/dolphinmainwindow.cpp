@@ -1605,8 +1605,8 @@ void DolphinMainWindow::setupActions()
     closeTab->setEnabled(false);
     connect(closeTab, SIGNAL(triggered()), this, SLOT(closeTab()));
 
-    QAction* qlookAction = m_activeViewContainer->view()->qlookSelectedItems();
-    qlookAction->setShortcut(Qt::Key_Space);
+    // QAction* qlookAction = m_activeViewContainer->view()->qlookSelectedItems();
+    // qlookAction->setShortcut(Qt::Key_Space);
 
     KStandardAction::quit(this, SLOT(quit()), actionCollection());
 

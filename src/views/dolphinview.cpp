@@ -622,12 +622,12 @@ void DolphinView::trashSelectedItems()
     KonqOperations::del(this, KonqOperations::TRASH, list);
 }
 
-void DolphinView::qlookSelectedItems()
-{
-    const KUrl::List list = simplifiedSelectedUrls();
-    KRun::run("kfind", list, parentWidget());
-    //KRun::run("sushi", list, parentWidget());
-}
+// void DolphinView::qlookSelectedItems()
+// {
+//     const KUrl::List list = simplifiedSelectedUrls();
+//     KRun::run("kfind", list, parentWidget());
+//     //KRun::run("sushi", list, parentWidget());
+// }
 
 void DolphinView::deleteSelectedItems()
 {
