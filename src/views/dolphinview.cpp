@@ -628,12 +628,11 @@ void DolphinView::searchSelectedItems()
     KRun::run("kfind", list, this);
 }
 
-// void DolphinView::qlookSelectedItems()
-// {
-//     const KUrl::List list = simplifiedSelectedUrls();
-//     KRun::run("kfind", list, parentWidget());
-//     //KRun::run("sushi", list, parentWidget());
-// }
+void DolphinView::qlookSelectedItems()
+{
+    const KUrl::List list = simplifiedSelectedUrls();
+    KRun::run("sushi", list, this);
+}
 
 void DolphinView::deleteSelectedItems()
 {

@@ -203,8 +203,14 @@ private slots:
     /** Pastes the clipboard data to the active view. */
     void paste();
 
-    /** Replaces the URL navigator by a search box to find files. */
+    /** Runs kfind */
     void find();
+
+    /** Replaces the URL navigator by a search box to find files. */
+    void search();
+
+    /** Runs sushi */
+    void qlook();
 
     /**
      * Is invoked when the "Find" is active and the search location
@@ -609,4 +615,3 @@ inline int DolphinMainWindow::getId() const
 }
 
 #endif // DOLPHIN_MAINWINDOW_H
-

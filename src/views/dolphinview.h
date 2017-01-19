@@ -375,7 +375,7 @@ public slots:
     /**
      * Shows a preview of selected items.
      */
-    // void qlookSelectedItems();
+    void qlookSelectedItems();
 
     /**
      * Open kfind at the selected items. FIXME: Make it open with current directory instead of currently selected items.
