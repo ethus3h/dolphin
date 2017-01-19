@@ -631,7 +631,7 @@ void DolphinView::searchSelectedItems()
 void DolphinView::qlookSelectedItems()
 {
     const KUrl::List list = simplifiedSelectedUrls();
-    KRun::run("sushi", list, this);
+    KRun::run("qlook", list, this);
 }
 
 void DolphinView::deleteSelectedItems()
