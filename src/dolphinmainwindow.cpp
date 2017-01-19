@@ -1615,7 +1615,8 @@ void DolphinMainWindow::setupActions()
     connect(closeTab, SIGNAL(triggered()), this, SLOT(closeTab()));
 
     KAction* qlookAction = actionCollection()->addAction("qlook");
-    qlookAction->setShortcut(Qt::Key_Space);
+    //qlookAction->setShortcut(Qt::Key_Space);
+    qlookAction->setShortcut(Qt::CTRL | Qt::Key_P);
 
     KStandardAction::quit(this, SLOT(quit()), actionCollection());
 
