@@ -830,15 +830,15 @@ void DolphinMainWindow::find()
     m_activeViewContainer->view()->searchSelectedItems();
 }
 
+void DolphinMainWindow::qlook()
+{
+    m_activeViewContainer->view()->qlookSelectedItems();
+}
+
 void DolphinMainWindow::search()
 {
     // Opens the built-in search bar.
     m_activeViewContainer->setSearchModeEnabled(true);
-}
-
-void DolphinMainWindow::qlook()
-{
-    m_activeViewContainer->view()->qlookSelectedItems();
 }
 
 void DolphinMainWindow::slotSearchLocationChanged()
@@ -1614,10 +1614,6 @@ void DolphinMainWindow::setupActions()
     closeTab->setEnabled(false);
     connect(closeTab, SIGNAL(triggered()), this, SLOT(closeTab()));
 
-    KAction* qlookAction = actionCollection()->addAction("qlook");
-    //qlookAction->setShortcut(Qt::Key_Space);
-    qlookAction->setShortcut(Qt::CTRL | Qt::Key_P);
-
     KStandardAction::quit(this, SLOT(quit()), actionCollection());
 
     // setup 'Edit' menu
@@ -1641,6 +1637,10 @@ void DolphinMainWindow::setupActions()
     paste->setIconText(i18nc("@action:inmenu 📋", "📋"));
 
     KStandardAction::find(this, SLOT(find()), actionCollection());
+
+    KAction* qlookAction = actionCollection()->addAction("qlook");
+    qlookAction->setShortcut(Qt::Key_Space);
+    connect(qlookAction, SIGNAL(triggered()), this, SLOT(qlookAction()));
 
     KAction* selectAll = actionCollection()->addAction("select_all");
     selectAll->setText(i18nc("@action:inmenu Edit", "Select All"));
