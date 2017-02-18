@@ -123,6 +123,9 @@ public slots:
      * change.
      */
     void changeUrl(const KUrl& url);
+    
+    /** Qlook slot for running Sushi. */
+    void qlook(const KUrl& url);
 
     /** Stores all settings and quits Dolphin. */
     void quit();
@@ -208,9 +211,6 @@ private slots:
 
     /** Replaces the URL navigator by a search box to find files. */
     void search();
-
-    /** Runs sushi */
-    void qlook();
 
     /**
      * Is invoked when the "Find" is active and the search location

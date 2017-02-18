@@ -612,7 +612,7 @@ void DolphinMainWindow::closeEvent(QCloseEvent* event)
     }
 
     if ((m_viewTab.count() > 1) && generalSettings->confirmClosingMultipleTabs() && closedByUser) {
-        // Ask the user if he really wants to quit and close all tabs.
+        // Ask the user if they really want to quit and close all tabs.
         // Open a confirmation dialog with 3 buttons:
         // KDialog::Yes    -> Quit
         // KDialog::No     -> Close only the current tab
