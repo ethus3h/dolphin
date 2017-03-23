@@ -125,7 +125,7 @@ public slots:
     void changeUrl(const KUrl& url);
     
     /** Qlook slot for running Sushi. */
-    void qlook(const KUrl& url);
+    void qlookAction();
 
     /** Stores all settings and quits Dolphin. */
     void quit();
