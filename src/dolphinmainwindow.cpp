@@ -830,7 +830,7 @@ void DolphinMainWindow::find()
     m_activeViewContainer->view()->searchSelectedItems();
 }
 
-void DolphinMainWindow::qlook()
+void DolphinMainWindow::qlookAction()
 {
     m_activeViewContainer->view()->qlookSelectedItems();
 }
