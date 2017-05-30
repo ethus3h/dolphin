@@ -39,19 +39,20 @@
 #include <QListView>
 #include <QSet>
 #include <QWidget>
+#include <qstringlist.h>
 
 typedef KIO::FileUndoManager::CommandType CommandType;
 
 class DolphinColumnViewContainer;
 class DolphinDetailsView;
 class DolphinDetailsViewExpander;
+class DolphinDirLister;
 class DolphinIconsView;
 class DolphinModel;
 class DolphinSortFilterProxyModel;
 class DolphinViewController;
 class KAction;
 class KActionCollection;
-class KDirLister;
 class KUrl;
 class ViewModeController;
 class ViewProperties;
