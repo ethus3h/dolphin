@@ -23,6 +23,7 @@
 
 #include <views/dolphinview.h>
 #include <KUrl>
+#include <qstringlist.h>
 #include <libdolphin_export.h>
 
 class ViewPropertySettings;
