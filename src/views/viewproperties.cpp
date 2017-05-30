@@ -110,6 +110,12 @@ ViewProperties::ViewProperties(const KUrl& url) :
             settings->setGlobalViewProps(false);
             m_changedProps = false;
         }
+    } else {
+        QStringList directoryList = QStringList::QStringList(m_node->hideSpecificFiles());
+        for (QStringList::Iterator it = directoryList.begin();
+                                  it != directoryList.end(); ++it) {
+              m_hiddenList.append(*it);
+        }
     }
 }
 
