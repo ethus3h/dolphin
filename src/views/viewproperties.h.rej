@@ -1,0 +1,10 @@
+--- views/viewproperties.h	(revision 1156733)
++++ views/viewproperties.h	(working copy)
+@@ -23,6 +23,7 @@
+ 
+ #include <views/dolphinview.h>
+ #include <kurl.h>
++#include <qstringlist.h>
+ #include <libdolphin_export.h>
+ 
+ class ViewPropertySettings;

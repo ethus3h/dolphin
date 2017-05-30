@@ -25,7 +25,6 @@
 #include <config-nepomuk.h>
 
 #include "libdolphin_export.h"
-#include "dolphindirlister.h"
 
 #include <kparts/part.h>
 #include <KFileItem>
@@ -165,9 +164,6 @@ public:
 
     /** See setShowHiddenFiles */
     bool showHiddenFiles() const;
-    
-    /** returns the list of specifically hidden files in the current folder */
-    QStringList hiddenList() const;
 
     /** See setCategorizedSorting */
     bool categorizedSorting() const;
@@ -831,7 +827,7 @@ private:
 
         DolphinModel* dirModel() const;
         DolphinSortFilterProxyModel* proxyModel() const;
-        DolphinDirLister* dirLister() const;
+        KDirLister* dirLister() const;
 
     private:
         KUrl m_rootUrl;

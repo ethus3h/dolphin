@@ -1,0 +1,11 @@
+--- views/dolphinview.cpp	(revision 1156733)
++++ views/dolphinview.cpp	(working copy)
+@@ -140,7 +141,7 @@
+     connect(m_dolphinViewController, SIGNAL(urlChangeRequested(KUrl)),
+             m_viewModeController, SLOT(setUrl(KUrl)));
+ 
+-    KDirLister* dirLister = m_viewAccessor.dirLister();
++    DolphinDirLister* dirLister = m_viewAccessor.dirLister();
+     connect(dirLister, SIGNAL(redirection(KUrl,KUrl)),
+             this, SLOT(slotRedirection(KUrl,KUrl)));
+     connect(dirLister, SIGNAL(completed()),

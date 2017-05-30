@@ -53,7 +53,6 @@
 #include <QPainter>
 #include <QPoint>
 #include <QScrollBar>
-#include <qstringlist.h>
 
 DolphinColumnView::DolphinColumnView(QWidget* parent,
                                      DolphinColumnViewContainer* container,

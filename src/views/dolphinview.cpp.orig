@@ -55,7 +55,6 @@
 #include "dolphincolumnviewcontainer.h"
 #include "dolphinviewcontroller.h"
 #include "dolphindetailsview.h"
-#include "dolphindirlister.h"
 #include "dolphinfileitemdelegate.h"
 #include "dolphinnewfilemenuobserver.h"
 #include "dolphinsortfilterproxymodel.h"
@@ -259,11 +258,6 @@ bool DolphinView::showPreview() const
 bool DolphinView::showHiddenFiles() const
 {
     return m_viewAccessor.dirLister()->showingDotFiles();
-}
-
-QStringList DolphinView::hiddenList() const
-{
-    return m_viewAccessor.dirLister()->hiddenList();
 }
 
 bool DolphinView::categorizedSorting() const
@@ -1170,7 +1164,7 @@ void DolphinView::loadDirectory(const KUrl& url, bool reload)
         return;
     }
 
-    DolphinDirLister* dirLister = m_viewAccessor.dirLister();
+    KDirLister* dirLister = m_viewAccessor.dirLister();
     dirLister->openUrl(url, reload ? KDirLister::Reload : KDirLister::NoFlags);
 }
 
@@ -1200,8 +1194,6 @@ void DolphinView::applyViewProperties()
         m_viewAccessor.dirLister()->setShowingDotFiles(showHiddenFiles);
         emit showHiddenFilesChanged();
     }
-
-    m_viewAccessor.dirLister()->setHiddenList(props.hiddenList());
 
     m_storedCategorizedSorting = props.categorizedSorting();
     const bool categorized = m_storedCategorizedSorting && supportsCategorizedSorting();
@@ -1641,10 +1633,9 @@ DolphinSortFilterProxyModel* DolphinView::ViewAccessor::proxyModel() const
     return m_proxyModel;
 }
 
-DolphinDirLister* DolphinView::ViewAccessor::dirLister() const
+KDirLister* DolphinView::ViewAccessor::dirLister() const
 {
-    return static_cast<DolphinDirLister*>(dirModel()->dirLister());
-    /* may need new DolphinDirLister(dirModel()->dirLister()) */
+    return dirModel()->dirLister();
 }
 
 #include "dolphinview.moc"

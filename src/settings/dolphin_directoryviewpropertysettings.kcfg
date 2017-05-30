@@ -12,6 +12,10 @@
             <whatsthis context="@info:whatsthis">When this option is enabled hidden files, such as those starting with a '.', will be shown in the file view.</whatsthis>
             <default>false</default>
         </entry>
+        <entry name="HideSpecificFiles" type="StringList" >
+            <label context="@label">Hide specific files</label>
+            <whatsthis context="@info:whatsthis">When files are listed here they'll be hidden from view normally</whatsthis>
+        </entry>
     </group>
 
     <group name="Dolphin">

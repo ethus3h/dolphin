@@ -25,6 +25,7 @@ DolphinDirLister::DolphinDirLister() :
     KDirLister()
 {
     setAutoErrorHandlingEnabled(false, 0);
+    hiddenlist = QStringList::QStringList();
 }
 
 DolphinDirLister::~DolphinDirLister()
@@ -43,6 +44,29 @@ void DolphinDirLister::handleError(KIO::Job* job)
             emit errorMessage(errorString);
         }
     }
+}
+
+void DolphinDirLister::setHiddenList(const QStringList& list)
+{
+    hiddenlist = QStringList::QStringList(list);
+}
+
+QStringList DolphinDirLister::hiddenList()
+{
+    return QStringList::QStringList(hiddenlist);
+}
+
+bool DolphinDirLister::matchesFilter(const KFileItem& item) const
+{
+    if (!showingDotFiles()) {
+        QStringList thelist = QStringList::QStringList(hiddenlist);
+        for (QStringList::Iterator it = thelist.begin(); it != thelist.end(); ++it) {
+            if (*it == item.text()) {
+                return false;
+            }
+        }
+    }
+    return KDirLister::matchesFilter(item);
 }
 
 #include "dolphindirlister.moc"
