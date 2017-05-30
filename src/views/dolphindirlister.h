@@ -22,6 +22,7 @@
 
 #include <libdolphin_export.h>
 #include <KDirLister>
+#include <qstringlist.h>
 
 /**
  * @brief Extends the class KDirLister by emitting a signal when an
