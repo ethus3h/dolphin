@@ -1368,7 +1368,7 @@ QItemSelection DolphinView::childrenMatchingPattern(const QModelIndex& parent, c
 
 void DolphinView::connectViewAccessor()
 {
-    KDirLister* dirLister = m_viewAccessor.dirLister();
+    DolphinDirLister* dirLister = m_viewAccessor.dirLister();
     connect(dirLister, SIGNAL(redirection(KUrl,KUrl)), this, SLOT(slotRedirection(KUrl,KUrl)));
     connect(dirLister, SIGNAL(started(KUrl)),          this, SLOT(slotDirListerStarted(KUrl)));
     connect(dirLister, SIGNAL(completed()),            this, SLOT(slotDirListerCompleted()));
