@@ -1,4 +1,4 @@
-405b0e2eda71bbfeb7d3e214ae16e4d79a4da3f4 refs/heads/master
+23bafac23e817b6337151d0aa0fa6d97fdc0e8fe refs/heads/master
 16db90c7938d09bfa8916afef8cce8dd258fa00d refs/remotes/origin/7
 85957c72f330d5bfa4048ea5216aa7ae97fe4e03 refs/remotes/origin/Applications/14.12
 3d54caadb8a0dc3c2aa48c4b54d3a59fece4e542 refs/remotes/origin/Applications/15.08
@@ -6,7 +6,7 @@ cacba0c4c92ff99df7b6069d32822b19f8fc4c5b refs/remotes/origin/Applications/15.12
 c44ff72ce2817d1b159bf706278eb13670492b17 refs/remotes/origin/Applications/16.04
 826dec93c169db9187b9e1684f5ccfca1827550b refs/remotes/origin/Applications/16.08
 586368dbfc900b172069b45a6a7db301ab3c009a refs/remotes/origin/Applications/16.12
-405b0e2eda71bbfeb7d3e214ae16e4d79a4da3f4 refs/remotes/origin/HEAD
+23bafac23e817b6337151d0aa0fa6d97fdc0e8fe refs/remotes/origin/HEAD
 fa907ecba97c251320481413091bbe752118b6b4 refs/remotes/origin/KDE/4.0
 7731abf980f6d0785e09bd0d929539181c8eede9 refs/remotes/origin/KDE/4.1
 4c99efe4d2d0b4558a563732d13bccf26f9e922f refs/remotes/origin/KDE/4.10
@@ -31,7 +31,7 @@ a1649952b842afa83d819d9c43832f8bdb912301 refs/remotes/origin/KDE/4.3
 7a7cfa6addc3c6089a0d48e17ec623d248b97df2 refs/remotes/origin/isemenov/qml
 91607d4c4d60d7d51827e770e5504aa4ff552e48 refs/remotes/origin/kdepim/enterprise-4.0.83
 d5967230c0e8c5d6d22982b341c9123fae211e9f refs/remotes/origin/kdepim/enterprise-4.1
-405b0e2eda71bbfeb7d3e214ae16e4d79a4da3f4 refs/remotes/origin/master
+23bafac23e817b6337151d0aa0fa6d97fdc0e8fe refs/remotes/origin/master
 ce69bb06e6e0e3e588a797a5e5a057e9bf529eec refs/remotes/origin/origin
 156045c3f49373caa30a0e1b4f3f830d0d9e39ed refs/remotes/origin/patch-1
 6bc77951e49ed070bc70ceba5d510acc6c71c02d refs/remotes/origin/plasma/isemenov/fvport
