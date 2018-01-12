@@ -562,3 +562,27 @@ int main(int argc, char** argv)
 #endif
 }
 
+Performing C++ SOURCE FILE Test _OFFT_IS_64BIT succeeded with the following output:
+Change Dir: /home/kyan/Ember Library/Ember satellite projects/wreathe-file-manager/cmake-2017jan12/CMakeFiles/CMakeTmp
+
+Run Build Command:"/usr/bin/gmake" "cmTC_b436d/fast"
+/usr/bin/gmake -f CMakeFiles/cmTC_b436d.dir/build.make CMakeFiles/cmTC_b436d.dir/build
+gmake[1]: Entering directory '/library/Ember satellite projects/wreathe-file-manager/cmake-2017jan12/CMakeFiles/CMakeTmp'
+Building CXX object CMakeFiles/cmTC_b436d.dir/src.cxx.o
+/usr/bin/c++  -D_GNU_SOURCE -D_LARGEFILE64_SOURCE  -D_OFFT_IS_64BIT   -o CMakeFiles/cmTC_b436d.dir/src.cxx.o -c "/home/kyan/Ember Library/Ember satellite projects/wreathe-file-manager/cmake-2017jan12/CMakeFiles/CMakeTmp/src.cxx"
+Linking CXX executable cmTC_b436d
+/usr/bin/cmake -E cmake_link_script CMakeFiles/cmTC_b436d.dir/link.txt --verbose=1
+/usr/bin/c++   -D_OFFT_IS_64BIT    -rdynamic CMakeFiles/cmTC_b436d.dir/src.cxx.o  -o cmTC_b436d 
+gmake[1]: Leaving directory '/library/Ember satellite projects/wreathe-file-manager/cmake-2017jan12/CMakeFiles/CMakeTmp'
+
+Source file was:
+
+#include <sys/types.h>
+ /* Check that off_t can represent 2**63 - 1 correctly.
+    We can't simply define LARGE_OFF_T to be 9223372036854775807,
+    since some C++ compilers masquerading as C compilers
+    incorrectly reject 9223372036854775807.  */
+#define LARGE_OFF_T (((off_t) 1 << 62) - 1 + ((off_t) 1 << 62))
+  int off_t_is_large[(LARGE_OFF_T % 2147483629 == 721 && LARGE_OFF_T % 2147483647 == 1) ? 1 : -1];
+  int main() { return 0; }
+

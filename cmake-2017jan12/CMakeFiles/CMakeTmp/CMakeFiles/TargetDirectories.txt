@@ -1,3 +1,0 @@
-/home/kyan/Ember Library/Ember satellite projects/wreathe-file-manager/cmake-2017jan12/CMakeFiles/CMakeTmp/CMakeFiles/rebuild_cache.dir
-/home/kyan/Ember Library/Ember satellite projects/wreathe-file-manager/cmake-2017jan12/CMakeFiles/CMakeTmp/CMakeFiles/edit_cache.dir
-/home/kyan/Ember Library/Ember satellite projects/wreathe-file-manager/cmake-2017jan12/CMakeFiles/CMakeTmp/CMakeFiles/cmTC_b436d.dir
