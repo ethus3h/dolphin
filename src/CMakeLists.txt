@@ -423,8 +423,7 @@ install( FILES settings/dolphin_directoryviewpropertysettings.kcfg
 install( FILES org.kde.dolphin.appdata.xml DESTINATION ${KDE_INSTALL_METAINFODIR} )
 install( FILES dolphinui.rc DESTINATION ${DATA_INSTALL_DIR}/dolphin )
 install( FILES search/filenamesearch.protocol DESTINATION ${SERVICES_INSTALL_DIR} )
-install( FILES settings/kcm/kcmdolphinviewmodes.desktop DESTINATION
-${KDE_INSTALL_KSERVICES5DIR} )
+install( FILES settings/kcm/kcmdolphinviewmodes.desktop DESTINATION ${KDE_INSTALL_KSERVICES5DIR} )
 install( FILES settings/kcm/kcmdolphinnavigation.desktop DESTINATION ${SERVICES_INSTALL_DIR} )
 install( FILES settings/kcm/kcmdolphinservices.desktop DESTINATION ${SERVICES_INSTALL_DIR} )
 install( FILES settings/kcm/kcmdolphingeneral.desktop DESTINATION ${SERVICES_INSTALL_DIR} )
