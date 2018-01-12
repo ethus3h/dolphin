@@ -37,6 +37,7 @@
   remotes/origin/plasma/isemenov/qml        7a7cfa6ad Revert "Hide context menu plugins unless enabled by default or by the user"
   remotes/origin/plasma/sebas/dirlister     bc6625430 Merge branch '4.9'
   remotes/origin/stashAction                3e32ee5e8 need to fix async conditions
+  remotes/origin/upstream-2018jan12         dedb61276 Explicitly pass iconNameForUrl when dropping places entry
   remotes/origin/wreathe-2016dec14          5eefb96b6 Update columnviewsettingspage.cpp
   remotes/upstream/Applications/14.12       85957c72f SVN_SILENT made messages (after extraction)
   remotes/upstream/Applications/15.08       3d54caadb SVN_SILENT made messages (.desktop file)
