@@ -1,5 +1,5 @@
 /***************************************************************************
- *   Copyright (C) 2007 by Peter Penz (peter.penz@gmx.at)                  *
+ *   Copyright (C) 2007-2012 by Peter Penz <peter.penz19@gmail.com>        *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
  *   it under the terms of the GNU General Public License as published by  *
@@ -20,30 +20,29 @@
 #ifndef ADDITIONALINFODIALOG_H
 #define ADDITIONALINFODIALOG_H
 
-#include <KDialog>
-#include <KFileItemDelegate>
+#include <QDialog>
 #include <QList>
+#include <QListWidget>
 
-class QCheckBox;
 
 /**
- * @brief Dialog for changing the additional information properties of a directory.
+ * @brief Dialog for changing the additional information shown in the view.
  */
-class AdditionalInfoDialog : public KDialog
+class AdditionalInfoDialog : public QDialog
 {
     Q_OBJECT
 
 public:
-    AdditionalInfoDialog(QWidget* parent, KFileItemDelegate::InformationList infoList);
-    virtual ~AdditionalInfoDialog();
-    KFileItemDelegate::InformationList informationList() const;
+    AdditionalInfoDialog(QWidget* parent, const QList<QByteArray>& visibleRoles);
+    ~AdditionalInfoDialog() override;
+    QList<QByteArray> visibleRoles() const;
 
-private slots:
-    void slotOk();
+public slots:
+    void accept() override;
 
 private:
-    KFileItemDelegate::InformationList m_infoList;
-    QList<QCheckBox*> m_checkBoxes;
+    QList<QByteArray> m_visibleRoles;
+    QListWidget* m_listWidget;
 };
 
 #endif
