@@ -127,13 +127,32 @@ kconfig_add_kcfg_files(dolphinprivate_LIB_SRCS GENERATE_MOC
     settings/dolphin_versioncontrolsettings.kcfgc
 )
 
-kde4_add_library(dolphinprivate SHARED ${dolphinprivate_LIB_SRCS})
+add_library(dolphinprivate ${dolphinprivate_LIB_SRCS})
+generate_export_header(dolphinprivate BASE_NAME dolphin)
 
-target_link_libraries(dolphinprivate ${KDE4_KFILE_LIBS} konq ${KDE4_KNEWSTUFF3_LIBS})
-if (Nepomuk_FOUND)
-  target_link_libraries(dolphinprivate ${NEPOMUK_LIBRARIES} ${NEPOMUK_QUERY_LIBRARIES} nepomukutils ${SOPRANO_LIBRARIES})
-endif (Nepomuk_FOUND)
+target_link_libraries(
+    dolphinprivate PUBLIC
+    dolphinvcs
+    Qt5::Gui
+    KF5::Crash
+    KF5::I18n
+    KF5::IconThemes
+    KF5::KIOCore
+    KF5::KIOWidgets
+    KF5::KIOFileWidgets
+    KF5::Completion
+    KF5::TextWidgets
+    KF5::ConfigCore
+    KF5::NewStuff
+    KF5::Parts
+)
 
+# Old from KDE4: target_link_libraries(dolphinprivate ${KDE4_KFILE_LIBS} konq ${KDE4_KNEWSTUFF3_LIBS})
+
+# TODO: Disabling Nepomuk for the moment
+# if (Nepomuk_FOUND)
+#   target_link_libraries(dolphinprivate ${NEPOMUK_LIBRARIES} ${NEPOMUK_QUERY_LIBRARIES} nepomukutils ${SOPRANO_LIBRARIES})
+# endif (Nepomuk_FOUND)
 
 set_target_properties(dolphinprivate PROPERTIES VERSION ${GENERIC_LIB_VERSION} SOVERSION ${GENERIC_LIB_SOVERSION} )
 install(TARGETS dolphinprivate  ${INSTALL_TARGETS_DEFAULT_ARGS})
