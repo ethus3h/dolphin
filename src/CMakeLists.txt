@@ -180,21 +180,25 @@ install(FILES ${CMAKE_CURRENT_BINARY_DIR}/dolphin_export.h DESTINATION ${KDE_INS
 
 set(dolphinpart_SRCS
    dolphinpart.cpp
+#    dolphinpart_ext.cpp
+#    dolphindebug.cpp
 )
 
-kde4_add_plugin(dolphinpart ${dolphinpart_SRCS})
+qt5_add_resources(dolphinpart_SRCS dolphinpart.qrc)
 
-target_link_libraries(dolphinpart dolphinprivate konq ${KDE4_KPARTS_LIBS} ${KDE4_KFILE_LIBS})
+add_library(dolphinpart MODULE ${dolphinpart_SRCS})
 
-install(TARGETS dolphinpart DESTINATION ${PLUGIN_INSTALL_DIR})
+target_link_libraries(dolphinpart
+    dolphinprivate
+)
 
-install(FILES dolphinpart.rc DESTINATION ${DATA_INSTALL_DIR}/dolphinpart)
-install(FILES dolphinpart.desktop DESTINATION ${SERVICES_INSTALL_DIR} )
-install(FILES views/versioncontrol/fileviewversioncontrolplugin.desktop DESTINATION ${SERVICETYPES_INSTALL_DIR})
+install(TARGETS dolphinpart DESTINATION ${KDE_INSTALL_PLUGINDIR})
+
+install(FILES dolphinpart.desktop DESTINATION ${KDE_INSTALL_KSERVICES5DIR})
 
 ##########################################
 
-set(dolphin_SRCS
+set(dolphinstatic_SRCS
     dolphinapplication.cpp
     dolphindockwidget.cpp
     dolphinmainwindow.cpp
@@ -242,7 +246,7 @@ set(dolphin_SRCS
     views/zoomlevelinfo.cpp
 )
 
-kde4_add_kcfg_files(dolphin_SRCS
+kconfig_add_kcfg_files(dolphinstatic_SRCS GENERATE_MOC
     panels/folders/dolphin_folderspanelsettings.kcfgc
     panels/information/dolphin_informationpanelsettings.kcfgc
     search/dolphin_searchsettings.kcfgc
@@ -260,19 +264,54 @@ if(NOT WIN32)
    set(dolphin_SRCS ${dolphin_SRCS} panels/terminal/terminalpanel.cpp)
 endif(NOT WIN32)
 
-kde4_add_app_icon(dolphin_SRCS "${KDE4_ICON_INSTALL_DIR}/oxygen/*/apps/system-file-manager.png")
+if(NOT WIN32)
+   set(dolphinstatic_SRCS ${dolphinstatic_SRCS} panels/terminal/terminalpanel.cpp)
+endif()
 
-kde4_add_kdeinit_executable(dolphin ${dolphin_SRCS})
+qt5_add_resources(dolphinstatic_SRCS dolphin.qrc)
+
+add_library(dolphinstatic STATIC ${dolphinstatic_SRCS})
+
+target_include_directories(dolphinstatic PRIVATE ${PHONON_INCLUDES})
+target_link_libraries(dolphinstatic
+    dolphinprivate
+    KF5::KCMUtils
+    KF5::DBusAddons
+    KF5::Notifications
+    Phonon::phonon4qt5
+)
+
+if (KF5Activities_FOUND)
+    target_link_libraries(
+        dolphinstatic
+        KF5::Activities
+    )
+endif()
+
+set(dolphin_SRCS
+    dbusinterface.cpp
+    main.cpp
+)
+
+# Sets the icon on Windows and OSX
+file(GLOB ICONS_SRCS "${CMAKE_CURRENT_SOURCE_DIR}/icons/*system-file-manager.png")
+ecm_add_app_icon(dolphin_SRCS ICONS ${ICONS_SRCS})
+
+kf5_add_kdeinit_executable(dolphin ${dolphin_SRCS})
+
 
 target_link_libraries(kdeinit_dolphin
-    ${KDE4_KDEPRINT_LIBS}
-    ${KDE4_KFILE_LIBS}
-    ${KDE4_KPARTS_LIBS}
-    ${KDE4_KCMUTILS_LIBRARY}
-    konq
+    dolphinstatic
     dolphinprivate
-    knewstuff3
-    ${KDE4_PHONON_LIBS}
+)
+
+include(DbusInterfaceMacros)
+
+generate_and_install_dbus_interface(
+    kdeinit_dolphin
+    dbusinterface.h
+    org.freedesktop.FileManager1.xml
+    OPTIONS -a
 )
 
 if (Nepomuk_FOUND)
@@ -284,8 +323,8 @@ if (Nepomuk_FOUND)
     )
 endif (Nepomuk_FOUND)
 
-install(TARGETS kdeinit_dolphin ${INSTALL_TARGETS_DEFAULT_ARGS})
-install(TARGETS dolphin ${INSTALL_TARGETS_DEFAULT_ARGS})
+install(TARGETS kdeinit_dolphin ${KDE_INSTALL_TARGETS_DEFAULT_ARGS})
+install(TARGETS dolphin ${KDE_INSTALL_TARGETS_DEFAULT_ARGS})
 
 ##########################################
 
