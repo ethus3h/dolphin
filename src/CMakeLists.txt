@@ -16,6 +16,11 @@ remove_definitions(
     -DQT_NO_CAST_FROM_ASCII
     -DQT_NO_CAST_TO_ASCII
 )
+
+##########################################
+
+# Disabling Nepomuk for KF5
+
 # macro_optional_find_package(Nepomuk)
 # macro_log_feature(Nepomuk_FOUND "Nepomuk" "Nepomuk" "http://www.kde.org" FALSE "" "For adding desktop-wide tagging support to dolphin")
 # macro_bool_to_01(Nepomuk_FOUND HAVE_NEPOMUK)
@@ -28,7 +33,39 @@ remove_definitions(
 #   include_directories( ${SOPRANO_INCLUDE_DIR} ${NEPOMUK_INCLUDE_DIR} )
 # endif (Nepomuk_FOUND)
 
-# add_subdirectory(tests)
+##########################################
+
+set(dolphinvcs_LIB_SRCS
+    views/versioncontrol/kversioncontrolplugin.cpp
+)
+
+add_library(dolphinvcs ${dolphinvcs_LIB_SRCS})
+generate_export_header(dolphinvcs BASE_NAME dolphinvcs)
+
+target_link_libraries(
+    dolphinvcs PUBLIC
+    Qt5::Widgets
+)
+
+set_target_properties(dolphinvcs PROPERTIES
+    VERSION ${DOLPHINVCS_VERSION_STRING}
+    SOVERSION ${DOLPHINVCS_SOVERSION}
+    EXPORT_NAME DolphinVcs
+)
+
+ecm_generate_headers(dolphinvcs_LIB_HEADERS
+    HEADER_NAMES
+    KVersionControlPlugin
+
+    RELATIVE "views/versioncontrol"
+    REQUIRED_HEADERS dolphinvcs_LIB_HEADERS
+)
+
+install(TARGETS dolphinvcs EXPORT DolphinVcsTargets ${KDE_INSTALL_TARGETS_DEFAULT_ARGS})
+
+install(FILES views/versioncontrol/fileviewversioncontrolplugin.desktop DESTINATION ${KDE_INSTALL_KSERVICETYPES5DIR})
+install(FILES ${CMAKE_CURRENT_BINARY_DIR}/dolphinvcs_export.h DESTINATION ${KDE_INSTALL_INCLUDEDIR} COMPONENT Devel)
+install(FILES ${dolphinvcs_LIB_HEADERS} DESTINATION "${KDE_INSTALL_INCLUDEDIR}/Dolphin" COMPONENT Devel)
 
 ########### next target ###############
 
