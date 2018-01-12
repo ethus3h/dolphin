@@ -24,8 +24,7 @@
 #define APPLYVIEWPROPSJOB_H
 
 #include <KIO/Job>
-#include <KFileItem>
-#include <KUrl>
+#include <QUrl>
 
 class ViewProperties;
 
@@ -60,19 +59,19 @@ public:
      * @param viewProps View properties for the directory \a dir including its
      *                  sub directories.
      */
-    ApplyViewPropsJob(const KUrl& dir, const ViewProperties& viewProps);
-    virtual ~ApplyViewPropsJob();
+    ApplyViewPropsJob(const QUrl& dir, const ViewProperties& viewProps);
+    ~ApplyViewPropsJob() override;
     int progress() const;
 
 private slots:
-    virtual void slotResult(KJob* job);
+    void slotResult(KJob* job) override;
     void slotEntries(KIO::Job*, const KIO::UDSEntryList&);
 
 private:
     ViewProperties* m_viewProps;
     int m_currentItem;
     int m_progress;
-    KUrl m_dir;
+    QUrl m_dir;
 };
 
 inline int ApplyViewPropsJob::progress() const
