@@ -154,9 +154,27 @@ target_link_libraries(
 #   target_link_libraries(dolphinprivate ${NEPOMUK_LIBRARIES} ${NEPOMUK_QUERY_LIBRARIES} nepomukutils ${SOPRANO_LIBRARIES})
 # endif (Nepomuk_FOUND)
 
-set_target_properties(dolphinprivate PROPERTIES VERSION ${GENERIC_LIB_VERSION} SOVERSION ${GENERIC_LIB_SOVERSION} )
-install(TARGETS dolphinprivate  ${INSTALL_TARGETS_DEFAULT_ARGS})
+if(HAVE_BALOO)
+    target_link_libraries(
+        dolphinprivate PUBLIC
+        KF5::FileMetaData
+        KF5::Baloo
+        KF5::BalooWidgets
+    )
+else()
+    target_link_libraries(
+        dolphinprivate PUBLIC
+        KF5::KDELibs4Support # for KFileMetaDataWidget
+    )
+endif()
 
+set_target_properties(dolphinprivate PROPERTIES
+    VERSION ${DOLPHINPRIVATE_VERSION_STRING}
+    SOVERSION ${DOLPHINPRIVATE_SOVERSION}
+)
+
+install(TARGETS dolphinprivate ${KDE_INSTALL_TARGETS_DEFAULT_ARGS} LIBRARY NAMELINK_SKIP)
+install(FILES ${CMAKE_CURRENT_BINARY_DIR}/dolphin_export.h DESTINATION ${KDE_INSTALL_INCLUDEDIR} COMPONENT Devel)
 
 ##########################################
 
