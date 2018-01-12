@@ -430,3 +430,8 @@ install( FILES settings/kcm/kcmdolphingeneral.desktop DESTINATION ${KDE_INSTALL_
 install( FILES settings/services/servicemenu.knsrc DESTINATION ${KDE_INSTALL_CONFDIR} )
 install( PROGRAMS settings/services/servicemenuinstallation DESTINATION ${KDE_INSTALL_BINDIR} )
 install( PROGRAMS settings/services/servicemenudeinstallation DESTINATION ${KDE_INSTALL_BINDIR} )
+
+if(BUILD_TESTING)
+    find_package(Qt5Test ${QT_MIN_VERSION} CONFIG REQUIRED)
+    add_subdirectory(tests)
+endif()
