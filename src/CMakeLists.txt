@@ -403,11 +403,12 @@ install(TARGETS kcm_dolphingeneral DESTINATION ${KDE_INSTALL_PLUGINDIR} )
 
 #########################################
 
-set(kio_search_PART_SRCS
-    search/filenamesearchprotocol.cpp)
-kde4_add_plugin(kio_filenamesearch ${kio_search_PART_SRCS})
-target_link_libraries(kio_filenamesearch ${KDE4_KIO_LIBS})
-install(TARGETS kio_filenamesearch DESTINATION ${PLUGIN_INSTALL_DIR})
+# TODO: disabled for now
+# set(kio_search_PART_SRCS
+#     search/filenamesearchprotocol.cpp)
+# kde4_add_plugin(kio_filenamesearch ${kio_search_PART_SRCS})
+# target_link_libraries(kio_filenamesearch ${KDE4_KIO_LIBS})
+# install(TARGETS kio_filenamesearch DESTINATION ${PLUGIN_INSTALL_DIR})
 
 ########### install files ###############
 
