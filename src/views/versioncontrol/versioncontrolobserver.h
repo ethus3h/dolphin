@@ -20,20 +20,19 @@
 #ifndef VERSIONCONTROLOBSERVER_H
 #define VERSIONCONTROLOBSERVER_H
 
-#include <libdolphin_export.h>
+#include "dolphin_export.h"
+
+#include "kversioncontrolplugin.h"
 
 #include <KFileItem>
-#include <kversioncontrolplugin.h>
+
+#include <QUrl>
 #include <QList>
-#include <QMutex>
 #include <QObject>
-#include <QPersistentModelIndex>
 #include <QString>
 
-class DolphinModel;
-class KDirLister;
 class KFileItemList;
-class QAbstractItemView;
+class KFileItemModel;
 class QAction;
 class QTimer;
 class UpdateItemStatesThread;
@@ -41,21 +40,23 @@ class UpdateItemStatesThread;
 /**
  * @brief Observes all version control plugins.
  *
- * The item view gets updated automatically if the currently shown
- * directory is under version control.
+ * The items of the directory-model get updated automatically if the currently
+ * shown directory is under version control.
  *
  * @see VersionControlPlugin
  */
-class LIBDOLPHINPRIVATE_EXPORT VersionControlObserver : public QObject
+class DOLPHIN_EXPORT VersionControlObserver : public QObject
 {
     Q_OBJECT
 
 public:
-    VersionControlObserver(QAbstractItemView* view);
-    virtual ~VersionControlObserver();
+    explicit VersionControlObserver(QObject* parent = nullptr);
+    ~VersionControlObserver() override;
 
-    QList<QAction*> contextMenuActions(const KFileItemList& items) const;
-    QList<QAction*> contextMenuActions(const QString& directory) const;
+    void setModel(KFileItemModel* model);
+    KFileItemModel* model() const;
+
+    QList<QAction*> actions(const KFileItemList& items) const;
 
 signals:
     /**
@@ -101,26 +102,31 @@ private slots:
     void slotThreadFinished();
 
 private:
-    struct ItemState
-    {
-        QPersistentModelIndex index;
-        KFileItem item;
-        KVersionControlPlugin::VersionState version;
-    };
+    typedef QPair<KFileItem, KVersionControlPlugin::ItemVersion> ItemState;
 
     void updateItemStates();
 
     /**
-     * Adds recursively all items from the directory \p parentIndex into
-     * the list \p itemStates.
+     * It creates a item state list for every expanded directory and stores
+     * this list together with the directory url in the \a itemStates map.
+     *
+     * @itemStates      A map of item state lists for every expanded directory
+     *                  and its items, where the "key" is the directory url and
+     *                  the "value" is a list of ItemStates for every item
+     *                  within this directory.
+     * @firstIndex      The index to start the processing from, this is needed
+     *                  because this function is recursively called.
+     *
+     * @return          The number of (recursive) processed items.
      */
-    void addDirectory(const QModelIndex& parentIndex, QList<ItemState>& itemStates);
+    int createItemStatesList(QMap<QString, QVector<ItemState> >& itemStates,
+                             const int firstIndex = 0);
 
     /**
      * Returns a matching plugin for the given directory.
      * 0 is returned, if no matching plugin has been found.
      */
-    KVersionControlPlugin* searchPlugin(const KUrl& directory) const;
+    KVersionControlPlugin* searchPlugin(const QUrl& directory) const;
 
     /**
      * Returns true, if the directory contains a version control information.
@@ -133,9 +139,7 @@ private:
     bool m_silentUpdate; // if true, no messages will be send during the update
                          // of version states
 
-    QAbstractItemView* m_view;
-    KDirLister* m_dirLister;
-    DolphinModel* m_dolphinModel;
+    KFileItemModel* m_model;
 
     QTimer* m_dirVerificationTimer;
 
