@@ -19,8 +19,8 @@
 
 QT_BEGIN_MOC_NAMESPACE
 struct qt_meta_stringdata_DolphinDirLister_t {
-    QByteArrayData data[7];
-    char stringdata0[59];
+    QByteArrayData data[6];
+    char stringdata0[54];
 };
 #define QT_MOC_LITERAL(idx, ofs, len) \
     Q_STATIC_BYTE_ARRAY_DATA_HEADER_INITIALIZER_WITH_OFFSET(len, \
@@ -34,12 +34,11 @@ QT_MOC_LITERAL(1, 17, 12), // "errorMessage"
 QT_MOC_LITERAL(2, 30, 0), // ""
 QT_MOC_LITERAL(3, 31, 3), // "msg"
 QT_MOC_LITERAL(4, 35, 14), // "urlIsFileError"
-QT_MOC_LITERAL(5, 50, 4), // "KUrl"
-QT_MOC_LITERAL(6, 55, 3) // "url"
+QT_MOC_LITERAL(5, 50, 3) // "url"
 
     },
     "DolphinDirLister\0errorMessage\0\0msg\0"
-    "urlIsFileError\0KUrl\0url"
+    "urlIsFileError\0url"
 };
 #undef QT_MOC_LITERAL
 
@@ -62,7 +61,7 @@ static const uint qt_meta_data_DolphinDirLister[] = {
 
  // signals: parameters
     QMetaType::Void, QMetaType::QString,    3,
-    QMetaType::Void, 0x80000000 | 5,    6,
+    QMetaType::Void, QMetaType::QUrl,    5,
 
        0        // eod
 };
@@ -74,7 +73,7 @@ void DolphinDirLister::qt_static_metacall(QObject *_o, QMetaObject::Call _c, int
         Q_UNUSED(_t)
         switch (_id) {
         case 0: _t->errorMessage((*reinterpret_cast< const QString(*)>(_a[1]))); break;
-        case 1: _t->urlIsFileError((*reinterpret_cast< const KUrl(*)>(_a[1]))); break;
+        case 1: _t->urlIsFileError((*reinterpret_cast< const QUrl(*)>(_a[1]))); break;
         default: ;
         }
     } else if (_c == QMetaObject::IndexOfMethod) {
@@ -88,7 +87,7 @@ void DolphinDirLister::qt_static_metacall(QObject *_o, QMetaObject::Call _c, int
             }
         }
         {
-            typedef void (DolphinDirLister::*_t)(const KUrl & );
+            typedef void (DolphinDirLister::*_t)(const QUrl & );
             if (*reinterpret_cast<_t *>(func) == static_cast<_t>(&DolphinDirLister::urlIsFileError)) {
                 *result = 1;
                 return;
@@ -141,7 +140,7 @@ void DolphinDirLister::errorMessage(const QString & _t1)
 }
 
 // SIGNAL 1
-void DolphinDirLister::urlIsFileError(const KUrl & _t1)
+void DolphinDirLister::urlIsFileError(const QUrl & _t1)
 {
     void *_a[] = { Q_NULLPTR, const_cast<void*>(reinterpret_cast<const void*>(&_t1)) };
     QMetaObject::activate(this, &staticMetaObject, 1, _a);

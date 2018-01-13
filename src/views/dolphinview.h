@@ -38,6 +38,8 @@
 #include <QLinkedList>
 #include <QListView>
 #include <QSet>
+#include <QUrl>
+#include <QMimeData>
 #include <QWidget>
 #include <qstringlist.h>
 
@@ -53,7 +55,6 @@ class DolphinSortFilterProxyModel;
 class DolphinViewController;
 class KAction;
 class KActionCollection;
-class KUrl;
 class ViewModeController;
 class ViewProperties;
 class QRegExp;
@@ -124,7 +125,7 @@ public:
      * @param url              Specifies the content which should be shown.
      * @param parent           Parent widget of the view.
      */
-    DolphinView( const KUrl& url, QWidget* parent);
+    DolphinView( const QUrl& url, QWidget* parent);
 
     virtual ~DolphinView();
 
@@ -132,7 +133,7 @@ public:
      * Returns the current active URL, where all actions are applied.
      * The URL navigator is synchronized with this URL.
      */
-    KUrl url() const;
+    QUrl url() const;
 
     /**
      * Returns the root URL of the view, which is defined as the first
@@ -143,7 +144,7 @@ public:
      * and DolphinView::url() might return
      * /home/peter/Documents/Music/
      */
-    KUrl rootUrl() const;
+    QUrl rootUrl() const;
 
     /**
      * If \a active is true, the view will marked as active. The active
@@ -211,7 +212,7 @@ public:
      * gets selected if no loading of a directory has been triggered
      * by DolphinView::setUrl() or DolphinView::reload().
      */
-    void markUrlsAsSelected(const QList<KUrl>& urls);
+    void markUrlsAsSelected(const QList<QUrl>& urls);
 
     /**
      * All items that match to the pattern \a pattern will get selected
@@ -349,7 +350,7 @@ public slots:
      * Changes the directory to \a url. If the current directory is equal to
      * \a url, nothing will be done (use DolphinView::reload() instead).
      */
-    void setUrl(const KUrl& url);
+    void setUrl(const QUrl& url);
 
     /**
      * Selects all items.
@@ -445,7 +446,7 @@ signals:
     void activated();
 
     /** Is emitted if URL of the view has been changed to \a url. */
-    void urlChanged(const KUrl& url);
+    void urlChanged(const QUrl& url);
 
     /**
      * Is emitted when clicking on an item with the left mouse button.
@@ -460,7 +461,7 @@ signals:
     /**
      * Is emitted if a new tab should be opened for the URL \a url.
      */
-    void tabRequested(const KUrl& url);
+    void tabRequested(const QUrl& url);
 
     /**
      * Is emitted if the view mode (IconsView, DetailsView,
@@ -510,7 +511,7 @@ signals:
      * will be added.
      */
     void requestContextMenu(const KFileItem& item,
-                            const KUrl& url,
+                            const QUrl& url,
                             const QList<QAction*>& customActions);
 
     /**
@@ -537,13 +538,13 @@ signals:
      * it is assured that the view contains already the correct root
      * URL and property settings.
      */
-    void startedPathLoading(const KUrl& url);
+    void startedPathLoading(const QUrl& url);
 
     /**
      * Is emitted after the path triggered by DolphinView::setUrl()
      * has been loaded.
      */
-    void finishedPathLoading(const KUrl& url);
+    void finishedPathLoading(const QUrl& url);
 
     /**
      * Is emitted after DolphinView::setUrl() has been invoked and provides
@@ -555,13 +556,13 @@ signals:
      * Is emitted if the DolphinView::setUrl() is invoked but the URL is not
      * a directory.
      */
-    void urlIsFileError(const KUrl& file);
+    void urlIsFileError(const QUrl& file);
 
     /**
      * Emitted when KDirLister emits redirection.
      * Testcase: fish://localhost
      */
-    void redirection(const KUrl& oldUrl, const KUrl& newUrl);
+    void redirection(const QUrl& oldUrl, const QUrl& newUrl);
 
     /**
      * Is emitted when the write state of the folder has been changed. The application
@@ -617,7 +618,7 @@ private slots:
      * the item is indicated by \a destItem.
      */
     void dropUrls(const KFileItem& destItem,
-                  const KUrl& destPath,
+                  const QUrl& destPath,
                   QDropEvent* event);
 
     /**
@@ -668,7 +669,7 @@ private slots:
      * Invoked when the directory lister has been started the
      * loading of \a url.
      */
-    void slotDirListerStarted(const KUrl& url);
+    void slotDirListerStarted(const QUrl& url);
 
     /**
      * Invoked when the directory lister has completed the loading of
@@ -694,7 +695,7 @@ private slots:
      *
      * @see selectAndScrollToCreatedItem()
      */
-    void observeCreatedItem(const KUrl& url);
+    void observeCreatedItem(const QUrl& url);
 
     /**
      * Selects and scrolls to the item that got observed
@@ -706,17 +707,17 @@ private slots:
      * Called when a redirection happens.
      * Testcase: fish://localhost
      */
-    void slotRedirection(const KUrl& oldUrl, const KUrl& newUrl);
+    void slotRedirection(const QUrl& oldUrl, const QUrl& newUrl);
 
     /**
      * Restores the contents position, if history information about the old position is available.
      */
     void restoreContentsPosition();
 
-    void slotUrlChangeRequested(const KUrl& url);
+    void slotUrlChangeRequested(const QUrl& url);
 
 private:
-    void loadDirectory(const KUrl& url, bool reload = false);
+    void loadDirectory(const QUrl& url, bool reload = false);
 
     /**
      * Applies the view properties which are defined by the current URL
@@ -736,7 +737,7 @@ private:
      * Helper method for DolphinView::paste() and DolphinView::pasteIntoFolder().
      * Pastes the clipboard data into the URL \a url.
      */
-    void pasteToUrl(const KUrl& url);
+    void pasteToUrl(const QUrl& url);
 
     /**
      * Checks whether the current item view has the same zoom level
@@ -751,7 +752,7 @@ private:
      * simplified, so that when the URLs are part of different tree
      * levels, only the parent is returned.
      */
-    KUrl::List simplifiedSelectedUrls() const;
+    QUrl::List simplifiedSelectedUrls() const;
 
     /**
      * Returns the MIME data for all selected items.
@@ -803,7 +804,7 @@ private:
          * Must be invoked before the URL has been changed and allows view implementations
          * like the column view to create a new column.
          */
-        void prepareUrlChange(const KUrl& url);
+        void prepareUrlChange(const QUrl& url);
 
         QAbstractItemView* itemView() const;
         KFileItemDelegate* itemDelegate() const;
@@ -815,13 +816,13 @@ private:
          */
         QWidget* layoutTarget() const;
 
-        void setRootUrl(const KUrl& rootUrl);
-        KUrl rootUrl() const;
+        void setRootUrl(const QUrl& rootUrl);
+        QUrl rootUrl() const;
 
         bool supportsCategorizedSorting() const;
         bool itemsExpandable() const;
-        QSet<KUrl> expandedUrls() const;
-        const DolphinDetailsViewExpander* setExpandedUrls(const QSet<KUrl>& urlsToExpand);
+        QSet<QUrl> expandedUrls() const;
+        const DolphinDetailsViewExpander* setExpandedUrls(const QSet<QUrl>& urlsToExpand);
 
         /**
          * Returns true, if a reloading of the items is required
@@ -835,7 +836,7 @@ private:
         DolphinDirLister* dirLister() const;
 
     private:
-        KUrl m_rootUrl;
+        QUrl m_rootUrl;
         DolphinIconsView* m_iconsView;
         DolphinDetailsView* m_detailsView;
         DolphinColumnViewContainer* m_columnsContainer;
@@ -867,9 +868,9 @@ private:
 
     QTimer* m_selectionChangedTimer;
 
-    KUrl m_activeItemUrl;
+    QUrl m_activeItemUrl;
     QPoint m_restoredContentsPosition;
-    KUrl m_createdItemUrl; // URL for a new item that got created by the "Create New..." menu
+    QUrl m_createdItemUrl; // URL for a new item that got created by the "Create New..." menu
     KFileItemList m_selectedItems; // this is used for making the View to remember selections after F5
 
     /**
