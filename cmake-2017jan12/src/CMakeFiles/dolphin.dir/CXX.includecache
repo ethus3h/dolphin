@@ -1,0 +1,12 @@
+#IncludeRegexLine: ^[ 	]*[#%][ 	]*(include|import)[ 	]*[<"]([^">]+)([">])
+
+#IncludeRegexScan: ^.*$
+
+#IncludeRegexComplain: ^$
+
+#IncludeRegexTransform: 
+
+/home/kyan/Ember Library/Ember satellite projects/wreathe-file-manager/cmake-2017jan12/src/dolphin_autogen/moc_compilation.cpp
+
+/home/kyan/Ember Library/Ember satellite projects/wreathe-file-manager/cmake-2017jan12/src/dolphin_dummy.cpp
+
