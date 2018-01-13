@@ -1,7 +1,5 @@
 set( EXECUTABLE_OUTPUT_PATH ${CMAKE_CURRENT_BINARY_DIR} )
-
-find_package(Qt5Test CONFIG REQUIRED)
-include(ECMAddTests)
+include_directories( ${CMAKE_CURRENT_SOURCE_DIR}/.. ${CMAKE_CURRENT_BUILD_DIR}/.. ${KDE4_INCLUDES} )
 
 # DolphinDetailsView
 ecm_add_test(dolphindetailsviewtest TEST dolphindetailsviewtest.cpp testdir.cpp testbase.cpp ../views/zoomlevelinfo.cpp)
