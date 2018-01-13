@@ -116,7 +116,7 @@ void KItemListViewAnimation::start(QGraphicsWidget* widget, AnimationType type, 
 {
     stop(widget, type);
 
-    QPropertyAnimation* propertyAnim = nullptr;
+    QPropertyAnimation* propertyAnim = 0;
     const int animationDuration = widget->style()->styleHint(QStyle::SH_Widget_Animate) ? 200 : 1;
 
     switch (type) {

@@ -52,22 +52,22 @@ public:
         DetailsLayout
     };
 
-    KStandardItemListView(QGraphicsWidget* parent = nullptr);
-    ~KStandardItemListView() override;
+    KStandardItemListView(QGraphicsWidget* parent = 0);
+    virtual ~KStandardItemListView();
 
     void setItemLayout(ItemLayout layout);
     ItemLayout itemLayout() const;
 
 protected:
-    KItemListWidgetCreatorBase* defaultWidgetCreator() const override;
-    KItemListGroupHeaderCreatorBase* defaultGroupHeaderCreator() const override;
-    void initializeItemListWidget(KItemListWidget* item) override;
-    bool itemSizeHintUpdateRequired(const QSet<QByteArray>& changedRoles) const override;
+    virtual KItemListWidgetCreatorBase* defaultWidgetCreator() const Q_DECL_OVERRIDE;
+    virtual KItemListGroupHeaderCreatorBase* defaultGroupHeaderCreator() const Q_DECL_OVERRIDE;
+    virtual void initializeItemListWidget(KItemListWidget* item) Q_DECL_OVERRIDE;
+    virtual bool itemSizeHintUpdateRequired(const QSet<QByteArray>& changedRoles) const Q_DECL_OVERRIDE;
     virtual bool itemLayoutSupportsItemExpanding(ItemLayout layout) const;
     virtual void onItemLayoutChanged(ItemLayout current, ItemLayout previous);
-    void onScrollOrientationChanged(Qt::Orientation current, Qt::Orientation previous) override;
-    void onSupportsItemExpandingChanged(bool supportsExpanding) override;
-    void polishEvent() override;
+    virtual void onScrollOrientationChanged(Qt::Orientation current, Qt::Orientation previous) Q_DECL_OVERRIDE;
+    virtual void onSupportsItemExpandingChanged(bool supportsExpanding) Q_DECL_OVERRIDE;
+    virtual void polishEvent() Q_DECL_OVERRIDE;
 
 private:
     void applyDefaultStyleOption(int iconSize, int padding, int horizontalMargin, int verticalMargin);

@@ -41,9 +41,9 @@
 
 DolphinFileMetaDataWidget::DolphinFileMetaDataWidget(QWidget* parent) :
     QWidget(parent),
-    m_preview(nullptr),
-    m_name(nullptr),
-    m_fileMetaDataWidget(nullptr)
+    m_preview(0),
+    m_name(0),
+    m_fileMetaDataWidget(0)
 {
     // Create widget for file preview
     m_preview = new QLabel(this);

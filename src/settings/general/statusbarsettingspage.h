@@ -32,13 +32,13 @@ class StatusBarSettingsPage : public SettingsPageBase
 
 public:
     StatusBarSettingsPage(QWidget* parent);
-    ~StatusBarSettingsPage() override;
+    virtual ~StatusBarSettingsPage();
 
     /** @see SettingsPageBase::applySettings() */
-    void applySettings() override;
+    virtual void applySettings() Q_DECL_OVERRIDE;
 
     /** @see SettingsPageBase::restoreDefaults() */
-    void restoreDefaults() override;
+    virtual void restoreDefaults() Q_DECL_OVERRIDE;
 
 private:
     void loadSettings();

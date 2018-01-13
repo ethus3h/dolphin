@@ -37,13 +37,13 @@ class ViewSettingsPage : public SettingsPageBase
 
 public:
     ViewSettingsPage(QWidget* parent);
-    ~ViewSettingsPage() override;
+    virtual ~ViewSettingsPage();
 
     /** @see SettingsPageBase::applySettings() */
-    void applySettings() override;
+    virtual void applySettings() Q_DECL_OVERRIDE;
 
     /** @see SettingsPageBase::restoreDefaults() */
-    void restoreDefaults() override;
+    virtual void restoreDefaults() Q_DECL_OVERRIDE;
 
 private:
     QList<ViewSettingsTab*> m_tabs;

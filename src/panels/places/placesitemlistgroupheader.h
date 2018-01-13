@@ -27,13 +27,13 @@ class PlacesItemListGroupHeader : public KStandardItemListGroupHeader
     Q_OBJECT
 
 public:
-    PlacesItemListGroupHeader(QGraphicsWidget* parent = nullptr);
-    ~PlacesItemListGroupHeader() override;
+    PlacesItemListGroupHeader(QGraphicsWidget* parent = 0);
+    virtual ~PlacesItemListGroupHeader();
 
 protected:
-    void paintSeparator(QPainter* painter, const QColor& color) override;
+    virtual void paintSeparator(QPainter* painter, const QColor& color) Q_DECL_OVERRIDE;
 
-    QPalette::ColorRole normalTextColorRole() const override;
+    virtual QPalette::ColorRole normalTextColorRole() const Q_DECL_OVERRIDE;
 };
 #endif
 

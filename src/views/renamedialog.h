@@ -39,7 +39,7 @@ class DOLPHIN_EXPORT RenameDialog : public QDialog
 
 public:
     explicit RenameDialog(QWidget* parent, const KFileItemList& items);
-    ~RenameDialog() override;
+    virtual ~RenameDialog();
 
 signals:
     void renamingFinished(const QList<QUrl>& urls);

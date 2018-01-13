@@ -34,7 +34,6 @@
 #include <KIO/DropJob>
 #include <KIO/EmptyTrashJob>
 #include <KIO/JobUiDelegate>
-#include <KFilePlacesModel>
 #include <KJobWidgets>
 #include <KLocalizedString>
 #include <KIconLoader>
@@ -171,10 +170,10 @@ void PlacesPanel::slotItemContextMenuRequested(int index, const QPointF& pos)
 
     QMenu menu(this);
 
-    QAction* emptyTrashAction = nullptr;
-    QAction* editAction = nullptr;
-    QAction* teardownAction = nullptr;
-    QAction* ejectAction = nullptr;
+    QAction* emptyTrashAction = 0;
+    QAction* editAction = 0;
+    QAction* teardownAction = 0;
+    QAction* ejectAction = 0;
 
     const QString label = item->text();
 
@@ -214,7 +213,7 @@ void PlacesPanel::slotItemContextMenuRequested(int index, const QPointF& pos)
         editAction = menu.addAction(QIcon::fromTheme("document-properties"), i18nc("@item:inmenu", "Edit..."));
     }
 
-    QAction* removeAction = nullptr;
+    QAction* removeAction = 0;
     if (!isDevice && !item->isSystemItem()) {
         removeAction = menu.addAction(QIcon::fromTheme(QStringLiteral("edit-delete")), i18nc("@item:inmenu", "Remove"));
     }
@@ -222,8 +221,6 @@ void PlacesPanel::slotItemContextMenuRequested(int index, const QPointF& pos)
     QAction* hideAction = menu.addAction(i18nc("@item:inmenu", "Hide"));
     hideAction->setCheckable(true);
     hideAction->setChecked(item->isHidden());
-
-    buildGroupContextMenu(&menu, index);
 
     QAction* action = menu.exec(pos.toPoint());
     if (action) {
@@ -242,11 +239,13 @@ void PlacesPanel::slotItemContextMenuRequested(int index, const QPointF& pos)
             if (action == editAction) {
                 editEntry(index);
             } else if (action == removeAction) {
-                m_model->deleteItem(index);
+                m_model->removeItem(index);
+                m_model->saveBookmarks();
             } else if (action == hideAction) {
                 item->setHidden(hideAction->isChecked());
+                m_model->saveBookmarks();
             } else if (action == openInNewWindowAction) {
-                Dolphin::openNewWindow({KFilePlacesModel::convertedUrl(m_model->data(index).value("url").toUrl())}, this);
+                Dolphin::openNewWindow({PlacesItemModel::convertedUrl(m_model->data(index).value("url").toUrl())}, this);
             } else if (action == openInNewTabAction) {
                 // TriggerItem does set up the storage first and then it will
                 // emit the slotItemMiddleClicked signal, because of Qt::MiddleButton.
@@ -268,14 +267,12 @@ void PlacesPanel::slotViewContextMenuRequested(const QPointF& pos)
 
     QAction* addAction = menu.addAction(QIcon::fromTheme(QStringLiteral("document-new")), i18nc("@item:inmenu", "Add Entry..."));
 
-    QAction* showAllAction = nullptr;
+    QAction* showAllAction = 0;
     if (m_model->hiddenCount() > 0) {
         showAllAction = menu.addAction(i18nc("@item:inmenu", "Show All Entries"));
         showAllAction->setCheckable(true);
         showAllAction->setChecked(m_model->hiddenItemsShown());
     }
-
-    buildGroupContextMenu(&menu, m_controller->indexCloseToMousePressedPosition());
 
     QMenu* iconSizeSubMenu = new QMenu(i18nc("@item:inmenu", "Icon Size"), &menu);
 
@@ -330,24 +327,6 @@ void PlacesPanel::slotViewContextMenuRequested(const QPointF& pos)
     selectClosestItem();
 }
 
-QAction *PlacesPanel::buildGroupContextMenu(QMenu *menu, int index)
-{
-    if (index == -1) {
-        return nullptr;
-    }
-
-    KFilePlacesModel::GroupType groupType = m_model->groupType(index);
-    QAction *hideGroupAction = menu->addAction(i18nc("@item:inmenu", "Hide Section '%1'", m_model->item(index)->group()));
-    hideGroupAction->setCheckable(true);
-    hideGroupAction->setChecked(m_model->isGroupHidden(groupType));
-
-    connect(hideGroupAction, &QAction::triggered, this, [this, groupType, hideGroupAction]{
-        m_model->setGroupHidden(groupType, hideGroupAction->isChecked());
-    });
-
-    return hideGroupAction;
-}
-
 void PlacesPanel::slotItemDropEvent(int index, QGraphicsSceneDragDropEvent* event)
 {
     if (index < 0) {
@@ -355,8 +334,8 @@ void PlacesPanel::slotItemDropEvent(int index, QGraphicsSceneDragDropEvent* even
     }
 
     const PlacesItem* destItem = m_model->placesItem(index);
-
-    if (destItem->isSearchOrTimelineUrl()) {
+    const PlacesItem::GroupType group = destItem->groupType();
+    if (group == PlacesItem::SearchForType || group == PlacesItem::RecentlySavedType) {
         return;
     }
 
@@ -409,14 +388,15 @@ void PlacesPanel::slotItemDropEventStorageSetupDone(int index, bool success)
         delete m_itemDropEvent;
 
         m_itemDropEventIndex = -1;
-        m_itemDropEventMimeData = nullptr;
-        m_itemDropEvent = nullptr;
+        m_itemDropEventMimeData = 0;
+        m_itemDropEvent = 0;
     }
 }
 
 void PlacesPanel::slotAboveItemDropEvent(int index, QGraphicsSceneDragDropEvent* event)
 {
     m_model->dropMimeDataBefore(index, event->mimeData());
+    m_model->saveBookmarks();
 }
 
 void PlacesPanel::slotUrlsDropped(const QUrl& dest, QDropEvent* event, QWidget* parent)
@@ -433,7 +413,7 @@ void PlacesPanel::slotTrashUpdated(KJob* job)
         emit errorMessage(job->errorString());
     }
     // as long as KIO doesn't do this, do it ourselves
-    KNotification::event(QStringLiteral("Trash: emptied"), QString(), QPixmap(), nullptr, KNotification::DefaultEvent);
+    KNotification::event(QStringLiteral("Trash: emptied"), QString(), QPixmap(), 0, KNotification::DefaultEvent);
 }
 
 void PlacesPanel::slotStorageSetupDone(int index, bool success)
@@ -476,7 +456,9 @@ void PlacesPanel::addEntry()
     dialog->setAllowGlobal(true);
     dialog->setUrl(url);
     if (dialog->exec() == QDialog::Accepted) {
-        m_model->createPlacesItem(dialog->text(), dialog->url(), dialog->icon());
+        PlacesItem* item = m_model->createPlacesItem(dialog->text(), dialog->url(), dialog->icon());
+        m_model->appendItemToGroup(item);
+        m_model->saveBookmarks();
     }
 
     delete dialog;
@@ -498,7 +480,7 @@ void PlacesPanel::editEntry(int index)
             oldItem->setText(dialog->text());
             oldItem->setUrl(dialog->url());
             oldItem->setIcon(dialog->icon());
-            m_model->refresh();
+            m_model->saveBookmarks();
         }
     }
 
@@ -535,9 +517,9 @@ void PlacesPanel::triggerItem(int index, Qt::MouseButton button)
         const QUrl url = m_model->data(index).value("url").toUrl();
         if (!url.isEmpty()) {
             if (button == Qt::MiddleButton) {
-                emit placeMiddleClicked(KFilePlacesModel::convertedUrl(url));
+                emit placeMiddleClicked(PlacesItemModel::convertedUrl(url));
             } else {
-                emit placeActivated(KFilePlacesModel::convertedUrl(url));
+                emit placeActivated(PlacesItemModel::convertedUrl(url));
             }
         }
     }

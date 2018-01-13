@@ -70,7 +70,7 @@ public:
     };
 
     DolphinViewContainer(const QUrl& url, QWidget* parent);
-    ~DolphinViewContainer() override;
+    virtual ~DolphinViewContainer();
 
     /**
      * Returns the current active URL, where all actions are applied.
@@ -92,8 +92,6 @@ public:
      */
     void setAutoGrabFocus(bool grab);
     bool autoGrabFocus() const;
-
-    QString currentSearchText() const;
 
     const DolphinStatusBar* statusBar() const;
     DolphinStatusBar* statusBar();

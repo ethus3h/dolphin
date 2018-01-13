@@ -30,7 +30,7 @@ K_PLUGIN_FACTORY(KCMDolphinNavigationConfigFactory, registerPlugin<DolphinNaviga
 
 DolphinNavigationConfigModule::DolphinNavigationConfigModule(QWidget* parent, const QVariantList& args) :
     KCModule(parent),
-    m_navigation(nullptr)
+    m_navigation(0)
 {
     Q_UNUSED(args);
 
@@ -41,7 +41,7 @@ DolphinNavigationConfigModule::DolphinNavigationConfigModule(QWidget* parent, co
 
     m_navigation = new NavigationSettingsPage(this);
     connect(m_navigation, &NavigationSettingsPage::changed, this, static_cast<void(DolphinNavigationConfigModule::*)()>(&DolphinNavigationConfigModule::changed));
-    topLayout->addWidget(m_navigation, 0, nullptr);
+    topLayout->addWidget(m_navigation, 0, 0);
 }
 
 DolphinNavigationConfigModule::~DolphinNavigationConfigModule()

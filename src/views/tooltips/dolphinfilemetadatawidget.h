@@ -45,8 +45,8 @@ class DolphinFileMetaDataWidget : public QWidget
     Q_OBJECT
 
 public:
-    DolphinFileMetaDataWidget(QWidget* parent = nullptr);
-    ~DolphinFileMetaDataWidget() override;
+    DolphinFileMetaDataWidget(QWidget* parent = 0);
+    virtual ~DolphinFileMetaDataWidget();
 
     void setPreview(const QPixmap& pixmap);
     QPixmap preview() const;

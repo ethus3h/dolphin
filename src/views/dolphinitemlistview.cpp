@@ -30,7 +30,6 @@
 #include <kitemviews/kitemlistcontroller.h>
 #include <kitemviews/kitemliststyleoption.h>
 
-#include <KIO/PreviewJob>
 
 #include <views/viewmodecontroller.h>
 
@@ -95,7 +94,11 @@ void DolphinItemListView::readSettings()
     updateGridSize();
 
     const KConfigGroup globalConfig(KSharedConfig::openConfig(), "PreviewSettings");
-    setEnabledPlugins(globalConfig.readEntry("Plugins", KIO::PreviewJob::defaultPlugins()));
+    const QStringList plugins = globalConfig.readEntry("Plugins", QStringList()
+                                                       << QStringLiteral("directorythumbnail")
+                                                       << QStringLiteral("imagethumbnail")
+                                                       << QStringLiteral("jpegthumbnail"));
+    setEnabledPlugins(plugins);
 
     endTransaction();
 }

@@ -43,7 +43,7 @@ class ToolTipManager : public QObject
 
 public:
     explicit ToolTipManager(QWidget* parent);
-    ~ToolTipManager() override;
+    virtual ~ToolTipManager();
 
     /**
      * Triggers the showing of the tooltip for the item \p item

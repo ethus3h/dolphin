@@ -40,7 +40,7 @@ class FoldersPanel : public Panel
 
 public:
     explicit FoldersPanel(QWidget* parent = nullptr);
-    ~FoldersPanel() override;
+    virtual ~FoldersPanel();
 
     void setShowHiddenFiles(bool show);
     void setLimitFoldersPanelToHome(bool enable);
@@ -59,13 +59,13 @@ signals:
 
 protected:
     /** @see Panel::urlChanged() */
-    bool urlChanged() override;
+    virtual bool urlChanged() Q_DECL_OVERRIDE;
 
     /** @see QWidget::showEvent() */
-    void showEvent(QShowEvent* event) override;
+    virtual void showEvent(QShowEvent* event) Q_DECL_OVERRIDE;
 
     /** @see QWidget::keyPressEvent() */
-    void keyPressEvent(QKeyEvent* event) override;
+    virtual void keyPressEvent(QKeyEvent* event) Q_DECL_OVERRIDE;
 
 private slots:
     void slotItemActivated(int index);

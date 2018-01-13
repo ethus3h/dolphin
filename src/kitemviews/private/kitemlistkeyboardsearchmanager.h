@@ -41,8 +41,8 @@ class DOLPHIN_EXPORT KItemListKeyboardSearchManager : public QObject
 
 public:
 
-    KItemListKeyboardSearchManager(QObject* parent = nullptr);
-    ~KItemListKeyboardSearchManager() override;
+    KItemListKeyboardSearchManager(QObject* parent = 0);
+    virtual ~KItemListKeyboardSearchManager();
 
     /**
      * Add \a keys to the text buffer used for searching.

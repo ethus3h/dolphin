@@ -45,7 +45,7 @@ public:
     TreeViewContextMenu(FoldersPanel* parent,
                         const KFileItem& fileInfo);
 
-    ~TreeViewContextMenu() override;
+    virtual ~TreeViewContextMenu();
 
     /** Opens the context menu modal. */
     void open();

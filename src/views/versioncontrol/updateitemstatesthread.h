@@ -46,12 +46,12 @@ public:
      */
     UpdateItemStatesThread(KVersionControlPlugin* plugin,
                            const QMap<QString, QVector<VersionControlObserver::ItemState> >& itemStates);
-    ~UpdateItemStatesThread() override;
+    virtual ~UpdateItemStatesThread();
 
     QMap<QString, QVector<VersionControlObserver::ItemState> > itemStates() const;
 
 protected:
-    void run() override;
+    virtual void run() Q_DECL_OVERRIDE;
 
 private:
     QMutex* m_globalPluginMutex; // Protects the m_plugin globally

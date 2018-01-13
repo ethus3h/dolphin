@@ -60,7 +60,7 @@ void* KItemListViewAccessible::interface_cast(QAccessible::InterfaceType type)
     if (type == QAccessible::TableInterface) {
         return static_cast<QAccessibleTableInterface*>(this);
     }
-    return nullptr;
+    return Q_NULLPTR;
 }
 
 void KItemListViewAccessible::modelReset()
@@ -70,7 +70,7 @@ void KItemListViewAccessible::modelReset()
 QAccessibleInterface* KItemListViewAccessible::cell(int index) const
 {
     if (index < 0 || index >= view()->model()->count()) {
-        return nullptr;
+        return 0;
     }
 
     if (m_cells.size() <= index) {
@@ -93,7 +93,7 @@ QAccessibleInterface* KItemListViewAccessible::cellAt(int row, int column) const
 
 QAccessibleInterface* KItemListViewAccessible::caption() const
 {
-    return nullptr;
+    return 0;
 }
 
 QString KItemListViewAccessible::columnDescription(int) const
@@ -168,7 +168,7 @@ QList<int> KItemListViewAccessible::selectedRows() const
 
 QAccessibleInterface* KItemListViewAccessible::summary() const
 {
-    return nullptr;
+    return 0;
 }
 
 bool KItemListViewAccessible::isColumnSelected(int) const
@@ -225,7 +225,7 @@ QAccessibleInterface* KItemListViewAccessible::childAt(int x, int y) const
 QAccessibleInterface* KItemListViewAccessible::parent() const
 {
     // FIXME: return KItemListContainerAccessible here
-    return nullptr;
+    return Q_NULLPTR;
 }
 
 int KItemListViewAccessible::childCount() const
@@ -265,7 +265,7 @@ QAccessibleInterface* KItemListViewAccessible::child(int index) const
     if (index >= 0 && index < childCount()) {
         return cell(index);
     }
-    return nullptr;
+    return Q_NULLPTR;
 }
 
 // Table Cell
@@ -282,7 +282,7 @@ void* KItemListAccessibleCell::interface_cast(QAccessible::InterfaceType type)
     if (type == QAccessible::TableCellInterface) {
         return static_cast<QAccessibleTableCellInterface*>(this);
     }
-    return nullptr;
+    return Q_NULLPTR;
 }
 
 int KItemListAccessibleCell::columnExtent() const
@@ -398,7 +398,7 @@ void KItemListAccessibleCell::setText(QAccessible::Text, const QString&)
 
 QAccessibleInterface* KItemListAccessibleCell::child(int) const
 {
-    return nullptr;
+    return Q_NULLPTR;
 }
 
 bool KItemListAccessibleCell::isValid() const
@@ -408,7 +408,7 @@ bool KItemListAccessibleCell::isValid() const
 
 QAccessibleInterface* KItemListAccessibleCell::childAt(int, int) const
 {
-    return nullptr;
+    return Q_NULLPTR;
 }
 
 int KItemListAccessibleCell::childCount() const
@@ -434,7 +434,7 @@ int KItemListAccessibleCell::index() const
 
 QObject* KItemListAccessibleCell::object() const
 {
-    return nullptr;
+    return 0;
 }
 
 // Container Interface
@@ -465,7 +465,7 @@ QAccessibleInterface* KItemListContainerAccessible::child(int index) const
     if (index == 0) {
         return QAccessible::queryAccessibleInterface(container()->controller()->view());
     }
-    return nullptr;
+    return Q_NULLPTR;
 }
 
 const KItemListContainer* KItemListContainerAccessible::container() const

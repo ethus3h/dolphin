@@ -66,14 +66,14 @@ DolphinContextMenu::DolphinContextMenu(DolphinMainWindow* parent,
     m_mainWindow(parent),
     m_fileInfo(fileInfo),
     m_baseUrl(baseUrl),
-    m_baseFileItem(nullptr),
+    m_baseFileItem(0),
     m_selectedItems(),
     m_selectedItemsProperties(nullptr),
     m_context(NoContext),
     m_copyToMenu(parent),
     m_customActions(),
     m_command(None),
-    m_removeAction(nullptr)
+    m_removeAction(0)
 {
     // The context menu either accesses the URLs of the selected items
     // or the items itself. To increase the performance both lists are cached.
@@ -306,7 +306,9 @@ void DolphinContextMenu::openItemContextMenu()
             if (selectedUrl.isValid()) {
                 PlacesItemModel model;
                 const QString text = selectedUrl.fileName();
-                model.createPlacesItem(text, selectedUrl, KIO::iconNameForUrl(selectedUrl));
+                PlacesItem* item = model.createPlacesItem(text, selectedUrl, KIO::iconNameForUrl(selectedUrl));
+                model.appendItemToGroup(item);
+                model.saveBookmarks();
             }
         } else if (activatedAction == openParentAction) {
             m_command = OpenParentFolder;
@@ -335,7 +337,7 @@ void DolphinContextMenu::openViewportContextMenu()
     addAction(m_mainWindow->actionCollection()->action(QStringLiteral("new_tab")));
 
     // Insert 'Add to Places' entry if exactly one item is selected
-    QAction* addToPlacesAction = nullptr;
+    QAction* addToPlacesAction = 0;
     if (!placeExists(m_mainWindow->activeViewContainer()->url())) {
         addToPlacesAction = addAction(QIcon::fromTheme(QStringLiteral("bookmark-new")),
                                              i18nc("@action:inmenu Add current folder to places", "Add to Places"));
@@ -376,7 +378,9 @@ void DolphinContextMenu::openViewportContextMenu()
             } else {
                 icon = KIO::iconNameForUrl(url);
             }
-            model.createPlacesItem(container->placesText(), url, icon);
+            PlacesItem* item = model.createPlacesItem(container->placesText(), url, icon);
+            model.appendItemToGroup(item);
+            model.saveBookmarks();
         }
     }
 }
@@ -404,7 +408,7 @@ void DolphinContextMenu::insertDefaultItemActions(const KFileItemListProperties&
 
         if (showDeleteAction && showMoveToTrashAction) {
             delete m_removeAction;
-            m_removeAction = nullptr;
+            m_removeAction = 0;
             addAction(m_mainWindow->actionCollection()->action(KStandardAction::name(KStandardAction::MoveToTrash)));
             addAction(m_mainWindow->actionCollection()->action(KStandardAction::name(KStandardAction::DeleteFile)));
         } else if (showDeleteAction && !showMoveToTrashAction) {
@@ -441,7 +445,7 @@ bool DolphinContextMenu::placeExists(const QUrl& url) const
 
 QAction* DolphinContextMenu::createPasteAction()
 {
-    QAction* action = nullptr;
+    QAction* action = 0;
     const bool isDir = !m_fileInfo.isNull() && m_fileInfo.isDir();
     if (isDir && (m_selectedItems.count() == 1)) {
         const QMimeData *mimeData = QApplication::clipboard()->mimeData();

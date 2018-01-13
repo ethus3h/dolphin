@@ -49,13 +49,13 @@ KItemListController::KItemListController(KItemModelBase* model, KItemListView* v
     m_selectionBehavior(NoSelection),
     m_autoActivationBehavior(ActivationAndExpansion),
     m_mouseDoubleClickAction(ActivateItemOnly),
-    m_model(nullptr),
-    m_view(nullptr),
+    m_model(0),
+    m_view(0),
     m_selectionManager(new KItemListSelectionManager(this)),
     m_keyboardManager(new KItemListKeyboardSearchManager(this)),
     m_pressedIndex(-1),
     m_pressedMousePos(),
-    m_autoActivationTimer(nullptr),
+    m_autoActivationTimer(0),
     m_oldSelection(),
     m_keyboardAnchorIndex(-1),
     m_keyboardAnchorPos(0)
@@ -76,10 +76,10 @@ KItemListController::KItemListController(KItemModelBase* model, KItemListView* v
 
 KItemListController::~KItemListController()
 {
-    setView(nullptr);
+    setView(0);
     Q_ASSERT(!m_view);
 
-    setModel(nullptr);
+    setModel(0);
     Q_ASSERT(!m_model);
 }
 
@@ -177,20 +177,6 @@ void KItemListController::setMouseDoubleClickAction(MouseDoubleClickAction actio
 KItemListController::MouseDoubleClickAction KItemListController::mouseDoubleClickAction() const
 {
     return m_mouseDoubleClickAction;
-}
-
-int KItemListController::indexCloseToMousePressedPosition() const
-{
-    QHashIterator<KItemListWidget*, KItemListGroupHeader*> it(m_view->m_visibleGroups);
-    while (it.hasNext()) {
-        it.next();
-        KItemListGroupHeader *groupHeader = it.value();
-        const QPointF mappedToGroup = groupHeader->mapFromItem(nullptr, m_pressedMousePos);
-        if (groupHeader->contains(mappedToGroup)) {
-            return it.key()->index();
-        }
-    }
-    return -1;
 }
 
 void KItemListController::setAutoActivationDelay(int delay)
@@ -1230,7 +1216,7 @@ KItemListWidget* KItemListController::hoveredWidget() const
         }
     }
 
-    return nullptr;
+    return 0;
 }
 
 KItemListWidget* KItemListController::widgetForPos(const QPointF& pos) const
@@ -1247,7 +1233,7 @@ KItemListWidget* KItemListController::widgetForPos(const QPointF& pos) const
         }
     }
 
-    return nullptr;
+    return 0;
 }
 
 void KItemListController::updateKeyboardAnchor()

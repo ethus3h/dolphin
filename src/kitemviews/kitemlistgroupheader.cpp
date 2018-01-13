@@ -29,7 +29,7 @@
 #include <QStyleOptionGraphicsItem>
 
 KItemListGroupHeader::KItemListGroupHeader(QGraphicsWidget* parent) :
-    QGraphicsWidget(parent, nullptr),
+    QGraphicsWidget(parent, 0),
     m_dirtyCache(true),
     m_role(),
     m_data(),

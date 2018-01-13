@@ -30,7 +30,7 @@ K_PLUGIN_FACTORY(KCMDolphinServicesConfigFactory, registerPlugin<DolphinServices
 
 DolphinServicesConfigModule::DolphinServicesConfigModule(QWidget* parent, const QVariantList& args) :
     KCModule(parent),
-    m_services(nullptr)
+    m_services(0)
 {
     Q_UNUSED(args);
 
@@ -41,7 +41,7 @@ DolphinServicesConfigModule::DolphinServicesConfigModule(QWidget* parent, const 
 
     m_services = new ServicesSettingsPage(this);
     connect(m_services, &ServicesSettingsPage::changed, this, static_cast<void(DolphinServicesConfigModule::*)()>(&DolphinServicesConfigModule::changed));
-    topLayout->addWidget(m_services, 0, nullptr);
+    topLayout->addWidget(m_services, 0, 0);
 }
 
 DolphinServicesConfigModule::~DolphinServicesConfigModule()

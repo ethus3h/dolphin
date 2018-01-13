@@ -32,13 +32,13 @@ class ConfirmationsSettingsPage : public SettingsPageBase
 
 public:
     ConfirmationsSettingsPage(QWidget* parent);
-    ~ConfirmationsSettingsPage() override;
+    virtual ~ConfirmationsSettingsPage();
 
     /** @see SettingsPageBase::applySettings() */
-    void applySettings() override;
+    virtual void applySettings() Q_DECL_OVERRIDE;
 
     /** @see SettingsPageBase::restoreDefaults() */
-    void restoreDefaults() override;
+    virtual void restoreDefaults() Q_DECL_OVERRIDE;
 
 private:
     void loadSettings();

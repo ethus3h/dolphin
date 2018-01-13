@@ -48,7 +48,7 @@ class KItemListContainerViewport : public QGraphicsView
 public:
     KItemListContainerViewport(QGraphicsScene* scene, QWidget* parent);
 protected:
-    void wheelEvent(QWheelEvent* event) override;
+    void wheelEvent(QWheelEvent* event) Q_DECL_OVERRIDE;
 };
 
 KItemListContainerViewport::KItemListContainerViewport(QGraphicsScene* scene, QWidget* parent) :
@@ -70,8 +70,8 @@ void KItemListContainerViewport::wheelEvent(QWheelEvent* event)
 KItemListContainer::KItemListContainer(KItemListController* controller, QWidget* parent) :
     QAbstractScrollArea(parent),
     m_controller(controller),
-    m_horizontalSmoothScroller(nullptr),
-    m_verticalSmoothScroller(nullptr)
+    m_horizontalSmoothScroller(0),
+    m_verticalSmoothScroller(0)
 {
     Q_ASSERT(controller);
     controller->setParent(this);
@@ -83,10 +83,10 @@ KItemListContainer::KItemListContainer(KItemListController* controller, QWidget*
     m_verticalSmoothScroller = new KItemListSmoothScroller(verticalScrollBar(), this);
 
     if (controller->model()) {
-        slotModelChanged(controller->model(), nullptr);
+        slotModelChanged(controller->model(), 0);
     }
     if (controller->view()) {
-        slotViewChanged(controller->view(), nullptr);
+        slotViewChanged(controller->view(), 0);
     }
 
     connect(controller, &KItemListController::modelChanged,
@@ -100,7 +100,7 @@ KItemListContainer::~KItemListContainer()
     // Don't rely on the QObject-order to delete the controller, otherwise
     // the QGraphicsScene might get deleted before the view.
     delete m_controller;
-    m_controller = nullptr;
+    m_controller = 0;
 }
 
 KItemListController* KItemListContainer::controller() const
@@ -216,8 +216,8 @@ void KItemListContainer::slotViewChanged(KItemListView* current, KItemListView* 
         disconnect(previous, &KItemListView::maximumItemOffsetChanged,
                    this, &KItemListContainer::updateItemOffsetScrollBar);
         disconnect(previous, &KItemListView::scrollTo, this, &KItemListContainer::scrollTo);
-        m_horizontalSmoothScroller->setTargetObject(nullptr);
-        m_verticalSmoothScroller->setTargetObject(nullptr);
+        m_horizontalSmoothScroller->setTargetObject(0);
+        m_verticalSmoothScroller->setTargetObject(0);
     }
     if (current) {
         scene->addItem(current);
@@ -257,8 +257,8 @@ void KItemListContainer::updateScrollOffsetScrollBar()
         return;
     }
 
-    KItemListSmoothScroller* smoothScroller = nullptr;
-    QScrollBar* scrollOffsetScrollBar = nullptr;
+    KItemListSmoothScroller* smoothScroller = 0;
+    QScrollBar* scrollOffsetScrollBar = 0;
     int singleStep = 0;
     int pageStep = 0;
     int maximum = 0;
@@ -308,8 +308,8 @@ void KItemListContainer::updateItemOffsetScrollBar()
         return;
     }
 
-    KItemListSmoothScroller* smoothScroller = nullptr;
-    QScrollBar* itemOffsetScrollBar = nullptr;
+    KItemListSmoothScroller* smoothScroller = 0;
+    QScrollBar* itemOffsetScrollBar = 0;
     int singleStep = 0;
     int pageStep = 0;
     if (view->scrollOrientation() == Qt::Vertical) {

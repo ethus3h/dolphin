@@ -49,9 +49,9 @@ namespace {
 
 KFileItemListView::KFileItemListView(QGraphicsWidget* parent) :
     KStandardItemListView(parent),
-    m_modelRolesUpdater(nullptr),
-    m_updateVisibleIndexRangeTimer(nullptr),
-    m_updateIconSizeTimer(nullptr)
+    m_modelRolesUpdater(0),
+    m_updateVisibleIndexRangeTimer(0),
+    m_updateIconSizeTimer(0)
 {
     setAcceptDrops(true);
 
@@ -229,7 +229,7 @@ void KFileItemListView::onModelChanged(KItemModelBase* current, KItemModelBase* 
     KStandardItemListView::onModelChanged(current, previous);
 
     delete m_modelRolesUpdater;
-    m_modelRolesUpdater = nullptr;
+    m_modelRolesUpdater = 0;
 
     if (current) {
         m_modelRolesUpdater = new KFileItemModelRolesUpdater(static_cast<KFileItemModel*>(current), this);

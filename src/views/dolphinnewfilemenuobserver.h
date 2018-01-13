@@ -48,7 +48,7 @@ signals:
 
 private:
     DolphinNewFileMenuObserver();
-    ~DolphinNewFileMenuObserver() override;
+    virtual ~DolphinNewFileMenuObserver();
 
     friend class DolphinNewFileMenuObserverSingleton;
 };

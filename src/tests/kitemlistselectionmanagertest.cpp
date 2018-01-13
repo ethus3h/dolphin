@@ -30,8 +30,8 @@ class DummyModel : public KItemModelBase
 public:
     DummyModel();
     void setCount(int count);
-    int count() const override;
-    QHash<QByteArray, QVariant> data(int index) const override;
+    int count() const Q_DECL_OVERRIDE;
+    QHash<QByteArray, QVariant> data(int index) const Q_DECL_OVERRIDE;
 
 private:
     int m_count;
@@ -99,10 +99,10 @@ void KItemListSelectionManagerTest::init()
 void KItemListSelectionManagerTest::cleanup()
 {
     delete m_selectionManager;
-    m_selectionManager = nullptr;
+    m_selectionManager = 0;
 
     delete m_model;
-    m_model = nullptr;
+    m_model = 0;
 }
 
 void KItemListSelectionManagerTest::testConstructor()

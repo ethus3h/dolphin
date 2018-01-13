@@ -33,8 +33,8 @@ class DolphinPartBrowserExtension : public KParts::BrowserExtension
     Q_OBJECT
 public:
     DolphinPartBrowserExtension( DolphinPart* part );
-    void restoreState(QDataStream &stream) override;
-    void saveState(QDataStream &stream) override;
+    virtual void restoreState(QDataStream &stream) Q_DECL_OVERRIDE;
+    virtual void saveState(QDataStream &stream) Q_DECL_OVERRIDE;
 
 public Q_SLOTS:
     void cut();
@@ -54,10 +54,10 @@ class DolphinPartFileInfoExtension : public KParts::FileInfoExtension
 public:
     DolphinPartFileInfoExtension(DolphinPart* part);
 
-    QueryModes supportedQueryModes() const override;
-    bool hasSelection() const override;
+    virtual QueryModes supportedQueryModes() const Q_DECL_OVERRIDE;
+    virtual bool hasSelection() const Q_DECL_OVERRIDE;
 
-    KFileItemList queryFor(QueryMode mode) const override;
+    virtual KFileItemList queryFor(QueryMode mode) const Q_DECL_OVERRIDE;
 
 private:
     DolphinPart* m_part;
@@ -69,10 +69,10 @@ class DolphinPartListingFilterExtension : public KParts::ListingFilterExtension
 
 public:
     DolphinPartListingFilterExtension(DolphinPart* part);
-    FilterModes supportedFilterModes() const override;
-    bool supportsMultipleFilters(FilterMode mode) const override;
-    QVariant filter(FilterMode mode) const override;
-    void setFilter(FilterMode mode, const QVariant& filter) override;
+    virtual FilterModes supportedFilterModes() const Q_DECL_OVERRIDE;
+    virtual bool supportsMultipleFilters(FilterMode mode) const Q_DECL_OVERRIDE;
+    virtual QVariant filter(FilterMode mode) const Q_DECL_OVERRIDE;
+    virtual void setFilter(FilterMode mode, const QVariant& filter) Q_DECL_OVERRIDE;
 
 private:
     DolphinPart* m_part;
@@ -84,7 +84,7 @@ class DolphinPartListingNotificationExtension : public KParts::ListingNotificati
 
 public:
     DolphinPartListingNotificationExtension(DolphinPart* part);
-    NotificationEventTypes supportedNotificationEventTypes() const override;
+    virtual NotificationEventTypes supportedNotificationEventTypes() const Q_DECL_OVERRIDE;
 
 public Q_SLOTS:
     void slotNewItems(const KFileItemList&);

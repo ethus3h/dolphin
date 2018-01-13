@@ -69,7 +69,7 @@ class DOLPHIN_EXPORT KItemListWidget : public QGraphicsWidget
 
 public:
     KItemListWidget(KItemListWidgetInformant* informant, QGraphicsItem* parent);
-    ~KItemListWidget() override;
+    virtual ~KItemListWidget();
 
     void setIndex(int index);
     int index() const;
@@ -82,7 +82,7 @@ public:
      * to show the data of the custom model provided by KItemListWidget::data().
      * @reimp
      */
-    void paint(QPainter* painter, const QStyleOptionGraphicsItem* option, QWidget* widget = nullptr) override;
+    virtual void paint(QPainter* painter, const QStyleOptionGraphicsItem* option, QWidget* widget = 0) Q_DECL_OVERRIDE;
 
     void setVisibleRoles(const QList<QByteArray>& roles);
     QList<QByteArray> visibleRoles() const;
@@ -142,7 +142,7 @@ public:
      *         or KItemListWidget::expansionToggleRect().
      * @reimp
      */
-    bool contains(const QPointF& point) const override;
+    virtual bool contains(const QPointF& point) const override;
 
     /**
      * @return Rectangle for the area that shows the icon.
@@ -186,7 +186,7 @@ public:
      * @return Pixmap that is used when dragging an item. Per default the current state of the
      *         widget is returned as pixmap.
      */
-    virtual QPixmap createDragPixmap(const QStyleOptionGraphicsItem* option, QWidget* widget = nullptr);
+    virtual QPixmap createDragPixmap(const QStyleOptionGraphicsItem* option, QWidget* widget = 0);
 
 signals:
     void roleEditingCanceled(int index, const QByteArray& role, const QVariant& value);
@@ -203,7 +203,7 @@ protected:
     virtual void alternateBackgroundChanged(bool enabled);
     virtual void siblingsInformationChanged(const QBitArray& current, const QBitArray& previous);
     virtual void editedRoleChanged(const QByteArray& current, const QByteArray& previous);
-    void resizeEvent(QGraphicsSceneResizeEvent* event) override;
+    virtual void resizeEvent(QGraphicsSceneResizeEvent* event) Q_DECL_OVERRIDE;
 
     /**
      * @return The current opacity of the hover-animation. When implementing a custom painting-code for a hover-state

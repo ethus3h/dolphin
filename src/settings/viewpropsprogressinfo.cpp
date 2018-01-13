@@ -39,12 +39,12 @@ ViewPropsProgressInfo::ViewPropsProgressInfo(QWidget* parent,
                                              const ViewProperties& viewProps) :
     QDialog(parent),
     m_dir(dir),
-    m_viewProps(nullptr),
-    m_label(nullptr),
-    m_progressBar(nullptr),
-    m_dirSizeJob(nullptr),
-    m_applyViewPropsJob(nullptr),
-    m_timer(nullptr)
+    m_viewProps(0),
+    m_label(0),
+    m_progressBar(0),
+    m_dirSizeJob(0),
+    m_applyViewPropsJob(0),
+    m_timer(0)
 {
     const QSize minSize = minimumSize();
     setMinimumSize(QSize(320, minSize.height()));
@@ -96,13 +96,13 @@ ViewPropsProgressInfo::ViewPropsProgressInfo(QWidget* parent,
 ViewPropsProgressInfo::~ViewPropsProgressInfo()
 {
     delete m_viewProps;
-    m_viewProps = nullptr;
+    m_viewProps = 0;
 }
 
 void ViewPropsProgressInfo::closeEvent(QCloseEvent* event)
 {
     m_timer->stop();
-    m_applyViewPropsJob = nullptr;
+    m_applyViewPropsJob = 0;
     QDialog::closeEvent(event);
 }
 
@@ -110,12 +110,12 @@ void ViewPropsProgressInfo::reject()
 {
     if (m_dirSizeJob) {
         m_dirSizeJob->kill();
-        m_dirSizeJob = nullptr;
+        m_dirSizeJob = 0;
     }
 
     if (m_applyViewPropsJob) {
         m_applyViewPropsJob->kill();
-        m_applyViewPropsJob = nullptr;
+        m_applyViewPropsJob = 0;
     }
 
     QDialog::reject();
@@ -144,7 +144,7 @@ void ViewPropsProgressInfo::applyViewProperties()
     m_label->setText(i18nc("@info:progress", "Folders: %1", subdirs));
     m_progressBar->setMaximum(subdirs);
 
-    m_dirSizeJob = nullptr;
+    m_dirSizeJob = 0;
 
     m_applyViewPropsJob = new ApplyViewPropsJob(m_dir, *m_viewProps);
     connect(m_applyViewPropsJob, &ApplyViewPropsJob::result,

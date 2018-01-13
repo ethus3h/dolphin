@@ -49,7 +49,7 @@
 DolphinViewActionHandler::DolphinViewActionHandler(KActionCollection* collection, QObject* parent) :
     QObject(parent),
     m_actionCollection(collection),
-    m_currentView(nullptr),
+    m_currentView(0),
     m_sortByActions(),
     m_visibleRoles()
 {
@@ -62,7 +62,7 @@ void DolphinViewActionHandler::setCurrentView(DolphinView* view)
     Q_ASSERT(view);
 
     if (m_currentView) {
-        disconnect(m_currentView, nullptr, this, nullptr);
+        disconnect(m_currentView, 0, this, 0);
     }
 
     m_currentView = view;
@@ -233,8 +233,8 @@ QActionGroup* DolphinViewActionHandler::createFileItemRolesActionGroup(const QSt
     }
 
     QString groupName;
-    KActionMenu* groupMenu = nullptr;
-    QActionGroup* groupMenuGroup = nullptr;
+    KActionMenu* groupMenu = 0;
+    QActionGroup* groupMenuGroup = 0;
 
     bool indexingEnabled = false;
 #ifdef HAVE_BALOO
@@ -249,7 +249,7 @@ QActionGroup* DolphinViewActionHandler::createFileItemRolesActionGroup(const QSt
             continue;
         }
 
-        KToggleAction* action = nullptr;
+        KToggleAction* action = 0;
         const QString name = groupPrefix + info.role;
         if (info.group.isEmpty()) {
             action = m_actionCollection->add<KToggleAction>(name);
@@ -590,7 +590,7 @@ void DolphinViewActionHandler::slotAdjustViewProperties()
 
 void DolphinViewActionHandler::slotProperties()
 {
-    KPropertiesDialog* dialog = nullptr;
+    KPropertiesDialog* dialog = 0;
     const KFileItemList list = m_currentView->selectedItems();
     if (list.isEmpty()) {
         const QUrl url = m_currentView->url();

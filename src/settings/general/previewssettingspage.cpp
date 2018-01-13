@@ -26,7 +26,6 @@
 #include <KLocalizedString>
 #include <KServiceTypeTrader>
 #include <KService>
-#include <KIO/PreviewJob>
 
 #include <settings/serviceitemdelegate.h>
 #include <settings/servicemodel.h>
@@ -52,9 +51,9 @@ namespace {
 PreviewsSettingsPage::PreviewsSettingsPage(QWidget* parent) :
     SettingsPageBase(parent),
     m_initialized(false),
-    m_listView(nullptr),
+    m_listView(0),
     m_enabledPreviewPlugins(),
-    m_remoteFileSizeBox(nullptr)
+    m_remoteFileSizeBox(0)
 {
     QVBoxLayout* topLayout = new QVBoxLayout(this);
 
@@ -173,8 +172,11 @@ void PreviewsSettingsPage::loadPreviewPlugins()
 
 void PreviewsSettingsPage::loadSettings()
 {
-    const KConfigGroup globalConfig(KSharedConfig::openConfig(), QStringLiteral("PreviewSettings"));
-    m_enabledPreviewPlugins = globalConfig.readEntry("Plugins", KIO::PreviewJob::defaultPlugins());
+    KConfigGroup globalConfig(KSharedConfig::openConfig(), "PreviewSettings");
+    m_enabledPreviewPlugins = globalConfig.readEntry("Plugins", QStringList()
+                                                     << QStringLiteral("directorythumbnail")
+                                                     << QStringLiteral("imagethumbnail")
+                                                     << QStringLiteral("jpegthumbnail"));
 
     const qulonglong defaultRemotePreview = static_cast<qulonglong>(MaxRemotePreviewSize) * 1024 * 1024;
     const qulonglong maxRemoteByteSize = globalConfig.readEntry("MaximumRemoteSize", defaultRemotePreview);

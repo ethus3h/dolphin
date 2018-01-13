@@ -56,7 +56,7 @@ void ViewPropertiesTest::init()
 void ViewPropertiesTest::cleanup()
 {
     delete m_testDir;
-    m_testDir = nullptr;
+    m_testDir = 0;
 
     GeneralSettings::self()->setGlobalViewProps(m_globalViewProps);
     GeneralSettings::self()->save();

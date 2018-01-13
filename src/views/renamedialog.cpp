@@ -39,10 +39,10 @@ RenameDialog::RenameDialog(QWidget *parent, const KFileItemList& items) :
     QDialog(parent),
     m_renameOneItem(false),
     m_newName(),
-    m_lineEdit(nullptr),
+    m_lineEdit(0),
     m_items(items),
     m_allExtensionsDifferent(true),
-    m_spinBox(nullptr)
+    m_spinBox(0)
 {
     const QSize minSize = minimumSize();
     setMinimumSize(QSize(320, minSize.height()));
@@ -72,7 +72,7 @@ RenameDialog::RenameDialog(QWidget *parent, const KFileItemList& items) :
 
     QVBoxLayout* topLayout = new QVBoxLayout(page);
 
-    QLabel* editLabel = nullptr;
+    QLabel* editLabel = 0;
     if (m_renameOneItem) {
         m_newName = items.first().name();
         editLabel = new QLabel(xi18nc("@label:textbox", "Rename the item <filename>%1</filename> to:", m_newName),

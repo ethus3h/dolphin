@@ -48,7 +48,7 @@ class DolphinFacetsWidget : public QWidget
 
 public:
     explicit DolphinFacetsWidget(QWidget* parent = nullptr);
-    ~DolphinFacetsWidget() override;
+    virtual ~DolphinFacetsWidget();
 
     QString ratingTerm() const;
     QString facetType() const;

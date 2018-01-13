@@ -45,10 +45,10 @@ class DOLPHIN_EXPORT ViewPropertiesDialog : public QDialog
 
 public:
     explicit ViewPropertiesDialog(DolphinView* dolphinView);
-    ~ViewPropertiesDialog() override;
+    virtual ~ViewPropertiesDialog();
 
 public slots:
-    void accept() override;
+    void accept() Q_DECL_OVERRIDE;
 
 private slots:
     void slotApply();

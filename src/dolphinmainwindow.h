@@ -64,7 +64,7 @@ class DolphinMainWindow: public KXmlGuiWindow
 
 public:
     DolphinMainWindow();
-    ~DolphinMainWindow() override;
+    virtual ~DolphinMainWindow();
 
     /**
      * Returns the currently active view.
@@ -152,16 +152,16 @@ signals:
 
 protected:
     /** @see QWidget::showEvent() */
-    void showEvent(QShowEvent* event) override;
+    virtual void showEvent(QShowEvent* event) Q_DECL_OVERRIDE;
 
     /** @see QMainWindow::closeEvent() */
-    void closeEvent(QCloseEvent* event) override;
+    virtual void closeEvent(QCloseEvent* event) Q_DECL_OVERRIDE;
 
     /** @see KMainWindow::saveProperties() */
-    void saveProperties(KConfigGroup& group) override;
+    virtual void saveProperties(KConfigGroup& group) Q_DECL_OVERRIDE;
 
     /** @see KMainWindow::readProperties() */
-    void readProperties(const KConfigGroup& group) override;
+    virtual void readProperties(const KConfigGroup& group) Q_DECL_OVERRIDE;
 
 private slots:
     /**
@@ -499,8 +499,8 @@ private:
     {
     public:
         UndoUiInterface();
-        ~UndoUiInterface() override;
-        void jobError(KIO::Job* job) override;
+        virtual ~UndoUiInterface();
+        virtual void jobError(KIO::Job* job) Q_DECL_OVERRIDE;
     };
 
     KNewFileMenu* m_newFileMenu;
