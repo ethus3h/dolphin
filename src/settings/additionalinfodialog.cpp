@@ -1,5 +1,5 @@
 /***************************************************************************
- *   Copyright (C) 2007-2012 by Peter Penz <peter.penz19@gmail.com>        *
+ *   Copyright (C) 2007 by Peter Penz (peter.penz@gmx.at)                  *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
  *   it under the terms of the GNU General Public License as published by  *
@@ -19,103 +19,79 @@
 
 #include "additionalinfodialog.h"
 
-#include <config-baloo.h>
-
-#include <KSharedConfig>
-#include <KLocalizedString>
-#include "kitemviews/kfileitemmodel.h"
-#include <KConfigGroup>
-#include <KWindowConfig>
+#include <KLocale>
 
 #include <QCheckBox>
 #include <QLabel>
 #include <QVBoxLayout>
-#include <QDialogButtonBox>
-#include <QPushButton>
 
-#ifdef HAVE_BALOO
-    #include <Baloo/IndexerConfig>
-#endif
+#include "views/additionalinfoaccessor.h"
 
 AdditionalInfoDialog::AdditionalInfoDialog(QWidget* parent,
-                                           const QList<QByteArray>& visibleRoles) :
-    QDialog(parent),
-    m_visibleRoles(visibleRoles),
-    m_listWidget(nullptr)
+                                           KFileItemDelegate::InformationList infoList) :
+    KDialog(parent),
+    m_infoList(infoList),
+    m_checkBoxes()
 {
-    setWindowTitle(i18nc("@title:window", "Additional Information"));
-    setSizePolicy(QSizePolicy::Preferred, QSizePolicy::Minimum);
+    setCaption(i18nc("@title:window", "Additional Information"));
+    setButtons(Ok | Cancel);
+    setDefaultButton(Ok);
 
-    auto layout = new QVBoxLayout(this);
-    setLayout(layout);
+    QWidget* mainWidget = new QWidget(this);
+    mainWidget->setSizePolicy(QSizePolicy::Preferred, QSizePolicy::Minimum);
+    QVBoxLayout* layout = new QVBoxLayout(mainWidget);
 
     // Add header
-    auto header = new QLabel(this);
+    QLabel* header = new QLabel(mainWidget);
     header->setText(i18nc("@label", "Select which additional information should be shown:"));
     header->setWordWrap(true);
     layout->addWidget(header);
 
     // Add checkboxes
-    bool indexingEnabled = false;
-#ifdef HAVE_BALOO
-    Baloo::IndexerConfig config;
-    indexingEnabled = config.fileIndexingEnabled();
-#endif
-
-    m_listWidget = new QListWidget(this);
-    m_listWidget->setSelectionMode(QAbstractItemView::NoSelection);
-    const QList<KFileItemModel::RoleInfo> rolesInfo = KFileItemModel::rolesInformation();
-    foreach (const KFileItemModel::RoleInfo& info, rolesInfo) {
-        QListWidgetItem* item = new QListWidgetItem(info.translation, m_listWidget);
-        item->setCheckState(visibleRoles.contains(info.role) ? Qt::Checked : Qt::Unchecked);
-
-        const bool enable = ((!info.requiresBaloo && !info.requiresIndexer) ||
-                            (info.requiresBaloo) ||
-                            (info.requiresIndexer && indexingEnabled)) && info.role != "text";
-
-        if (!enable) {
-            item->setFlags(item->flags() & ~Qt::ItemIsEnabled);
-        }
+    const AdditionalInfoAccessor& infoAccessor = AdditionalInfoAccessor::instance();
+    const KFileItemDelegate::InformationList keys = infoAccessor.keys();
+    foreach (const KFileItemDelegate::Information info, keys) {
+        QCheckBox* checkBox = new QCheckBox(infoAccessor.translation(info), mainWidget);
+        checkBox->setChecked(infoList.contains(info));
+        layout->addWidget(checkBox);
+        m_checkBoxes.append(checkBox);
     }
-    layout->addWidget(m_listWidget);
 
-    auto buttonBox = new QDialogButtonBox(QDialogButtonBox::Ok | QDialogButtonBox::Cancel, this);
-    connect(buttonBox, &QDialogButtonBox::accepted, this, &AdditionalInfoDialog::accept);
-    connect(buttonBox, &QDialogButtonBox::rejected, this, &AdditionalInfoDialog::reject);
-    layout->addWidget(buttonBox);
+    layout->addStretch(1);
 
-    auto okButton = buttonBox->button(QDialogButtonBox::Ok);
-    okButton->setShortcut(Qt::CTRL | Qt::Key_Return);
-    okButton->setDefault(true);
+    setMainWidget(mainWidget);
 
-    const KConfigGroup dialogConfig(KSharedConfig::openConfig(QStringLiteral("dolphinrc")), "AdditionalInfoDialog");
-    KWindowConfig::restoreWindowSize(windowHandle(), dialogConfig);
+    const KConfigGroup dialogConfig(KSharedConfig::openConfig("dolphinrc"),
+                                    "AdditionalInfoDialog");
+    restoreDialogSize(dialogConfig);
+
+    connect(this, SIGNAL(okClicked()), this, SLOT(slotOk()));
 }
 
 AdditionalInfoDialog::~AdditionalInfoDialog()
 {
-    KConfigGroup dialogConfig(KSharedConfig::openConfig(QStringLiteral("dolphinrc")), "AdditionalInfoDialog");
-    KWindowConfig::saveWindowSize(windowHandle(), dialogConfig);
+    KConfigGroup dialogConfig(KSharedConfig::openConfig("dolphinrc"),
+                              "AdditionalInfoDialog");
+    saveDialogSize(dialogConfig, KConfigBase::Persistent);
 }
 
-QList<QByteArray> AdditionalInfoDialog::visibleRoles() const
+KFileItemDelegate::InformationList AdditionalInfoDialog::informationList() const
 {
-    return m_visibleRoles;
+    return m_infoList;
 }
 
-void AdditionalInfoDialog::accept()
+void AdditionalInfoDialog::slotOk()
 {
-    m_visibleRoles.clear();
+    m_infoList.clear();
 
+    const KFileItemDelegate::InformationList keys = AdditionalInfoAccessor::instance().keys();
     int index = 0;
-    const QList<KFileItemModel::RoleInfo> rolesInfo = KFileItemModel::rolesInformation();
-    foreach (const KFileItemModel::RoleInfo& info, rolesInfo) {
-        const QListWidgetItem* item = m_listWidget->item(index);
-        if (item->checkState() == Qt::Checked) {
-            m_visibleRoles.append(info.role);
+    foreach (const KFileItemDelegate::Information info, keys) {
+        if (m_checkBoxes[index]->isChecked()) {
+            m_infoList.append(info);
         }
         ++index;
     }
-
-    QDialog::accept();
 }
+
+#include "additionalinfodialog.moc"
