@@ -396,10 +396,10 @@ if (Nepomuk_FOUND)
   target_link_libraries(kcm_dolphingeneral dolphinprivate ${NEPOMUK_LIBRARIES})
 endif (Nepomuk_FOUND)
 
-install(TARGETS kcm_dolphinviewmodes DESTINATION ${KDE_INSTALL_PLUGINDIR} )
-install(TARGETS kcm_dolphinnavigation DESTINATION ${KDE_INSTALL_PLUGINDIR} )
-install(TARGETS kcm_dolphinservices DESTINATION ${KDE_INSTALL_PLUGINDIR} )
-install(TARGETS kcm_dolphingeneral DESTINATION ${KDE_INSTALL_PLUGINDIR} )
+install(TARGETS kcm_dolphinviewmodes DESTINATION ${PLUGIN_INSTALL_DIR} )
+install(TARGETS kcm_dolphinnavigation DESTINATION ${PLUGIN_INSTALL_DIR} )
+install(TARGETS kcm_dolphinservices DESTINATION ${PLUGIN_INSTALL_DIR} )
+install(TARGETS kcm_dolphingeneral DESTINATION ${PLUGIN_INSTALL_DIR} )
 
 #########################################
 
