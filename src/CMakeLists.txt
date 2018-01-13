@@ -1,34 +1,16 @@
-include(ECMAddAppIcon)
+macro_optional_find_package(Nepomuk)
+macro_log_feature(Nepomuk_FOUND "Nepomuk" "Nepomuk" "http://www.kde.org" FALSE "" "For adding desktop-wide tagging support to dolphin")
+macro_bool_to_01(Nepomuk_FOUND HAVE_NEPOMUK)
+configure_file(config-nepomuk.h.cmake ${CMAKE_CURRENT_BINARY_DIR}/config-nepomuk.h )
 
-configure_file(config-baloo.h.cmake ${CMAKE_CURRENT_BINARY_DIR}/config-baloo.h)
+include_directories( ${KDE4_INCLUDE_DIR} ${QT_INCLUDES} )
 
-configure_file(config-dolphin.h.cmake ${CMAKE_CURRENT_BINARY_DIR}/config-dolphin.h)
+if (Nepomuk_FOUND)
+  # Yes, Soprano includes is what we need here
+  include_directories( ${SOPRANO_INCLUDE_DIR} ${NEPOMUK_INCLUDE_DIR} )
+endif (Nepomuk_FOUND)
 
-add_definitions(
-    -DTRANSLATION_DOMAIN=\"dolphin\"
-    -DQT_USE_FAST_CONCATENATION
-    -DQT_USE_FAST_OPERATOR_PLUS
-)
-remove_definitions(
-    -DQT_NO_CAST_FROM_BYTEARRAY
-    -DQT_NO_URL_CAST_FROM_STRING
-    -DQT_NO_SIGNALS_SLOTS_KEYWORDS
-    -DQT_NO_CAST_FROM_ASCII
-    -DQT_NO_CAST_TO_ASCII
-)
-# macro_optional_find_package(Nepomuk)
-# macro_log_feature(Nepomuk_FOUND "Nepomuk" "Nepomuk" "http://www.kde.org" FALSE "" "For adding desktop-wide tagging support to dolphin")
-# macro_bool_to_01(Nepomuk_FOUND HAVE_NEPOMUK)
-# configure_file(config-nepomuk.h.cmake ${CMAKE_CURRENT_BINARY_DIR}/config-nepomuk.h )
-
-# include_directories( ${KDE4_INCLUDE_DIR} ${QT_INCLUDES} )
-
-# if (Nepomuk_FOUND)
-#   # Yes, Soprano includes is what we need here
-#   include_directories( ${SOPRANO_INCLUDE_DIR} ${NEPOMUK_INCLUDE_DIR} )
-# endif (Nepomuk_FOUND)
-
-# add_subdirectory(tests)
+add_subdirectory(tests)
 
 ########### next target ###############
 
@@ -306,3 +288,4 @@ install( FILES settings/kcm/kcmdolphingeneral.desktop DESTINATION ${SERVICES_INS
 install( FILES settings/services/servicemenu.knsrc DESTINATION ${CONFIG_INSTALL_DIR} )
 install( PROGRAMS settings/services/servicemenuinstallation DESTINATION ${BIN_INSTALL_DIR} )
 install( PROGRAMS settings/services/servicemenudeinstallation DESTINATION ${BIN_INSTALL_DIR} )
+
