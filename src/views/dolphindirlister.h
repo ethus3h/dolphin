@@ -43,7 +43,7 @@ signals:
     void errorMessage(const QString& msg);
 
     /** Is emitted when the URL of the directory lister represents a file. */
-    void urlIsFileError(const KUrl& url);
+    void urlIsFileError(const QUrl& url);
 
 protected:
     virtual void handleError(KIO::Job* job);
