@@ -285,6 +285,7 @@ src/CMakeFiles/dolphinprivate.dir/dolphin_directoryviewpropertysettings.cpp.o: /
 src/CMakeFiles/dolphinprivate.dir/dolphin_directoryviewpropertysettings.cpp.o: /usr/include/qt5/QtCore/QList
 src/CMakeFiles/dolphinprivate.dir/dolphin_directoryviewpropertysettings.cpp.o: /usr/include/qt5/QtCore/QMap
 src/CMakeFiles/dolphinprivate.dir/dolphin_directoryviewpropertysettings.cpp.o: /usr/include/qt5/QtCore/QMetaType
+src/CMakeFiles/dolphinprivate.dir/dolphin_directoryviewpropertysettings.cpp.o: /usr/include/qt5/QtCore/QMimeData
 src/CMakeFiles/dolphinprivate.dir/dolphin_directoryviewpropertysettings.cpp.o: /usr/include/qt5/QtCore/QObject
 src/CMakeFiles/dolphinprivate.dir/dolphin_directoryviewpropertysettings.cpp.o: /usr/include/qt5/QtCore/QPair
 src/CMakeFiles/dolphinprivate.dir/dolphin_directoryviewpropertysettings.cpp.o: /usr/include/qt5/QtCore/QPoint
@@ -339,6 +340,7 @@ src/CMakeFiles/dolphinprivate.dir/dolphin_directoryviewpropertysettings.cpp.o: /
 src/CMakeFiles/dolphinprivate.dir/dolphin_directoryviewpropertysettings.cpp.o: /usr/include/qt5/QtCore/qmap.h
 src/CMakeFiles/dolphinprivate.dir/dolphin_directoryviewpropertysettings.cpp.o: /usr/include/qt5/QtCore/qmargins.h
 src/CMakeFiles/dolphinprivate.dir/dolphin_directoryviewpropertysettings.cpp.o: /usr/include/qt5/QtCore/qmetatype.h
+src/CMakeFiles/dolphinprivate.dir/dolphin_directoryviewpropertysettings.cpp.o: /usr/include/qt5/QtCore/qmimedata.h
 src/CMakeFiles/dolphinprivate.dir/dolphin_directoryviewpropertysettings.cpp.o: /usr/include/qt5/QtCore/qmimetype.h
 src/CMakeFiles/dolphinprivate.dir/dolphin_directoryviewpropertysettings.cpp.o: /usr/include/qt5/QtCore/qmutex.h
 src/CMakeFiles/dolphinprivate.dir/dolphin_directoryviewpropertysettings.cpp.o: /usr/include/qt5/QtCore/qnamespace.h
@@ -944,6 +946,7 @@ src/CMakeFiles/dolphinprivate.dir/dolphinprivate_autogen/moc_compilation.cpp.o: 
 src/CMakeFiles/dolphinprivate.dir/dolphinprivate_autogen/moc_compilation.cpp.o: /usr/include/qt5/QtCore/QList
 src/CMakeFiles/dolphinprivate.dir/dolphinprivate_autogen/moc_compilation.cpp.o: /usr/include/qt5/QtCore/QMap
 src/CMakeFiles/dolphinprivate.dir/dolphinprivate_autogen/moc_compilation.cpp.o: /usr/include/qt5/QtCore/QMetaType
+src/CMakeFiles/dolphinprivate.dir/dolphinprivate_autogen/moc_compilation.cpp.o: /usr/include/qt5/QtCore/QMimeData
 src/CMakeFiles/dolphinprivate.dir/dolphinprivate_autogen/moc_compilation.cpp.o: /usr/include/qt5/QtCore/QMutex
 src/CMakeFiles/dolphinprivate.dir/dolphinprivate_autogen/moc_compilation.cpp.o: /usr/include/qt5/QtCore/QObject
 src/CMakeFiles/dolphinprivate.dir/dolphinprivate_autogen/moc_compilation.cpp.o: /usr/include/qt5/QtCore/QPair
@@ -1003,6 +1006,7 @@ src/CMakeFiles/dolphinprivate.dir/dolphinprivate_autogen/moc_compilation.cpp.o: 
 src/CMakeFiles/dolphinprivate.dir/dolphinprivate_autogen/moc_compilation.cpp.o: /usr/include/qt5/QtCore/qmap.h
 src/CMakeFiles/dolphinprivate.dir/dolphinprivate_autogen/moc_compilation.cpp.o: /usr/include/qt5/QtCore/qmargins.h
 src/CMakeFiles/dolphinprivate.dir/dolphinprivate_autogen/moc_compilation.cpp.o: /usr/include/qt5/QtCore/qmetatype.h
+src/CMakeFiles/dolphinprivate.dir/dolphinprivate_autogen/moc_compilation.cpp.o: /usr/include/qt5/QtCore/qmimedata.h
 src/CMakeFiles/dolphinprivate.dir/dolphinprivate_autogen/moc_compilation.cpp.o: /usr/include/qt5/QtCore/qmimetype.h
 src/CMakeFiles/dolphinprivate.dir/dolphinprivate_autogen/moc_compilation.cpp.o: /usr/include/qt5/QtCore/qmutex.h
 src/CMakeFiles/dolphinprivate.dir/dolphinprivate_autogen/moc_compilation.cpp.o: /usr/include/qt5/QtCore/qnamespace.h
@@ -1481,6 +1485,7 @@ src/CMakeFiles/dolphinprivate.dir/settings/applyviewpropsjob.cpp.o: /usr/include
 src/CMakeFiles/dolphinprivate.dir/settings/applyviewpropsjob.cpp.o: /usr/include/qt5/QtCore/QList
 src/CMakeFiles/dolphinprivate.dir/settings/applyviewpropsjob.cpp.o: /usr/include/qt5/QtCore/QMap
 src/CMakeFiles/dolphinprivate.dir/settings/applyviewpropsjob.cpp.o: /usr/include/qt5/QtCore/QMetaType
+src/CMakeFiles/dolphinprivate.dir/settings/applyviewpropsjob.cpp.o: /usr/include/qt5/QtCore/QMimeData
 src/CMakeFiles/dolphinprivate.dir/settings/applyviewpropsjob.cpp.o: /usr/include/qt5/QtCore/QObject
 src/CMakeFiles/dolphinprivate.dir/settings/applyviewpropsjob.cpp.o: /usr/include/qt5/QtCore/QPair
 src/CMakeFiles/dolphinprivate.dir/settings/applyviewpropsjob.cpp.o: /usr/include/qt5/QtCore/QSet
@@ -1530,6 +1535,7 @@ src/CMakeFiles/dolphinprivate.dir/settings/applyviewpropsjob.cpp.o: /usr/include
 src/CMakeFiles/dolphinprivate.dir/settings/applyviewpropsjob.cpp.o: /usr/include/qt5/QtCore/qmap.h
 src/CMakeFiles/dolphinprivate.dir/settings/applyviewpropsjob.cpp.o: /usr/include/qt5/QtCore/qmargins.h
 src/CMakeFiles/dolphinprivate.dir/settings/applyviewpropsjob.cpp.o: /usr/include/qt5/QtCore/qmetatype.h
+src/CMakeFiles/dolphinprivate.dir/settings/applyviewpropsjob.cpp.o: /usr/include/qt5/QtCore/qmimedata.h
 src/CMakeFiles/dolphinprivate.dir/settings/applyviewpropsjob.cpp.o: /usr/include/qt5/QtCore/qmimetype.h
 src/CMakeFiles/dolphinprivate.dir/settings/applyviewpropsjob.cpp.o: /usr/include/qt5/QtCore/qmutex.h
 src/CMakeFiles/dolphinprivate.dir/settings/applyviewpropsjob.cpp.o: /usr/include/qt5/QtCore/qnamespace.h
@@ -1896,6 +1902,7 @@ src/CMakeFiles/dolphinprivate.dir/settings/viewpropertiesdialog.cpp.o: /usr/incl
 src/CMakeFiles/dolphinprivate.dir/settings/viewpropertiesdialog.cpp.o: /usr/include/qt5/QtCore/QList
 src/CMakeFiles/dolphinprivate.dir/settings/viewpropertiesdialog.cpp.o: /usr/include/qt5/QtCore/QMap
 src/CMakeFiles/dolphinprivate.dir/settings/viewpropertiesdialog.cpp.o: /usr/include/qt5/QtCore/QMetaType
+src/CMakeFiles/dolphinprivate.dir/settings/viewpropertiesdialog.cpp.o: /usr/include/qt5/QtCore/QMimeData
 src/CMakeFiles/dolphinprivate.dir/settings/viewpropertiesdialog.cpp.o: /usr/include/qt5/QtCore/QObject
 src/CMakeFiles/dolphinprivate.dir/settings/viewpropertiesdialog.cpp.o: /usr/include/qt5/QtCore/QPair
 src/CMakeFiles/dolphinprivate.dir/settings/viewpropertiesdialog.cpp.o: /usr/include/qt5/QtCore/QPoint
@@ -1955,6 +1962,7 @@ src/CMakeFiles/dolphinprivate.dir/settings/viewpropertiesdialog.cpp.o: /usr/incl
 src/CMakeFiles/dolphinprivate.dir/settings/viewpropertiesdialog.cpp.o: /usr/include/qt5/QtCore/qmap.h
 src/CMakeFiles/dolphinprivate.dir/settings/viewpropertiesdialog.cpp.o: /usr/include/qt5/QtCore/qmargins.h
 src/CMakeFiles/dolphinprivate.dir/settings/viewpropertiesdialog.cpp.o: /usr/include/qt5/QtCore/qmetatype.h
+src/CMakeFiles/dolphinprivate.dir/settings/viewpropertiesdialog.cpp.o: /usr/include/qt5/QtCore/qmimedata.h
 src/CMakeFiles/dolphinprivate.dir/settings/viewpropertiesdialog.cpp.o: /usr/include/qt5/QtCore/qmimetype.h
 src/CMakeFiles/dolphinprivate.dir/settings/viewpropertiesdialog.cpp.o: /usr/include/qt5/QtCore/qmutex.h
 src/CMakeFiles/dolphinprivate.dir/settings/viewpropertiesdialog.cpp.o: /usr/include/qt5/QtCore/qnamespace.h
@@ -2149,6 +2157,7 @@ src/CMakeFiles/dolphinprivate.dir/settings/viewpropsprogressinfo.cpp.o: /usr/inc
 src/CMakeFiles/dolphinprivate.dir/settings/viewpropsprogressinfo.cpp.o: /usr/include/qt5/QtCore/QList
 src/CMakeFiles/dolphinprivate.dir/settings/viewpropsprogressinfo.cpp.o: /usr/include/qt5/QtCore/QMap
 src/CMakeFiles/dolphinprivate.dir/settings/viewpropsprogressinfo.cpp.o: /usr/include/qt5/QtCore/QMetaType
+src/CMakeFiles/dolphinprivate.dir/settings/viewpropsprogressinfo.cpp.o: /usr/include/qt5/QtCore/QMimeData
 src/CMakeFiles/dolphinprivate.dir/settings/viewpropsprogressinfo.cpp.o: /usr/include/qt5/QtCore/QObject
 src/CMakeFiles/dolphinprivate.dir/settings/viewpropsprogressinfo.cpp.o: /usr/include/qt5/QtCore/QPair
 src/CMakeFiles/dolphinprivate.dir/settings/viewpropsprogressinfo.cpp.o: /usr/include/qt5/QtCore/QSet
@@ -2200,6 +2209,7 @@ src/CMakeFiles/dolphinprivate.dir/settings/viewpropsprogressinfo.cpp.o: /usr/inc
 src/CMakeFiles/dolphinprivate.dir/settings/viewpropsprogressinfo.cpp.o: /usr/include/qt5/QtCore/qmap.h
 src/CMakeFiles/dolphinprivate.dir/settings/viewpropsprogressinfo.cpp.o: /usr/include/qt5/QtCore/qmargins.h
 src/CMakeFiles/dolphinprivate.dir/settings/viewpropsprogressinfo.cpp.o: /usr/include/qt5/QtCore/qmetatype.h
+src/CMakeFiles/dolphinprivate.dir/settings/viewpropsprogressinfo.cpp.o: /usr/include/qt5/QtCore/qmimedata.h
 src/CMakeFiles/dolphinprivate.dir/settings/viewpropsprogressinfo.cpp.o: /usr/include/qt5/QtCore/qmimetype.h
 src/CMakeFiles/dolphinprivate.dir/settings/viewpropsprogressinfo.cpp.o: /usr/include/qt5/QtCore/qmutex.h
 src/CMakeFiles/dolphinprivate.dir/settings/viewpropsprogressinfo.cpp.o: /usr/include/qt5/QtCore/qnamespace.h
@@ -2363,6 +2373,7 @@ src/CMakeFiles/dolphinprivate.dir/views/additionalinfoaccessor.cpp.o: /usr/inclu
 src/CMakeFiles/dolphinprivate.dir/views/additionalinfoaccessor.cpp.o: /usr/include/qt5/QtCore/QList
 src/CMakeFiles/dolphinprivate.dir/views/additionalinfoaccessor.cpp.o: /usr/include/qt5/QtCore/QMap
 src/CMakeFiles/dolphinprivate.dir/views/additionalinfoaccessor.cpp.o: /usr/include/qt5/QtCore/QMetaType
+src/CMakeFiles/dolphinprivate.dir/views/additionalinfoaccessor.cpp.o: /usr/include/qt5/QtCore/QMimeData
 src/CMakeFiles/dolphinprivate.dir/views/additionalinfoaccessor.cpp.o: /usr/include/qt5/QtCore/QObject
 src/CMakeFiles/dolphinprivate.dir/views/additionalinfoaccessor.cpp.o: /usr/include/qt5/QtCore/QPair
 src/CMakeFiles/dolphinprivate.dir/views/additionalinfoaccessor.cpp.o: /usr/include/qt5/QtCore/QPersistentModelIndex
@@ -2413,6 +2424,7 @@ src/CMakeFiles/dolphinprivate.dir/views/additionalinfoaccessor.cpp.o: /usr/inclu
 src/CMakeFiles/dolphinprivate.dir/views/additionalinfoaccessor.cpp.o: /usr/include/qt5/QtCore/qmap.h
 src/CMakeFiles/dolphinprivate.dir/views/additionalinfoaccessor.cpp.o: /usr/include/qt5/QtCore/qmargins.h
 src/CMakeFiles/dolphinprivate.dir/views/additionalinfoaccessor.cpp.o: /usr/include/qt5/QtCore/qmetatype.h
+src/CMakeFiles/dolphinprivate.dir/views/additionalinfoaccessor.cpp.o: /usr/include/qt5/QtCore/qmimedata.h
 src/CMakeFiles/dolphinprivate.dir/views/additionalinfoaccessor.cpp.o: /usr/include/qt5/QtCore/qmimetype.h
 src/CMakeFiles/dolphinprivate.dir/views/additionalinfoaccessor.cpp.o: /usr/include/qt5/QtCore/qmutex.h
 src/CMakeFiles/dolphinprivate.dir/views/additionalinfoaccessor.cpp.o: /usr/include/qt5/QtCore/qnamespace.h
@@ -2583,6 +2595,7 @@ src/CMakeFiles/dolphinprivate.dir/views/dolphincategorydrawer.cpp.o: /usr/includ
 src/CMakeFiles/dolphinprivate.dir/views/dolphincategorydrawer.cpp.o: /usr/include/qt5/QtCore/QList
 src/CMakeFiles/dolphinprivate.dir/views/dolphincategorydrawer.cpp.o: /usr/include/qt5/QtCore/QMap
 src/CMakeFiles/dolphinprivate.dir/views/dolphincategorydrawer.cpp.o: /usr/include/qt5/QtCore/QMetaType
+src/CMakeFiles/dolphinprivate.dir/views/dolphincategorydrawer.cpp.o: /usr/include/qt5/QtCore/QMimeData
 src/CMakeFiles/dolphinprivate.dir/views/dolphincategorydrawer.cpp.o: /usr/include/qt5/QtCore/QModelIndex
 src/CMakeFiles/dolphinprivate.dir/views/dolphincategorydrawer.cpp.o: /usr/include/qt5/QtCore/QObject
 src/CMakeFiles/dolphinprivate.dir/views/dolphincategorydrawer.cpp.o: /usr/include/qt5/QtCore/QPair
@@ -2642,6 +2655,7 @@ src/CMakeFiles/dolphinprivate.dir/views/dolphincategorydrawer.cpp.o: /usr/includ
 src/CMakeFiles/dolphinprivate.dir/views/dolphincategorydrawer.cpp.o: /usr/include/qt5/QtCore/qmap.h
 src/CMakeFiles/dolphinprivate.dir/views/dolphincategorydrawer.cpp.o: /usr/include/qt5/QtCore/qmargins.h
 src/CMakeFiles/dolphinprivate.dir/views/dolphincategorydrawer.cpp.o: /usr/include/qt5/QtCore/qmetatype.h
+src/CMakeFiles/dolphinprivate.dir/views/dolphincategorydrawer.cpp.o: /usr/include/qt5/QtCore/qmimedata.h
 src/CMakeFiles/dolphinprivate.dir/views/dolphincategorydrawer.cpp.o: /usr/include/qt5/QtCore/qmimetype.h
 src/CMakeFiles/dolphinprivate.dir/views/dolphincategorydrawer.cpp.o: /usr/include/qt5/QtCore/qmutex.h
 src/CMakeFiles/dolphinprivate.dir/views/dolphincategorydrawer.cpp.o: /usr/include/qt5/QtCore/qnamespace.h
@@ -2856,6 +2870,7 @@ src/CMakeFiles/dolphinprivate.dir/views/dolphincolumnview.cpp.o: /usr/include/qt
 src/CMakeFiles/dolphinprivate.dir/views/dolphincolumnview.cpp.o: /usr/include/qt5/QtCore/QList
 src/CMakeFiles/dolphinprivate.dir/views/dolphincolumnview.cpp.o: /usr/include/qt5/QtCore/QMap
 src/CMakeFiles/dolphinprivate.dir/views/dolphincolumnview.cpp.o: /usr/include/qt5/QtCore/QMetaType
+src/CMakeFiles/dolphinprivate.dir/views/dolphincolumnview.cpp.o: /usr/include/qt5/QtCore/QMimeData
 src/CMakeFiles/dolphinprivate.dir/views/dolphincolumnview.cpp.o: /usr/include/qt5/QtCore/QObject
 src/CMakeFiles/dolphinprivate.dir/views/dolphincolumnview.cpp.o: /usr/include/qt5/QtCore/QPair
 src/CMakeFiles/dolphinprivate.dir/views/dolphincolumnview.cpp.o: /usr/include/qt5/QtCore/QPersistentModelIndex
@@ -2916,6 +2931,7 @@ src/CMakeFiles/dolphinprivate.dir/views/dolphincolumnview.cpp.o: /usr/include/qt
 src/CMakeFiles/dolphinprivate.dir/views/dolphincolumnview.cpp.o: /usr/include/qt5/QtCore/qmap.h
 src/CMakeFiles/dolphinprivate.dir/views/dolphincolumnview.cpp.o: /usr/include/qt5/QtCore/qmargins.h
 src/CMakeFiles/dolphinprivate.dir/views/dolphincolumnview.cpp.o: /usr/include/qt5/QtCore/qmetatype.h
+src/CMakeFiles/dolphinprivate.dir/views/dolphincolumnview.cpp.o: /usr/include/qt5/QtCore/qmimedata.h
 src/CMakeFiles/dolphinprivate.dir/views/dolphincolumnview.cpp.o: /usr/include/qt5/QtCore/qmimetype.h
 src/CMakeFiles/dolphinprivate.dir/views/dolphincolumnview.cpp.o: /usr/include/qt5/QtCore/qmutex.h
 src/CMakeFiles/dolphinprivate.dir/views/dolphincolumnview.cpp.o: /usr/include/qt5/QtCore/qnamespace.h
@@ -3127,6 +3143,7 @@ src/CMakeFiles/dolphinprivate.dir/views/dolphincolumnviewcontainer.cpp.o: /usr/i
 src/CMakeFiles/dolphinprivate.dir/views/dolphincolumnviewcontainer.cpp.o: /usr/include/qt5/QtCore/QList
 src/CMakeFiles/dolphinprivate.dir/views/dolphincolumnviewcontainer.cpp.o: /usr/include/qt5/QtCore/QMap
 src/CMakeFiles/dolphinprivate.dir/views/dolphincolumnviewcontainer.cpp.o: /usr/include/qt5/QtCore/QMetaType
+src/CMakeFiles/dolphinprivate.dir/views/dolphincolumnviewcontainer.cpp.o: /usr/include/qt5/QtCore/QMimeData
 src/CMakeFiles/dolphinprivate.dir/views/dolphincolumnviewcontainer.cpp.o: /usr/include/qt5/QtCore/QObject
 src/CMakeFiles/dolphinprivate.dir/views/dolphincolumnviewcontainer.cpp.o: /usr/include/qt5/QtCore/QPair
 src/CMakeFiles/dolphinprivate.dir/views/dolphincolumnviewcontainer.cpp.o: /usr/include/qt5/QtCore/QPoint
@@ -3188,6 +3205,7 @@ src/CMakeFiles/dolphinprivate.dir/views/dolphincolumnviewcontainer.cpp.o: /usr/i
 src/CMakeFiles/dolphinprivate.dir/views/dolphincolumnviewcontainer.cpp.o: /usr/include/qt5/QtCore/qmap.h
 src/CMakeFiles/dolphinprivate.dir/views/dolphincolumnviewcontainer.cpp.o: /usr/include/qt5/QtCore/qmargins.h
 src/CMakeFiles/dolphinprivate.dir/views/dolphincolumnviewcontainer.cpp.o: /usr/include/qt5/QtCore/qmetatype.h
+src/CMakeFiles/dolphinprivate.dir/views/dolphincolumnviewcontainer.cpp.o: /usr/include/qt5/QtCore/qmimedata.h
 src/CMakeFiles/dolphinprivate.dir/views/dolphincolumnviewcontainer.cpp.o: /usr/include/qt5/QtCore/qmimetype.h
 src/CMakeFiles/dolphinprivate.dir/views/dolphincolumnviewcontainer.cpp.o: /usr/include/qt5/QtCore/qmutex.h
 src/CMakeFiles/dolphinprivate.dir/views/dolphincolumnviewcontainer.cpp.o: /usr/include/qt5/QtCore/qnamespace.h
@@ -3395,6 +3413,7 @@ src/CMakeFiles/dolphinprivate.dir/views/dolphindetailsview.cpp.o: /usr/include/q
 src/CMakeFiles/dolphinprivate.dir/views/dolphindetailsview.cpp.o: /usr/include/qt5/QtCore/QList
 src/CMakeFiles/dolphinprivate.dir/views/dolphindetailsview.cpp.o: /usr/include/qt5/QtCore/QMap
 src/CMakeFiles/dolphinprivate.dir/views/dolphindetailsview.cpp.o: /usr/include/qt5/QtCore/QMetaType
+src/CMakeFiles/dolphinprivate.dir/views/dolphindetailsview.cpp.o: /usr/include/qt5/QtCore/QMimeData
 src/CMakeFiles/dolphinprivate.dir/views/dolphindetailsview.cpp.o: /usr/include/qt5/QtCore/QObject
 src/CMakeFiles/dolphinprivate.dir/views/dolphindetailsview.cpp.o: /usr/include/qt5/QtCore/QPair
 src/CMakeFiles/dolphinprivate.dir/views/dolphindetailsview.cpp.o: /usr/include/qt5/QtCore/QPersistentModelIndex
@@ -3455,6 +3474,7 @@ src/CMakeFiles/dolphinprivate.dir/views/dolphindetailsview.cpp.o: /usr/include/q
 src/CMakeFiles/dolphinprivate.dir/views/dolphindetailsview.cpp.o: /usr/include/qt5/QtCore/qmap.h
 src/CMakeFiles/dolphinprivate.dir/views/dolphindetailsview.cpp.o: /usr/include/qt5/QtCore/qmargins.h
 src/CMakeFiles/dolphinprivate.dir/views/dolphindetailsview.cpp.o: /usr/include/qt5/QtCore/qmetatype.h
+src/CMakeFiles/dolphinprivate.dir/views/dolphindetailsview.cpp.o: /usr/include/qt5/QtCore/qmimedata.h
 src/CMakeFiles/dolphinprivate.dir/views/dolphindetailsview.cpp.o: /usr/include/qt5/QtCore/qmimetype.h
 src/CMakeFiles/dolphinprivate.dir/views/dolphindetailsview.cpp.o: /usr/include/qt5/QtCore/qmutex.h
 src/CMakeFiles/dolphinprivate.dir/views/dolphindetailsview.cpp.o: /usr/include/qt5/QtCore/qnamespace.h
@@ -3639,6 +3659,7 @@ src/CMakeFiles/dolphinprivate.dir/views/dolphindetailsviewexpander.cpp.o: /usr/i
 src/CMakeFiles/dolphinprivate.dir/views/dolphindetailsviewexpander.cpp.o: /usr/include/qt5/QtCore/QList
 src/CMakeFiles/dolphinprivate.dir/views/dolphindetailsviewexpander.cpp.o: /usr/include/qt5/QtCore/QMap
 src/CMakeFiles/dolphinprivate.dir/views/dolphindetailsviewexpander.cpp.o: /usr/include/qt5/QtCore/QMetaType
+src/CMakeFiles/dolphinprivate.dir/views/dolphindetailsviewexpander.cpp.o: /usr/include/qt5/QtCore/QMimeData
 src/CMakeFiles/dolphinprivate.dir/views/dolphindetailsviewexpander.cpp.o: /usr/include/qt5/QtCore/QObject
 src/CMakeFiles/dolphinprivate.dir/views/dolphindetailsviewexpander.cpp.o: /usr/include/qt5/QtCore/QPair
 src/CMakeFiles/dolphinprivate.dir/views/dolphindetailsviewexpander.cpp.o: /usr/include/qt5/QtCore/QPersistentModelIndex
@@ -3692,6 +3713,7 @@ src/CMakeFiles/dolphinprivate.dir/views/dolphindetailsviewexpander.cpp.o: /usr/i
 src/CMakeFiles/dolphinprivate.dir/views/dolphindetailsviewexpander.cpp.o: /usr/include/qt5/QtCore/qmap.h
 src/CMakeFiles/dolphinprivate.dir/views/dolphindetailsviewexpander.cpp.o: /usr/include/qt5/QtCore/qmargins.h
 src/CMakeFiles/dolphinprivate.dir/views/dolphindetailsviewexpander.cpp.o: /usr/include/qt5/QtCore/qmetatype.h
+src/CMakeFiles/dolphinprivate.dir/views/dolphindetailsviewexpander.cpp.o: /usr/include/qt5/QtCore/qmimedata.h
 src/CMakeFiles/dolphinprivate.dir/views/dolphindetailsviewexpander.cpp.o: /usr/include/qt5/QtCore/qmimetype.h
 src/CMakeFiles/dolphinprivate.dir/views/dolphindetailsviewexpander.cpp.o: /usr/include/qt5/QtCore/qmutex.h
 src/CMakeFiles/dolphinprivate.dir/views/dolphindetailsviewexpander.cpp.o: /usr/include/qt5/QtCore/qnamespace.h
@@ -4173,6 +4195,7 @@ src/CMakeFiles/dolphinprivate.dir/views/dolphiniconsview.cpp.o: /usr/include/qt5
 src/CMakeFiles/dolphinprivate.dir/views/dolphiniconsview.cpp.o: /usr/include/qt5/QtCore/QList
 src/CMakeFiles/dolphinprivate.dir/views/dolphiniconsview.cpp.o: /usr/include/qt5/QtCore/QMap
 src/CMakeFiles/dolphinprivate.dir/views/dolphiniconsview.cpp.o: /usr/include/qt5/QtCore/QMetaType
+src/CMakeFiles/dolphinprivate.dir/views/dolphiniconsview.cpp.o: /usr/include/qt5/QtCore/QMimeData
 src/CMakeFiles/dolphinprivate.dir/views/dolphiniconsview.cpp.o: /usr/include/qt5/QtCore/QModelIndex
 src/CMakeFiles/dolphinprivate.dir/views/dolphiniconsview.cpp.o: /usr/include/qt5/QtCore/QObject
 src/CMakeFiles/dolphinprivate.dir/views/dolphiniconsview.cpp.o: /usr/include/qt5/QtCore/QPair
@@ -4232,6 +4255,7 @@ src/CMakeFiles/dolphinprivate.dir/views/dolphiniconsview.cpp.o: /usr/include/qt5
 src/CMakeFiles/dolphinprivate.dir/views/dolphiniconsview.cpp.o: /usr/include/qt5/QtCore/qmap.h
 src/CMakeFiles/dolphinprivate.dir/views/dolphiniconsview.cpp.o: /usr/include/qt5/QtCore/qmargins.h
 src/CMakeFiles/dolphinprivate.dir/views/dolphiniconsview.cpp.o: /usr/include/qt5/QtCore/qmetatype.h
+src/CMakeFiles/dolphinprivate.dir/views/dolphiniconsview.cpp.o: /usr/include/qt5/QtCore/qmimedata.h
 src/CMakeFiles/dolphinprivate.dir/views/dolphiniconsview.cpp.o: /usr/include/qt5/QtCore/qmimetype.h
 src/CMakeFiles/dolphinprivate.dir/views/dolphiniconsview.cpp.o: /usr/include/qt5/QtCore/qmutex.h
 src/CMakeFiles/dolphinprivate.dir/views/dolphiniconsview.cpp.o: /usr/include/qt5/QtCore/qnamespace.h
@@ -4418,6 +4442,7 @@ src/CMakeFiles/dolphinprivate.dir/views/dolphinmodel.cpp.o: /usr/include/qt5/QtC
 src/CMakeFiles/dolphinprivate.dir/views/dolphinmodel.cpp.o: /usr/include/qt5/QtCore/QList
 src/CMakeFiles/dolphinprivate.dir/views/dolphinmodel.cpp.o: /usr/include/qt5/QtCore/QMap
 src/CMakeFiles/dolphinprivate.dir/views/dolphinmodel.cpp.o: /usr/include/qt5/QtCore/QMetaType
+src/CMakeFiles/dolphinprivate.dir/views/dolphinmodel.cpp.o: /usr/include/qt5/QtCore/QMimeData
 src/CMakeFiles/dolphinprivate.dir/views/dolphinmodel.cpp.o: /usr/include/qt5/QtCore/QObject
 src/CMakeFiles/dolphinprivate.dir/views/dolphinmodel.cpp.o: /usr/include/qt5/QtCore/QPair
 src/CMakeFiles/dolphinprivate.dir/views/dolphinmodel.cpp.o: /usr/include/qt5/QtCore/QPersistentModelIndex
@@ -4473,6 +4498,7 @@ src/CMakeFiles/dolphinprivate.dir/views/dolphinmodel.cpp.o: /usr/include/qt5/QtC
 src/CMakeFiles/dolphinprivate.dir/views/dolphinmodel.cpp.o: /usr/include/qt5/QtCore/qmap.h
 src/CMakeFiles/dolphinprivate.dir/views/dolphinmodel.cpp.o: /usr/include/qt5/QtCore/qmargins.h
 src/CMakeFiles/dolphinprivate.dir/views/dolphinmodel.cpp.o: /usr/include/qt5/QtCore/qmetatype.h
+src/CMakeFiles/dolphinprivate.dir/views/dolphinmodel.cpp.o: /usr/include/qt5/QtCore/qmimedata.h
 src/CMakeFiles/dolphinprivate.dir/views/dolphinmodel.cpp.o: /usr/include/qt5/QtCore/qmimetype.h
 src/CMakeFiles/dolphinprivate.dir/views/dolphinmodel.cpp.o: /usr/include/qt5/QtCore/qmutex.h
 src/CMakeFiles/dolphinprivate.dir/views/dolphinmodel.cpp.o: /usr/include/qt5/QtCore/qnamespace.h
@@ -4778,6 +4804,7 @@ src/CMakeFiles/dolphinprivate.dir/views/dolphinremoteencoding.cpp.o: /usr/includ
 src/CMakeFiles/dolphinprivate.dir/views/dolphinremoteencoding.cpp.o: /usr/include/qt5/QtCore/QList
 src/CMakeFiles/dolphinprivate.dir/views/dolphinremoteencoding.cpp.o: /usr/include/qt5/QtCore/QMap
 src/CMakeFiles/dolphinprivate.dir/views/dolphinremoteencoding.cpp.o: /usr/include/qt5/QtCore/QMetaType
+src/CMakeFiles/dolphinprivate.dir/views/dolphinremoteencoding.cpp.o: /usr/include/qt5/QtCore/QMimeData
 src/CMakeFiles/dolphinprivate.dir/views/dolphinremoteencoding.cpp.o: /usr/include/qt5/QtCore/QObject
 src/CMakeFiles/dolphinprivate.dir/views/dolphinremoteencoding.cpp.o: /usr/include/qt5/QtCore/QPair
 src/CMakeFiles/dolphinprivate.dir/views/dolphinremoteencoding.cpp.o: /usr/include/qt5/QtCore/QPoint
@@ -4834,6 +4861,7 @@ src/CMakeFiles/dolphinprivate.dir/views/dolphinremoteencoding.cpp.o: /usr/includ
 src/CMakeFiles/dolphinprivate.dir/views/dolphinremoteencoding.cpp.o: /usr/include/qt5/QtCore/qmap.h
 src/CMakeFiles/dolphinprivate.dir/views/dolphinremoteencoding.cpp.o: /usr/include/qt5/QtCore/qmargins.h
 src/CMakeFiles/dolphinprivate.dir/views/dolphinremoteencoding.cpp.o: /usr/include/qt5/QtCore/qmetatype.h
+src/CMakeFiles/dolphinprivate.dir/views/dolphinremoteencoding.cpp.o: /usr/include/qt5/QtCore/qmimedata.h
 src/CMakeFiles/dolphinprivate.dir/views/dolphinremoteencoding.cpp.o: /usr/include/qt5/QtCore/qmimetype.h
 src/CMakeFiles/dolphinprivate.dir/views/dolphinremoteencoding.cpp.o: /usr/include/qt5/QtCore/qmutex.h
 src/CMakeFiles/dolphinprivate.dir/views/dolphinremoteencoding.cpp.o: /usr/include/qt5/QtCore/qnamespace.h
@@ -5002,6 +5030,7 @@ src/CMakeFiles/dolphinprivate.dir/views/dolphinsortfilterproxymodel.cpp.o: /usr/
 src/CMakeFiles/dolphinprivate.dir/views/dolphinsortfilterproxymodel.cpp.o: /usr/include/qt5/QtCore/QList
 src/CMakeFiles/dolphinprivate.dir/views/dolphinsortfilterproxymodel.cpp.o: /usr/include/qt5/QtCore/QMap
 src/CMakeFiles/dolphinprivate.dir/views/dolphinsortfilterproxymodel.cpp.o: /usr/include/qt5/QtCore/QMetaType
+src/CMakeFiles/dolphinprivate.dir/views/dolphinsortfilterproxymodel.cpp.o: /usr/include/qt5/QtCore/QMimeData
 src/CMakeFiles/dolphinprivate.dir/views/dolphinsortfilterproxymodel.cpp.o: /usr/include/qt5/QtCore/QObject
 src/CMakeFiles/dolphinprivate.dir/views/dolphinsortfilterproxymodel.cpp.o: /usr/include/qt5/QtCore/QPair
 src/CMakeFiles/dolphinprivate.dir/views/dolphinsortfilterproxymodel.cpp.o: /usr/include/qt5/QtCore/QSet
@@ -5054,6 +5083,7 @@ src/CMakeFiles/dolphinprivate.dir/views/dolphinsortfilterproxymodel.cpp.o: /usr/
 src/CMakeFiles/dolphinprivate.dir/views/dolphinsortfilterproxymodel.cpp.o: /usr/include/qt5/QtCore/qmap.h
 src/CMakeFiles/dolphinprivate.dir/views/dolphinsortfilterproxymodel.cpp.o: /usr/include/qt5/QtCore/qmargins.h
 src/CMakeFiles/dolphinprivate.dir/views/dolphinsortfilterproxymodel.cpp.o: /usr/include/qt5/QtCore/qmetatype.h
+src/CMakeFiles/dolphinprivate.dir/views/dolphinsortfilterproxymodel.cpp.o: /usr/include/qt5/QtCore/qmimedata.h
 src/CMakeFiles/dolphinprivate.dir/views/dolphinsortfilterproxymodel.cpp.o: /usr/include/qt5/QtCore/qmimetype.h
 src/CMakeFiles/dolphinprivate.dir/views/dolphinsortfilterproxymodel.cpp.o: /usr/include/qt5/QtCore/qmutex.h
 src/CMakeFiles/dolphinprivate.dir/views/dolphinsortfilterproxymodel.cpp.o: /usr/include/qt5/QtCore/qnamespace.h
@@ -5452,6 +5482,7 @@ src/CMakeFiles/dolphinprivate.dir/views/dolphinview.cpp.o: /usr/include/qt5/QtCo
 src/CMakeFiles/dolphinprivate.dir/views/dolphinview.cpp.o: /usr/include/qt5/QtCore/QList
 src/CMakeFiles/dolphinprivate.dir/views/dolphinview.cpp.o: /usr/include/qt5/QtCore/QMap
 src/CMakeFiles/dolphinprivate.dir/views/dolphinview.cpp.o: /usr/include/qt5/QtCore/QMetaType
+src/CMakeFiles/dolphinprivate.dir/views/dolphinview.cpp.o: /usr/include/qt5/QtCore/QMimeData
 src/CMakeFiles/dolphinprivate.dir/views/dolphinview.cpp.o: /usr/include/qt5/QtCore/QObject
 src/CMakeFiles/dolphinprivate.dir/views/dolphinview.cpp.o: /usr/include/qt5/QtCore/QPair
 src/CMakeFiles/dolphinprivate.dir/views/dolphinview.cpp.o: /usr/include/qt5/QtCore/QPersistentModelIndex
@@ -5514,6 +5545,7 @@ src/CMakeFiles/dolphinprivate.dir/views/dolphinview.cpp.o: /usr/include/qt5/QtCo
 src/CMakeFiles/dolphinprivate.dir/views/dolphinview.cpp.o: /usr/include/qt5/QtCore/qmap.h
 src/CMakeFiles/dolphinprivate.dir/views/dolphinview.cpp.o: /usr/include/qt5/QtCore/qmargins.h
 src/CMakeFiles/dolphinprivate.dir/views/dolphinview.cpp.o: /usr/include/qt5/QtCore/qmetatype.h
+src/CMakeFiles/dolphinprivate.dir/views/dolphinview.cpp.o: /usr/include/qt5/QtCore/qmimedata.h
 src/CMakeFiles/dolphinprivate.dir/views/dolphinview.cpp.o: /usr/include/qt5/QtCore/qmimetype.h
 src/CMakeFiles/dolphinprivate.dir/views/dolphinview.cpp.o: /usr/include/qt5/QtCore/qmutex.h
 src/CMakeFiles/dolphinprivate.dir/views/dolphinview.cpp.o: /usr/include/qt5/QtCore/qnamespace.h
@@ -5738,6 +5770,7 @@ src/CMakeFiles/dolphinprivate.dir/views/dolphinviewactionhandler.cpp.o: /usr/inc
 src/CMakeFiles/dolphinprivate.dir/views/dolphinviewactionhandler.cpp.o: /usr/include/qt5/QtCore/QList
 src/CMakeFiles/dolphinprivate.dir/views/dolphinviewactionhandler.cpp.o: /usr/include/qt5/QtCore/QMap
 src/CMakeFiles/dolphinprivate.dir/views/dolphinviewactionhandler.cpp.o: /usr/include/qt5/QtCore/QMetaType
+src/CMakeFiles/dolphinprivate.dir/views/dolphinviewactionhandler.cpp.o: /usr/include/qt5/QtCore/QMimeData
 src/CMakeFiles/dolphinprivate.dir/views/dolphinviewactionhandler.cpp.o: /usr/include/qt5/QtCore/QObject
 src/CMakeFiles/dolphinprivate.dir/views/dolphinviewactionhandler.cpp.o: /usr/include/qt5/QtCore/QPair
 src/CMakeFiles/dolphinprivate.dir/views/dolphinviewactionhandler.cpp.o: /usr/include/qt5/QtCore/QSet
@@ -5787,6 +5820,7 @@ src/CMakeFiles/dolphinprivate.dir/views/dolphinviewactionhandler.cpp.o: /usr/inc
 src/CMakeFiles/dolphinprivate.dir/views/dolphinviewactionhandler.cpp.o: /usr/include/qt5/QtCore/qmap.h
 src/CMakeFiles/dolphinprivate.dir/views/dolphinviewactionhandler.cpp.o: /usr/include/qt5/QtCore/qmargins.h
 src/CMakeFiles/dolphinprivate.dir/views/dolphinviewactionhandler.cpp.o: /usr/include/qt5/QtCore/qmetatype.h
+src/CMakeFiles/dolphinprivate.dir/views/dolphinviewactionhandler.cpp.o: /usr/include/qt5/QtCore/qmimedata.h
 src/CMakeFiles/dolphinprivate.dir/views/dolphinviewactionhandler.cpp.o: /usr/include/qt5/QtCore/qmimetype.h
 src/CMakeFiles/dolphinprivate.dir/views/dolphinviewactionhandler.cpp.o: /usr/include/qt5/QtCore/qmutex.h
 src/CMakeFiles/dolphinprivate.dir/views/dolphinviewactionhandler.cpp.o: /usr/include/qt5/QtCore/qnamespace.h
@@ -6108,6 +6142,7 @@ src/CMakeFiles/dolphinprivate.dir/views/dolphinviewcontroller.cpp.o: /usr/includ
 src/CMakeFiles/dolphinprivate.dir/views/dolphinviewcontroller.cpp.o: /usr/include/qt5/QtCore/QList
 src/CMakeFiles/dolphinprivate.dir/views/dolphinviewcontroller.cpp.o: /usr/include/qt5/QtCore/QMap
 src/CMakeFiles/dolphinprivate.dir/views/dolphinviewcontroller.cpp.o: /usr/include/qt5/QtCore/QMetaType
+src/CMakeFiles/dolphinprivate.dir/views/dolphinviewcontroller.cpp.o: /usr/include/qt5/QtCore/QMimeData
 src/CMakeFiles/dolphinprivate.dir/views/dolphinviewcontroller.cpp.o: /usr/include/qt5/QtCore/QObject
 src/CMakeFiles/dolphinprivate.dir/views/dolphinviewcontroller.cpp.o: /usr/include/qt5/QtCore/QPair
 src/CMakeFiles/dolphinprivate.dir/views/dolphinviewcontroller.cpp.o: /usr/include/qt5/QtCore/QPluginLoader
@@ -6168,6 +6203,7 @@ src/CMakeFiles/dolphinprivate.dir/views/dolphinviewcontroller.cpp.o: /usr/includ
 src/CMakeFiles/dolphinprivate.dir/views/dolphinviewcontroller.cpp.o: /usr/include/qt5/QtCore/qmap.h
 src/CMakeFiles/dolphinprivate.dir/views/dolphinviewcontroller.cpp.o: /usr/include/qt5/QtCore/qmargins.h
 src/CMakeFiles/dolphinprivate.dir/views/dolphinviewcontroller.cpp.o: /usr/include/qt5/QtCore/qmetatype.h
+src/CMakeFiles/dolphinprivate.dir/views/dolphinviewcontroller.cpp.o: /usr/include/qt5/QtCore/qmimedata.h
 src/CMakeFiles/dolphinprivate.dir/views/dolphinviewcontroller.cpp.o: /usr/include/qt5/QtCore/qmimetype.h
 src/CMakeFiles/dolphinprivate.dir/views/dolphinviewcontroller.cpp.o: /usr/include/qt5/QtCore/qmutex.h
 src/CMakeFiles/dolphinprivate.dir/views/dolphinviewcontroller.cpp.o: /usr/include/qt5/QtCore/qnamespace.h
@@ -6339,6 +6375,7 @@ src/CMakeFiles/dolphinprivate.dir/views/draganddrophelper.cpp.o: /usr/include/qt
 src/CMakeFiles/dolphinprivate.dir/views/draganddrophelper.cpp.o: /usr/include/qt5/QtCore/QList
 src/CMakeFiles/dolphinprivate.dir/views/draganddrophelper.cpp.o: /usr/include/qt5/QtCore/QMap
 src/CMakeFiles/dolphinprivate.dir/views/draganddrophelper.cpp.o: /usr/include/qt5/QtCore/QMetaType
+src/CMakeFiles/dolphinprivate.dir/views/draganddrophelper.cpp.o: /usr/include/qt5/QtCore/QMimeData
 src/CMakeFiles/dolphinprivate.dir/views/draganddrophelper.cpp.o: /usr/include/qt5/QtCore/QObject
 src/CMakeFiles/dolphinprivate.dir/views/draganddrophelper.cpp.o: /usr/include/qt5/QtCore/QPair
 src/CMakeFiles/dolphinprivate.dir/views/draganddrophelper.cpp.o: /usr/include/qt5/QtCore/QScopedPointer
@@ -7491,6 +7528,7 @@ src/CMakeFiles/dolphinprivate.dir/views/tooltips/tooltipmanager.cpp.o: /usr/incl
 src/CMakeFiles/dolphinprivate.dir/views/tooltips/tooltipmanager.cpp.o: /usr/include/qt5/QtCore/QList
 src/CMakeFiles/dolphinprivate.dir/views/tooltips/tooltipmanager.cpp.o: /usr/include/qt5/QtCore/QMap
 src/CMakeFiles/dolphinprivate.dir/views/tooltips/tooltipmanager.cpp.o: /usr/include/qt5/QtCore/QMetaType
+src/CMakeFiles/dolphinprivate.dir/views/tooltips/tooltipmanager.cpp.o: /usr/include/qt5/QtCore/QMimeData
 src/CMakeFiles/dolphinprivate.dir/views/tooltips/tooltipmanager.cpp.o: /usr/include/qt5/QtCore/QObject
 src/CMakeFiles/dolphinprivate.dir/views/tooltips/tooltipmanager.cpp.o: /usr/include/qt5/QtCore/QPair
 src/CMakeFiles/dolphinprivate.dir/views/tooltips/tooltipmanager.cpp.o: /usr/include/qt5/QtCore/QPersistentModelIndex
@@ -7549,6 +7587,7 @@ src/CMakeFiles/dolphinprivate.dir/views/tooltips/tooltipmanager.cpp.o: /usr/incl
 src/CMakeFiles/dolphinprivate.dir/views/tooltips/tooltipmanager.cpp.o: /usr/include/qt5/QtCore/qmap.h
 src/CMakeFiles/dolphinprivate.dir/views/tooltips/tooltipmanager.cpp.o: /usr/include/qt5/QtCore/qmargins.h
 src/CMakeFiles/dolphinprivate.dir/views/tooltips/tooltipmanager.cpp.o: /usr/include/qt5/QtCore/qmetatype.h
+src/CMakeFiles/dolphinprivate.dir/views/tooltips/tooltipmanager.cpp.o: /usr/include/qt5/QtCore/qmimedata.h
 src/CMakeFiles/dolphinprivate.dir/views/tooltips/tooltipmanager.cpp.o: /usr/include/qt5/QtCore/qmimetype.h
 src/CMakeFiles/dolphinprivate.dir/views/tooltips/tooltipmanager.cpp.o: /usr/include/qt5/QtCore/qmutex.h
 src/CMakeFiles/dolphinprivate.dir/views/tooltips/tooltipmanager.cpp.o: /usr/include/qt5/QtCore/qnamespace.h
@@ -8095,6 +8134,7 @@ src/CMakeFiles/dolphinprivate.dir/views/viewextensionsfactory.cpp.o: /usr/includ
 src/CMakeFiles/dolphinprivate.dir/views/viewextensionsfactory.cpp.o: /usr/include/qt5/QtCore/QList
 src/CMakeFiles/dolphinprivate.dir/views/viewextensionsfactory.cpp.o: /usr/include/qt5/QtCore/QMap
 src/CMakeFiles/dolphinprivate.dir/views/viewextensionsfactory.cpp.o: /usr/include/qt5/QtCore/QMetaType
+src/CMakeFiles/dolphinprivate.dir/views/viewextensionsfactory.cpp.o: /usr/include/qt5/QtCore/QMimeData
 src/CMakeFiles/dolphinprivate.dir/views/viewextensionsfactory.cpp.o: /usr/include/qt5/QtCore/QObject
 src/CMakeFiles/dolphinprivate.dir/views/viewextensionsfactory.cpp.o: /usr/include/qt5/QtCore/QPair
 src/CMakeFiles/dolphinprivate.dir/views/viewextensionsfactory.cpp.o: /usr/include/qt5/QtCore/QPersistentModelIndex
@@ -8155,6 +8195,7 @@ src/CMakeFiles/dolphinprivate.dir/views/viewextensionsfactory.cpp.o: /usr/includ
 src/CMakeFiles/dolphinprivate.dir/views/viewextensionsfactory.cpp.o: /usr/include/qt5/QtCore/qmap.h
 src/CMakeFiles/dolphinprivate.dir/views/viewextensionsfactory.cpp.o: /usr/include/qt5/QtCore/qmargins.h
 src/CMakeFiles/dolphinprivate.dir/views/viewextensionsfactory.cpp.o: /usr/include/qt5/QtCore/qmetatype.h
+src/CMakeFiles/dolphinprivate.dir/views/viewextensionsfactory.cpp.o: /usr/include/qt5/QtCore/qmimedata.h
 src/CMakeFiles/dolphinprivate.dir/views/viewextensionsfactory.cpp.o: /usr/include/qt5/QtCore/qmimetype.h
 src/CMakeFiles/dolphinprivate.dir/views/viewextensionsfactory.cpp.o: /usr/include/qt5/QtCore/qmutex.h
 src/CMakeFiles/dolphinprivate.dir/views/viewextensionsfactory.cpp.o: /usr/include/qt5/QtCore/qnamespace.h
@@ -8324,6 +8365,7 @@ src/CMakeFiles/dolphinprivate.dir/views/viewmodecontroller.cpp.o: /usr/include/q
 src/CMakeFiles/dolphinprivate.dir/views/viewmodecontroller.cpp.o: /usr/include/qt5/QtCore/QList
 src/CMakeFiles/dolphinprivate.dir/views/viewmodecontroller.cpp.o: /usr/include/qt5/QtCore/QMap
 src/CMakeFiles/dolphinprivate.dir/views/viewmodecontroller.cpp.o: /usr/include/qt5/QtCore/QMetaType
+src/CMakeFiles/dolphinprivate.dir/views/viewmodecontroller.cpp.o: /usr/include/qt5/QtCore/QMimeData
 src/CMakeFiles/dolphinprivate.dir/views/viewmodecontroller.cpp.o: /usr/include/qt5/QtCore/QObject
 src/CMakeFiles/dolphinprivate.dir/views/viewmodecontroller.cpp.o: /usr/include/qt5/QtCore/QPair
 src/CMakeFiles/dolphinprivate.dir/views/viewmodecontroller.cpp.o: /usr/include/qt5/QtCore/QSet
@@ -8373,6 +8415,7 @@ src/CMakeFiles/dolphinprivate.dir/views/viewmodecontroller.cpp.o: /usr/include/q
 src/CMakeFiles/dolphinprivate.dir/views/viewmodecontroller.cpp.o: /usr/include/qt5/QtCore/qmap.h
 src/CMakeFiles/dolphinprivate.dir/views/viewmodecontroller.cpp.o: /usr/include/qt5/QtCore/qmargins.h
 src/CMakeFiles/dolphinprivate.dir/views/viewmodecontroller.cpp.o: /usr/include/qt5/QtCore/qmetatype.h
+src/CMakeFiles/dolphinprivate.dir/views/viewmodecontroller.cpp.o: /usr/include/qt5/QtCore/qmimedata.h
 src/CMakeFiles/dolphinprivate.dir/views/viewmodecontroller.cpp.o: /usr/include/qt5/QtCore/qmimetype.h
 src/CMakeFiles/dolphinprivate.dir/views/viewmodecontroller.cpp.o: /usr/include/qt5/QtCore/qmutex.h
 src/CMakeFiles/dolphinprivate.dir/views/viewmodecontroller.cpp.o: /usr/include/qt5/QtCore/qnamespace.h
@@ -8542,6 +8585,7 @@ src/CMakeFiles/dolphinprivate.dir/views/viewproperties.cpp.o: /usr/include/qt5/Q
 src/CMakeFiles/dolphinprivate.dir/views/viewproperties.cpp.o: /usr/include/qt5/QtCore/QList
 src/CMakeFiles/dolphinprivate.dir/views/viewproperties.cpp.o: /usr/include/qt5/QtCore/QMap
 src/CMakeFiles/dolphinprivate.dir/views/viewproperties.cpp.o: /usr/include/qt5/QtCore/QMetaType
+src/CMakeFiles/dolphinprivate.dir/views/viewproperties.cpp.o: /usr/include/qt5/QtCore/QMimeData
 src/CMakeFiles/dolphinprivate.dir/views/viewproperties.cpp.o: /usr/include/qt5/QtCore/QObject
 src/CMakeFiles/dolphinprivate.dir/views/viewproperties.cpp.o: /usr/include/qt5/QtCore/QPair
 src/CMakeFiles/dolphinprivate.dir/views/viewproperties.cpp.o: /usr/include/qt5/QtCore/QPoint
@@ -8600,6 +8644,7 @@ src/CMakeFiles/dolphinprivate.dir/views/viewproperties.cpp.o: /usr/include/qt5/Q
 src/CMakeFiles/dolphinprivate.dir/views/viewproperties.cpp.o: /usr/include/qt5/QtCore/qmap.h
 src/CMakeFiles/dolphinprivate.dir/views/viewproperties.cpp.o: /usr/include/qt5/QtCore/qmargins.h
 src/CMakeFiles/dolphinprivate.dir/views/viewproperties.cpp.o: /usr/include/qt5/QtCore/qmetatype.h
+src/CMakeFiles/dolphinprivate.dir/views/viewproperties.cpp.o: /usr/include/qt5/QtCore/qmimedata.h
 src/CMakeFiles/dolphinprivate.dir/views/viewproperties.cpp.o: /usr/include/qt5/QtCore/qmimetype.h
 src/CMakeFiles/dolphinprivate.dir/views/viewproperties.cpp.o: /usr/include/qt5/QtCore/qmutex.h
 src/CMakeFiles/dolphinprivate.dir/views/viewproperties.cpp.o: /usr/include/qt5/QtCore/qnamespace.h

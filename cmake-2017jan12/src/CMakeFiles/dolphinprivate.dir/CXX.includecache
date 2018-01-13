@@ -143,6 +143,10 @@ QListView
 -
 QSet
 -
+QUrl
+-
+QMimeData
+-
 QWidget
 -
 qstringlist.h
@@ -1481,6 +1485,10 @@ QListView
 -
 QSet
 -
+QUrl
+-
+QMimeData
+-
 QWidget
 -
 qstringlist.h
@@ -2166,6 +2174,10 @@ QLinkedList
 QListView
 -
 QSet
+-
+QUrl
+-
+QMimeData
 -
 QWidget
 -
@@ -3555,6 +3567,10 @@ qmap.h
 /usr/include/qt5/QtCore/QMetaType
 qmetatype.h
 /usr/include/qt5/QtCore/qmetatype.h
+
+/usr/include/qt5/QtCore/QMimeData
+qmimedata.h
+/usr/include/qt5/QtCore/qmimedata.h
 
 /usr/include/qt5/QtCore/QModelIndex
 qabstractitemmodel.h
