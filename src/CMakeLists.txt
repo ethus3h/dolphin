@@ -109,12 +109,14 @@ set(dolphinprivate_LIB_SRCS
     views/zoomlevelinfo.cpp
 )
 
-if(HAVE_BALOO)
-    set(dolphinprivate_LIB_SRCS
-        ${dolphinprivate_LIB_SRCS}
-        kitemviews/private/kbaloorolesprovider.cpp
-    )
-endif()
+# TODO: Disabling Baloo for the moment
+
+# if(HAVE_BALOO)
+#     set(dolphinprivate_LIB_SRCS
+#         ${dolphinprivate_LIB_SRCS}
+#         kitemviews/private/kbaloorolesprovider.cpp
+#     )
+# endif()
 
 kconfig_add_kcfg_files(dolphinprivate_LIB_SRCS GENERATE_MOC
     settings/dolphin_columnmodesettings.kcfgc
