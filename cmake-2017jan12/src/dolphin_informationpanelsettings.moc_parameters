@@ -1,0 +1,12 @@
+-I/home/kyan/Ember Library/Ember satellite projects/wreathe-file-manager/src
+-I/home/kyan/Ember Library/Ember satellite projects/wreathe-file-manager/cmake-2017jan12/src
+-D_GNU_SOURCE
+-D_LARGEFILE64_SOURCE
+-DQT_USE_FAST_OPERATOR_PLUS
+-DQT_USE_QSTRINGBUILDER
+-DTRANSLATION_DOMAIN="dolphin"
+-DQT_USE_FAST_CONCATENATION
+-DQT_USE_FAST_OPERATOR_PLUS
+-o
+/home/kyan/Ember Library/Ember satellite projects/wreathe-file-manager/cmake-2017jan12/src/dolphin_informationpanelsettings.moc
+/home/kyan/Ember Library/Ember satellite projects/wreathe-file-manager/cmake-2017jan12/src/dolphin_informationpanelsettings.h
