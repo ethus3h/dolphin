@@ -360,7 +360,7 @@ set(kcm_dolphingeneral_PART_SRCS
     settings/serviceitemdelegate.cpp
     settings/servicemodel.cpp)
 
-kconfig_add_kcfg_files(kcm_dolphinviewmodes_PART_SRCS
+kde4_add_kcfg_files(kcm_dolphinviewmodes_PART_SRCS
     settings/dolphin_columnmodesettings.kcfgc
     settings/dolphin_directoryviewpropertysettings.kcfgc
     settings/dolphin_detailsmodesettings.kcfgc
@@ -369,26 +369,25 @@ kconfig_add_kcfg_files(kcm_dolphinviewmodes_PART_SRCS
     settings/dolphin_versioncontrolsettings.kcfgc
 )
 
-kconfig_add_kcfg_files(kcm_dolphinnavigation_PART_SRCS
+kde4_add_kcfg_files(kcm_dolphinnavigation_PART_SRCS
     settings/dolphin_generalsettings.kcfgc)
 
-kconfig_add_kcfg_files(kcm_dolphinservices_PART_SRCS
+kde4_add_kcfg_files(kcm_dolphinservices_PART_SRCS
     settings/dolphin_generalsettings.kcfgc
     settings/dolphin_versioncontrolsettings.kcfgc)
 
-kconfig_add_kcfg_files(kcm_dolphingeneral_PART_SRCS
+kde4_add_kcfg_files(kcm_dolphingeneral_PART_SRCS
     settings/dolphin_generalsettings.kcfgc)
 
-add_library(kcm_dolphinviewmodes MODULE ${kcm_dolphinviewmodes_PART_SRCS})
-add_library(kcm_dolphinnavigation MODULE ${kcm_dolphinnavigation_PART_SRCS})
-add_library(kcm_dolphinservices MODULE ${kcm_dolphinservices_PART_SRCS})
-add_library(kcm_dolphingeneral MODULE ${kcm_dolphingeneral_PART_SRCS})
+kde4_add_plugin(kcm_dolphinviewmodes ${kcm_dolphinviewmodes_PART_SRCS})
+kde4_add_plugin(kcm_dolphinnavigation ${kcm_dolphinnavigation_PART_SRCS})
+kde4_add_plugin(kcm_dolphinservices ${kcm_dolphinservices_PART_SRCS})
+kde4_add_plugin(kcm_dolphingeneral ${kcm_dolphingeneral_PART_SRCS})
 
-target_link_libraries(kcm_dolphinviewmodes dolphinprivate)
-target_link_libraries(kcm_dolphinnavigation dolphinprivate)
-target_link_libraries(kcm_dolphinservices dolphinprivate)
-target_link_libraries(kcm_dolphingeneral dolphinprivate)
-
+target_link_libraries(kcm_dolphinviewmodes  ${KDE4_KDEUI_LIBS} ${KDE4_KFILE_LIBS} dolphinprivate)
+target_link_libraries(kcm_dolphinnavigation  ${KDE4_KDEUI_LIBS} ${KDE4_KFILE_LIBS} dolphinprivate)
+target_link_libraries(kcm_dolphinservices  ${KDE4_KDEUI_LIBS} ${KDE4_KFILE_LIBS} ${KDE4_KIO_LIBS} ${KDE4_KNEWSTUFF3_LIBRARY} dolphinprivate)
+target_link_libraries(kcm_dolphingeneral ${KDE4_KDEUI_LIBS} ${KDE4_KFILE_LIBS} ${KDE4_KIO_LIBS} dolphinprivate)
 if (Nepomuk_FOUND)
   target_link_libraries(kcm_dolphinviewmodes ${NEPOMUK_LIBRARIES})
   target_link_libraries(kcm_dolphinnavigation ${NEPOMUK_LIBRARIES})
