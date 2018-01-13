@@ -1,4 +1,3 @@
-<<<<<<< HEAD
   upstream-2018jan12                        dedb61276 Explicitly pass iconNameForUrl when dropping places entry
   remotes/origin/7                          16db90c79 Dolphin Part: Update the paste action at the end of the listing
   remotes/origin/Applications/14.12         85957c72f SVN_SILENT made messages (after extraction)
@@ -79,44 +78,3 @@
   remotes/upstream/plasma/isemenov/qml      7a7cfa6ad Revert "Hide context menu plugins unless enabled by default or by the user"
   remotes/upstream/plasma/sebas/dirlister   bc6625430 Merge branch '4.9'
   remotes/upstream/stashAction              3e32ee5e8 need to fix async conditions
-=======
-  remotes/origin/7                        16db90c79 Dolphin Part: Update the paste action at the end of the listing
-  remotes/origin/Applications/14.12       85957c72f SVN_SILENT made messages (after extraction)
-  remotes/origin/Applications/15.08       3d54caadb SVN_SILENT made messages (.desktop file)
-  remotes/origin/Applications/15.12       cacba0c4c SVN_SILENT made messages (.desktop file)
-  remotes/origin/Applications/16.04       c44ff72ce GIT_SILENT Upgrade KDE Applications version to 16.04.3.
-  remotes/origin/Applications/16.08       826dec93c GIT_SILENT Upgrade KDE Applications version to 16.08.3.
-  remotes/origin/Applications/16.12       586368dbf GIT_SILENT Upgrade KDE Applications version to 16.12.0.
-  remotes/origin/HEAD                     -> origin/master
-  remotes/origin/KDE/4.0                  fa907ecba SVN_SILENT made messages (.desktop file)
-  remotes/origin/KDE/4.1                  7731abf98 SVN_SILENT made messages (.desktop file)
-  remotes/origin/KDE/4.10                 4c99efe4d Dolphin Search Date: Set the proper date
-  remotes/origin/KDE/4.11                 c4c999d24 Fix Bug 328262 - rename bug if you cancel when folder already exists
-  remotes/origin/KDE/4.12                 a7562862e Update the "is cut" state of items if necessary
-  remotes/origin/KDE/4.13                 1e73d45e7 SVN_SILENT made messages (.desktop file)
-  remotes/origin/KDE/4.14                 b3e113c05 Hide the video player when the video has finished.
-  remotes/origin/KDE/4.2                  414c62daf SVN_SILENT made messages (.desktop file)
-  remotes/origin/KDE/4.3                  a1649952b Backport 1050276: Repair 'right click goes back in history' feature. Fixed for: 4.3.5 CCBUG: 168439
-  remotes/origin/KDE/4.4                  47d728f93 * Backport fix: Ignore invalid redirect requests after renaming an expanded folder in detail view.
-  remotes/origin/KDE/4.5                  9709f6b78 SVN_SILENT made messages (.desktop file)
-  remotes/origin/KDE/4.6                  8549c9ba7 Return the url of the view instead of the url of the url navigator.
-  remotes/origin/KDE/4.7                  1f7b83ff3 SVN_SILENT made messages (.desktop file)
-  remotes/origin/KDE/4.8                  87d1db1f3 SVN_SILENT made messages (.desktop file)
-  remotes/origin/KDE/4.9                  6d7481079 SVN_SILENT made messages (.desktop file)
-  remotes/origin/davidedmundson/highdpi   35c097267 Make KPixmapModifier::applyFrame handle high DPI images
-  remotes/origin/emmanuelp/tabhandling    1961bfc3a Update the window and tab title on url redirection.
-  remotes/origin/feature/baloo            2a0221b6b dolphin: stop being a retard and pushing not added changes
-  remotes/origin/focus                    0d742b44d Stop preview jobs when closing Dolphin
-  remotes/origin/fvport                   687d5145a Two small optimizations in KFileItemModel::removeItems()
-  remotes/origin/gsoc/arnavdhamija/2016   28f3b2969 SVN_SILENT made messages (after extraction)
-  remotes/origin/isemenov/qml             7a7cfa6ad Revert "Hide context menu plugins unless enabled by default or by the user"
-  remotes/origin/kdepim/enterprise-4.0.83 91607d4c4 Correcting icon name from "view_icon" to "view-icon"
-  remotes/origin/kdepim/enterprise-4.1    d5967230c Merge the complete kdebase 4.1 branch. -- Merged revisions 887116,888693,889150,889439,889778,890768,890935,891080,891882,891931,892345,892604,892739,893179,893661,894203,894623,895611,896304,897397,897472,897799,898019,898088,898397,899045,899546,900427,901203,904056,904386,905309,906142,906305,906307,906309,906316,906401,908189,908691,910155,910340,911265,911280 via svnmerge from  svn+ssh://tmcguire@svn.kde.org/home/kde//branches/KDE/4.1/kdebase
-  remotes/origin/origin                   ce69bb06e Improve performance when turning on the preview mode
-  remotes/origin/patch-1                  156045c3f Increase default column width for high-DPI
-  remotes/origin/plasma/isemenov/fvport   6bc77951e Merge remote-tracking branch 'origin' into fvport
-  remotes/origin/plasma/isemenov/qml      7a7cfa6ad Revert "Hide context menu plugins unless enabled by default or by the user"
-  remotes/origin/plasma/sebas/dirlister   bc6625430 Merge branch '4.9'
-  remotes/origin/stashAction              3e32ee5e8 need to fix async conditions
-  remotes/origin/wreathe-2016dec14        5eefb96b6 Update columnviewsettingspage.cpp
->>>>>>> parent of e88f4a974... Update Ember tree
