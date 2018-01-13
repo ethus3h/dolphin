@@ -19,7 +19,7 @@ remove_definitions(
 
 ##########################################
 
-# TODO: Disabling Nepomuk for the moment
+# Disabling Nepomuk for KF5
 
 # macro_optional_find_package(Nepomuk)
 # macro_log_feature(Nepomuk_FOUND "Nepomuk" "Nepomuk" "http://www.kde.org" FALSE "" "For adding desktop-wide tagging support to dolphin")
@@ -109,16 +109,7 @@ set(dolphinprivate_LIB_SRCS
     views/zoomlevelinfo.cpp
 )
 
-# TODO: Disabling Baloo for the moment
-
-# if(HAVE_BALOO)
-#     set(dolphinprivate_LIB_SRCS
-#         ${dolphinprivate_LIB_SRCS}
-#         kitemviews/private/kbaloorolesprovider.cpp
-#     )
-# endif()
-
-kconfig_add_kcfg_files(dolphinprivate_LIB_SRCS GENERATE_MOC
+kde4_add_kcfg_files(dolphinprivate_LIB_SRCS
     settings/dolphin_columnmodesettings.kcfgc
     settings/dolphin_directoryviewpropertysettings.kcfgc
     settings/dolphin_detailsmodesettings.kcfgc
