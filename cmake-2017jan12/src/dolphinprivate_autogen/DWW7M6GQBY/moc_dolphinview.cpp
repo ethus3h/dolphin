@@ -20,8 +20,8 @@
 
 QT_BEGIN_MOC_NAMESPACE
 struct qt_meta_stringdata_DolphinView_t {
-    QByteArrayData data[100];
-    char stringdata0[1483];
+    QByteArrayData data[101];
+    char stringdata0[1488];
 };
 #define QT_MOC_LITERAL(idx, ofs, len) \
     Q_STATIC_BYTE_ARRAY_DATA_HEADER_INITIALIZER_WITH_OFFSET(len, \
@@ -34,106 +34,107 @@ QT_MOC_LITERAL(0, 0, 11), // "DolphinView"
 QT_MOC_LITERAL(1, 12, 9), // "activated"
 QT_MOC_LITERAL(2, 22, 0), // ""
 QT_MOC_LITERAL(3, 23, 10), // "urlChanged"
-QT_MOC_LITERAL(4, 34, 3), // "url"
-QT_MOC_LITERAL(5, 38, 13), // "itemTriggered"
-QT_MOC_LITERAL(6, 52, 9), // "KFileItem"
-QT_MOC_LITERAL(7, 62, 4), // "item"
-QT_MOC_LITERAL(8, 67, 16), // "itemCountChanged"
-QT_MOC_LITERAL(9, 84, 12), // "tabRequested"
-QT_MOC_LITERAL(10, 97, 11), // "modeChanged"
-QT_MOC_LITERAL(11, 109, 18), // "showPreviewChanged"
-QT_MOC_LITERAL(12, 128, 22), // "showHiddenFilesChanged"
-QT_MOC_LITERAL(13, 151, 25), // "categorizedSortingChanged"
-QT_MOC_LITERAL(14, 177, 14), // "sortingChanged"
-QT_MOC_LITERAL(15, 192, 20), // "DolphinView::Sorting"
-QT_MOC_LITERAL(16, 213, 7), // "sorting"
-QT_MOC_LITERAL(17, 221, 16), // "sortOrderChanged"
-QT_MOC_LITERAL(18, 238, 13), // "Qt::SortOrder"
-QT_MOC_LITERAL(19, 252, 5), // "order"
-QT_MOC_LITERAL(20, 258, 23), // "sortFoldersFirstChanged"
-QT_MOC_LITERAL(21, 282, 12), // "foldersFirst"
-QT_MOC_LITERAL(22, 295, 21), // "additionalInfoChanged"
-QT_MOC_LITERAL(23, 317, 16), // "zoomLevelChanged"
-QT_MOC_LITERAL(24, 334, 5), // "level"
-QT_MOC_LITERAL(25, 340, 15), // "requestItemInfo"
-QT_MOC_LITERAL(26, 356, 16), // "selectionChanged"
-QT_MOC_LITERAL(27, 373, 13), // "KFileItemList"
-QT_MOC_LITERAL(28, 387, 9), // "selection"
-QT_MOC_LITERAL(29, 397, 18), // "requestContextMenu"
-QT_MOC_LITERAL(30, 416, 15), // "QList<QAction*>"
-QT_MOC_LITERAL(31, 432, 13), // "customActions"
-QT_MOC_LITERAL(32, 446, 11), // "infoMessage"
-QT_MOC_LITERAL(33, 458, 3), // "msg"
-QT_MOC_LITERAL(34, 462, 12), // "errorMessage"
-QT_MOC_LITERAL(35, 475, 25), // "operationCompletedMessage"
-QT_MOC_LITERAL(36, 501, 18), // "startedPathLoading"
-QT_MOC_LITERAL(37, 520, 19), // "finishedPathLoading"
-QT_MOC_LITERAL(38, 540, 19), // "pathLoadingProgress"
-QT_MOC_LITERAL(39, 560, 7), // "percent"
-QT_MOC_LITERAL(40, 568, 14), // "urlIsFileError"
-QT_MOC_LITERAL(41, 583, 4), // "file"
-QT_MOC_LITERAL(42, 588, 11), // "redirection"
-QT_MOC_LITERAL(43, 600, 6), // "oldUrl"
-QT_MOC_LITERAL(44, 607, 6), // "newUrl"
-QT_MOC_LITERAL(45, 614, 17), // "writeStateChanged"
-QT_MOC_LITERAL(46, 632, 16), // "isFolderWritable"
-QT_MOC_LITERAL(47, 649, 6), // "setUrl"
-QT_MOC_LITERAL(48, 656, 9), // "selectAll"
-QT_MOC_LITERAL(49, 666, 15), // "invertSelection"
-QT_MOC_LITERAL(50, 682, 14), // "clearSelection"
-QT_MOC_LITERAL(51, 697, 19), // "renameSelectedItems"
-QT_MOC_LITERAL(52, 717, 18), // "trashSelectedItems"
-QT_MOC_LITERAL(53, 736, 18), // "qlookSelectedItems"
-QT_MOC_LITERAL(54, 755, 19), // "searchSelectedItems"
-QT_MOC_LITERAL(55, 775, 19), // "deleteSelectedItems"
-QT_MOC_LITERAL(56, 795, 16), // "cutSelectedItems"
-QT_MOC_LITERAL(57, 812, 17), // "copySelectedItems"
-QT_MOC_LITERAL(58, 830, 5), // "paste"
-QT_MOC_LITERAL(59, 836, 15), // "pasteIntoFolder"
-QT_MOC_LITERAL(60, 852, 14), // "setShowPreview"
-QT_MOC_LITERAL(61, 867, 4), // "show"
-QT_MOC_LITERAL(62, 872, 18), // "setShowHiddenFiles"
-QT_MOC_LITERAL(63, 891, 21), // "setCategorizedSorting"
-QT_MOC_LITERAL(64, 913, 11), // "categorized"
-QT_MOC_LITERAL(65, 925, 8), // "activate"
-QT_MOC_LITERAL(66, 934, 11), // "triggerItem"
-QT_MOC_LITERAL(67, 946, 5), // "index"
-QT_MOC_LITERAL(68, 952, 20), // "slotSelectionChanged"
-QT_MOC_LITERAL(69, 973, 14), // "QItemSelection"
-QT_MOC_LITERAL(70, 988, 8), // "selected"
-QT_MOC_LITERAL(71, 997, 10), // "deselected"
-QT_MOC_LITERAL(72, 1008, 26), // "emitSelectionChangedSignal"
-QT_MOC_LITERAL(73, 1035, 15), // "openContextMenu"
-QT_MOC_LITERAL(74, 1051, 3), // "pos"
-QT_MOC_LITERAL(75, 1055, 8), // "dropUrls"
-QT_MOC_LITERAL(76, 1064, 8), // "destItem"
-QT_MOC_LITERAL(77, 1073, 8), // "destPath"
-QT_MOC_LITERAL(78, 1082, 11), // "QDropEvent*"
-QT_MOC_LITERAL(79, 1094, 5), // "event"
-QT_MOC_LITERAL(80, 1100, 13), // "updateSorting"
-QT_MOC_LITERAL(81, 1114, 15), // "updateSortOrder"
-QT_MOC_LITERAL(82, 1130, 22), // "updateSortFoldersFirst"
-QT_MOC_LITERAL(83, 1153, 20), // "updateAdditionalInfo"
-QT_MOC_LITERAL(84, 1174, 34), // "KFileItemDelegate::Informatio..."
-QT_MOC_LITERAL(85, 1209, 4), // "info"
-QT_MOC_LITERAL(86, 1214, 20), // "showHoverInformation"
-QT_MOC_LITERAL(87, 1235, 21), // "clearHoverInformation"
-QT_MOC_LITERAL(88, 1257, 22), // "slotDeleteFileFinished"
-QT_MOC_LITERAL(89, 1280, 5), // "KJob*"
-QT_MOC_LITERAL(90, 1286, 3), // "job"
-QT_MOC_LITERAL(91, 1290, 20), // "slotDirListerStarted"
-QT_MOC_LITERAL(92, 1311, 22), // "slotDirListerCompleted"
-QT_MOC_LITERAL(93, 1334, 20), // "slotLoadingCompleted"
-QT_MOC_LITERAL(94, 1355, 16), // "slotRefreshItems"
-QT_MOC_LITERAL(95, 1372, 18), // "observeCreatedItem"
-QT_MOC_LITERAL(96, 1391, 28), // "selectAndScrollToCreatedItem"
-QT_MOC_LITERAL(97, 1420, 15), // "slotRedirection"
-QT_MOC_LITERAL(98, 1436, 23), // "restoreContentsPosition"
-QT_MOC_LITERAL(99, 1460, 22) // "slotUrlChangeRequested"
+QT_MOC_LITERAL(4, 34, 4), // "KUrl"
+QT_MOC_LITERAL(5, 39, 3), // "url"
+QT_MOC_LITERAL(6, 43, 13), // "itemTriggered"
+QT_MOC_LITERAL(7, 57, 9), // "KFileItem"
+QT_MOC_LITERAL(8, 67, 4), // "item"
+QT_MOC_LITERAL(9, 72, 16), // "itemCountChanged"
+QT_MOC_LITERAL(10, 89, 12), // "tabRequested"
+QT_MOC_LITERAL(11, 102, 11), // "modeChanged"
+QT_MOC_LITERAL(12, 114, 18), // "showPreviewChanged"
+QT_MOC_LITERAL(13, 133, 22), // "showHiddenFilesChanged"
+QT_MOC_LITERAL(14, 156, 25), // "categorizedSortingChanged"
+QT_MOC_LITERAL(15, 182, 14), // "sortingChanged"
+QT_MOC_LITERAL(16, 197, 20), // "DolphinView::Sorting"
+QT_MOC_LITERAL(17, 218, 7), // "sorting"
+QT_MOC_LITERAL(18, 226, 16), // "sortOrderChanged"
+QT_MOC_LITERAL(19, 243, 13), // "Qt::SortOrder"
+QT_MOC_LITERAL(20, 257, 5), // "order"
+QT_MOC_LITERAL(21, 263, 23), // "sortFoldersFirstChanged"
+QT_MOC_LITERAL(22, 287, 12), // "foldersFirst"
+QT_MOC_LITERAL(23, 300, 21), // "additionalInfoChanged"
+QT_MOC_LITERAL(24, 322, 16), // "zoomLevelChanged"
+QT_MOC_LITERAL(25, 339, 5), // "level"
+QT_MOC_LITERAL(26, 345, 15), // "requestItemInfo"
+QT_MOC_LITERAL(27, 361, 16), // "selectionChanged"
+QT_MOC_LITERAL(28, 378, 13), // "KFileItemList"
+QT_MOC_LITERAL(29, 392, 9), // "selection"
+QT_MOC_LITERAL(30, 402, 18), // "requestContextMenu"
+QT_MOC_LITERAL(31, 421, 15), // "QList<QAction*>"
+QT_MOC_LITERAL(32, 437, 13), // "customActions"
+QT_MOC_LITERAL(33, 451, 11), // "infoMessage"
+QT_MOC_LITERAL(34, 463, 3), // "msg"
+QT_MOC_LITERAL(35, 467, 12), // "errorMessage"
+QT_MOC_LITERAL(36, 480, 25), // "operationCompletedMessage"
+QT_MOC_LITERAL(37, 506, 18), // "startedPathLoading"
+QT_MOC_LITERAL(38, 525, 19), // "finishedPathLoading"
+QT_MOC_LITERAL(39, 545, 19), // "pathLoadingProgress"
+QT_MOC_LITERAL(40, 565, 7), // "percent"
+QT_MOC_LITERAL(41, 573, 14), // "urlIsFileError"
+QT_MOC_LITERAL(42, 588, 4), // "file"
+QT_MOC_LITERAL(43, 593, 11), // "redirection"
+QT_MOC_LITERAL(44, 605, 6), // "oldUrl"
+QT_MOC_LITERAL(45, 612, 6), // "newUrl"
+QT_MOC_LITERAL(46, 619, 17), // "writeStateChanged"
+QT_MOC_LITERAL(47, 637, 16), // "isFolderWritable"
+QT_MOC_LITERAL(48, 654, 6), // "setUrl"
+QT_MOC_LITERAL(49, 661, 9), // "selectAll"
+QT_MOC_LITERAL(50, 671, 15), // "invertSelection"
+QT_MOC_LITERAL(51, 687, 14), // "clearSelection"
+QT_MOC_LITERAL(52, 702, 19), // "renameSelectedItems"
+QT_MOC_LITERAL(53, 722, 18), // "trashSelectedItems"
+QT_MOC_LITERAL(54, 741, 18), // "qlookSelectedItems"
+QT_MOC_LITERAL(55, 760, 19), // "searchSelectedItems"
+QT_MOC_LITERAL(56, 780, 19), // "deleteSelectedItems"
+QT_MOC_LITERAL(57, 800, 16), // "cutSelectedItems"
+QT_MOC_LITERAL(58, 817, 17), // "copySelectedItems"
+QT_MOC_LITERAL(59, 835, 5), // "paste"
+QT_MOC_LITERAL(60, 841, 15), // "pasteIntoFolder"
+QT_MOC_LITERAL(61, 857, 14), // "setShowPreview"
+QT_MOC_LITERAL(62, 872, 4), // "show"
+QT_MOC_LITERAL(63, 877, 18), // "setShowHiddenFiles"
+QT_MOC_LITERAL(64, 896, 21), // "setCategorizedSorting"
+QT_MOC_LITERAL(65, 918, 11), // "categorized"
+QT_MOC_LITERAL(66, 930, 8), // "activate"
+QT_MOC_LITERAL(67, 939, 11), // "triggerItem"
+QT_MOC_LITERAL(68, 951, 5), // "index"
+QT_MOC_LITERAL(69, 957, 20), // "slotSelectionChanged"
+QT_MOC_LITERAL(70, 978, 14), // "QItemSelection"
+QT_MOC_LITERAL(71, 993, 8), // "selected"
+QT_MOC_LITERAL(72, 1002, 10), // "deselected"
+QT_MOC_LITERAL(73, 1013, 26), // "emitSelectionChangedSignal"
+QT_MOC_LITERAL(74, 1040, 15), // "openContextMenu"
+QT_MOC_LITERAL(75, 1056, 3), // "pos"
+QT_MOC_LITERAL(76, 1060, 8), // "dropUrls"
+QT_MOC_LITERAL(77, 1069, 8), // "destItem"
+QT_MOC_LITERAL(78, 1078, 8), // "destPath"
+QT_MOC_LITERAL(79, 1087, 11), // "QDropEvent*"
+QT_MOC_LITERAL(80, 1099, 5), // "event"
+QT_MOC_LITERAL(81, 1105, 13), // "updateSorting"
+QT_MOC_LITERAL(82, 1119, 15), // "updateSortOrder"
+QT_MOC_LITERAL(83, 1135, 22), // "updateSortFoldersFirst"
+QT_MOC_LITERAL(84, 1158, 20), // "updateAdditionalInfo"
+QT_MOC_LITERAL(85, 1179, 34), // "KFileItemDelegate::Informatio..."
+QT_MOC_LITERAL(86, 1214, 4), // "info"
+QT_MOC_LITERAL(87, 1219, 20), // "showHoverInformation"
+QT_MOC_LITERAL(88, 1240, 21), // "clearHoverInformation"
+QT_MOC_LITERAL(89, 1262, 22), // "slotDeleteFileFinished"
+QT_MOC_LITERAL(90, 1285, 5), // "KJob*"
+QT_MOC_LITERAL(91, 1291, 3), // "job"
+QT_MOC_LITERAL(92, 1295, 20), // "slotDirListerStarted"
+QT_MOC_LITERAL(93, 1316, 22), // "slotDirListerCompleted"
+QT_MOC_LITERAL(94, 1339, 20), // "slotLoadingCompleted"
+QT_MOC_LITERAL(95, 1360, 16), // "slotRefreshItems"
+QT_MOC_LITERAL(96, 1377, 18), // "observeCreatedItem"
+QT_MOC_LITERAL(97, 1396, 28), // "selectAndScrollToCreatedItem"
+QT_MOC_LITERAL(98, 1425, 15), // "slotRedirection"
+QT_MOC_LITERAL(99, 1441, 23), // "restoreContentsPosition"
+QT_MOC_LITERAL(100, 1465, 22) // "slotUrlChangeRequested"
 
     },
-    "DolphinView\0activated\0\0urlChanged\0url\0"
-    "itemTriggered\0KFileItem\0item\0"
+    "DolphinView\0activated\0\0urlChanged\0"
+    "KUrl\0url\0itemTriggered\0KFileItem\0item\0"
     "itemCountChanged\0tabRequested\0modeChanged\0"
     "showPreviewChanged\0showHiddenFilesChanged\0"
     "categorizedSortingChanged\0sortingChanged\0"
@@ -191,101 +192,101 @@ static const uint qt_meta_data_DolphinView[] = {
  // signals: name, argc, parameters, tag, flags
        1,    0,  334,    2, 0x06 /* Public */,
        3,    1,  335,    2, 0x06 /* Public */,
-       5,    1,  338,    2, 0x06 /* Public */,
-       8,    0,  341,    2, 0x06 /* Public */,
-       9,    1,  342,    2, 0x06 /* Public */,
-      10,    0,  345,    2, 0x06 /* Public */,
-      11,    0,  346,    2, 0x06 /* Public */,
-      12,    0,  347,    2, 0x06 /* Public */,
-      13,    0,  348,    2, 0x06 /* Public */,
-      14,    1,  349,    2, 0x06 /* Public */,
-      17,    1,  352,    2, 0x06 /* Public */,
-      20,    1,  355,    2, 0x06 /* Public */,
-      22,    0,  358,    2, 0x06 /* Public */,
-      23,    1,  359,    2, 0x06 /* Public */,
-      25,    1,  362,    2, 0x06 /* Public */,
-      26,    1,  365,    2, 0x06 /* Public */,
-      29,    3,  368,    2, 0x06 /* Public */,
-      32,    1,  375,    2, 0x06 /* Public */,
-      34,    1,  378,    2, 0x06 /* Public */,
-      35,    1,  381,    2, 0x06 /* Public */,
-      36,    1,  384,    2, 0x06 /* Public */,
-      37,    1,  387,    2, 0x06 /* Public */,
-      38,    1,  390,    2, 0x06 /* Public */,
-      40,    1,  393,    2, 0x06 /* Public */,
-      42,    2,  396,    2, 0x06 /* Public */,
-      45,    1,  401,    2, 0x06 /* Public */,
+       6,    1,  338,    2, 0x06 /* Public */,
+       9,    0,  341,    2, 0x06 /* Public */,
+      10,    1,  342,    2, 0x06 /* Public */,
+      11,    0,  345,    2, 0x06 /* Public */,
+      12,    0,  346,    2, 0x06 /* Public */,
+      13,    0,  347,    2, 0x06 /* Public */,
+      14,    0,  348,    2, 0x06 /* Public */,
+      15,    1,  349,    2, 0x06 /* Public */,
+      18,    1,  352,    2, 0x06 /* Public */,
+      21,    1,  355,    2, 0x06 /* Public */,
+      23,    0,  358,    2, 0x06 /* Public */,
+      24,    1,  359,    2, 0x06 /* Public */,
+      26,    1,  362,    2, 0x06 /* Public */,
+      27,    1,  365,    2, 0x06 /* Public */,
+      30,    3,  368,    2, 0x06 /* Public */,
+      33,    1,  375,    2, 0x06 /* Public */,
+      35,    1,  378,    2, 0x06 /* Public */,
+      36,    1,  381,    2, 0x06 /* Public */,
+      37,    1,  384,    2, 0x06 /* Public */,
+      38,    1,  387,    2, 0x06 /* Public */,
+      39,    1,  390,    2, 0x06 /* Public */,
+      41,    1,  393,    2, 0x06 /* Public */,
+      43,    2,  396,    2, 0x06 /* Public */,
+      46,    1,  401,    2, 0x06 /* Public */,
 
  // slots: name, argc, parameters, tag, flags
-      47,    1,  404,    2, 0x0a /* Public */,
-      48,    0,  407,    2, 0x0a /* Public */,
-      49,    0,  408,    2, 0x0a /* Public */,
-      50,    0,  409,    2, 0x0a /* Public */,
-      51,    0,  410,    2, 0x0a /* Public */,
-      52,    0,  411,    2, 0x0a /* Public */,
-      53,    0,  412,    2, 0x0a /* Public */,
-      54,    0,  413,    2, 0x0a /* Public */,
-      55,    0,  414,    2, 0x0a /* Public */,
-      56,    0,  415,    2, 0x0a /* Public */,
-      57,    0,  416,    2, 0x0a /* Public */,
-      58,    0,  417,    2, 0x0a /* Public */,
-      59,    0,  418,    2, 0x0a /* Public */,
-      60,    1,  419,    2, 0x0a /* Public */,
-      62,    1,  422,    2, 0x0a /* Public */,
-      63,    1,  425,    2, 0x0a /* Public */,
-      65,    0,  428,    2, 0x08 /* Private */,
-      66,    1,  429,    2, 0x08 /* Private */,
-      68,    2,  432,    2, 0x08 /* Private */,
-      72,    0,  437,    2, 0x08 /* Private */,
-      73,    2,  438,    2, 0x08 /* Private */,
-      75,    3,  443,    2, 0x08 /* Private */,
-      80,    1,  450,    2, 0x08 /* Private */,
-      81,    1,  453,    2, 0x08 /* Private */,
-      82,    1,  456,    2, 0x08 /* Private */,
-      83,    1,  459,    2, 0x08 /* Private */,
-      86,    1,  462,    2, 0x08 /* Private */,
-      87,    0,  465,    2, 0x08 /* Private */,
-      88,    1,  466,    2, 0x08 /* Private */,
-      91,    1,  469,    2, 0x08 /* Private */,
-      92,    0,  472,    2, 0x08 /* Private */,
-      93,    0,  473,    2, 0x08 /* Private */,
-      94,    0,  474,    2, 0x08 /* Private */,
-      95,    1,  475,    2, 0x08 /* Private */,
-      96,    0,  478,    2, 0x08 /* Private */,
-      97,    2,  479,    2, 0x08 /* Private */,
-      98,    0,  484,    2, 0x08 /* Private */,
-      99,    1,  485,    2, 0x08 /* Private */,
+      48,    1,  404,    2, 0x0a /* Public */,
+      49,    0,  407,    2, 0x0a /* Public */,
+      50,    0,  408,    2, 0x0a /* Public */,
+      51,    0,  409,    2, 0x0a /* Public */,
+      52,    0,  410,    2, 0x0a /* Public */,
+      53,    0,  411,    2, 0x0a /* Public */,
+      54,    0,  412,    2, 0x0a /* Public */,
+      55,    0,  413,    2, 0x0a /* Public */,
+      56,    0,  414,    2, 0x0a /* Public */,
+      57,    0,  415,    2, 0x0a /* Public */,
+      58,    0,  416,    2, 0x0a /* Public */,
+      59,    0,  417,    2, 0x0a /* Public */,
+      60,    0,  418,    2, 0x0a /* Public */,
+      61,    1,  419,    2, 0x0a /* Public */,
+      63,    1,  422,    2, 0x0a /* Public */,
+      64,    1,  425,    2, 0x0a /* Public */,
+      66,    0,  428,    2, 0x08 /* Private */,
+      67,    1,  429,    2, 0x08 /* Private */,
+      69,    2,  432,    2, 0x08 /* Private */,
+      73,    0,  437,    2, 0x08 /* Private */,
+      74,    2,  438,    2, 0x08 /* Private */,
+      76,    3,  443,    2, 0x08 /* Private */,
+      81,    1,  450,    2, 0x08 /* Private */,
+      82,    1,  453,    2, 0x08 /* Private */,
+      83,    1,  456,    2, 0x08 /* Private */,
+      84,    1,  459,    2, 0x08 /* Private */,
+      87,    1,  462,    2, 0x08 /* Private */,
+      88,    0,  465,    2, 0x08 /* Private */,
+      89,    1,  466,    2, 0x08 /* Private */,
+      92,    1,  469,    2, 0x08 /* Private */,
+      93,    0,  472,    2, 0x08 /* Private */,
+      94,    0,  473,    2, 0x08 /* Private */,
+      95,    0,  474,    2, 0x08 /* Private */,
+      96,    1,  475,    2, 0x08 /* Private */,
+      97,    0,  478,    2, 0x08 /* Private */,
+      98,    2,  479,    2, 0x08 /* Private */,
+      99,    0,  484,    2, 0x08 /* Private */,
+     100,    1,  485,    2, 0x08 /* Private */,
 
  // signals: parameters
     QMetaType::Void,
-    QMetaType::Void, QMetaType::QUrl,    4,
-    QMetaType::Void, 0x80000000 | 6,    7,
+    QMetaType::Void, 0x80000000 | 4,    5,
+    QMetaType::Void, 0x80000000 | 7,    8,
     QMetaType::Void,
-    QMetaType::Void, QMetaType::QUrl,    4,
-    QMetaType::Void,
-    QMetaType::Void,
+    QMetaType::Void, 0x80000000 | 4,    5,
     QMetaType::Void,
     QMetaType::Void,
-    QMetaType::Void, 0x80000000 | 15,   16,
-    QMetaType::Void, 0x80000000 | 18,   19,
-    QMetaType::Void, QMetaType::Bool,   21,
     QMetaType::Void,
-    QMetaType::Void, QMetaType::Int,   24,
-    QMetaType::Void, 0x80000000 | 6,    7,
-    QMetaType::Void, 0x80000000 | 27,   28,
-    QMetaType::Void, 0x80000000 | 6, QMetaType::QUrl, 0x80000000 | 30,    7,    4,   31,
-    QMetaType::Void, QMetaType::QString,   33,
-    QMetaType::Void, QMetaType::QString,   33,
-    QMetaType::Void, QMetaType::QString,   33,
-    QMetaType::Void, QMetaType::QUrl,    4,
-    QMetaType::Void, QMetaType::QUrl,    4,
-    QMetaType::Void, QMetaType::Int,   39,
-    QMetaType::Void, QMetaType::QUrl,   41,
-    QMetaType::Void, QMetaType::QUrl, QMetaType::QUrl,   43,   44,
-    QMetaType::Void, QMetaType::Bool,   46,
+    QMetaType::Void,
+    QMetaType::Void, 0x80000000 | 16,   17,
+    QMetaType::Void, 0x80000000 | 19,   20,
+    QMetaType::Void, QMetaType::Bool,   22,
+    QMetaType::Void,
+    QMetaType::Void, QMetaType::Int,   25,
+    QMetaType::Void, 0x80000000 | 7,    8,
+    QMetaType::Void, 0x80000000 | 28,   29,
+    QMetaType::Void, 0x80000000 | 7, 0x80000000 | 4, 0x80000000 | 31,    8,    5,   32,
+    QMetaType::Void, QMetaType::QString,   34,
+    QMetaType::Void, QMetaType::QString,   34,
+    QMetaType::Void, QMetaType::QString,   34,
+    QMetaType::Void, 0x80000000 | 4,    5,
+    QMetaType::Void, 0x80000000 | 4,    5,
+    QMetaType::Void, QMetaType::Int,   40,
+    QMetaType::Void, 0x80000000 | 4,   42,
+    QMetaType::Void, 0x80000000 | 4, 0x80000000 | 4,   44,   45,
+    QMetaType::Void, QMetaType::Bool,   47,
 
  // slots: parameters
-    QMetaType::Void, QMetaType::QUrl,    4,
+    QMetaType::Void, 0x80000000 | 4,    5,
     QMetaType::Void,
     QMetaType::Void,
     QMetaType::Void,
@@ -298,31 +299,31 @@ static const uint qt_meta_data_DolphinView[] = {
     QMetaType::Void,
     QMetaType::Void,
     QMetaType::Void,
-    QMetaType::Void, QMetaType::Bool,   61,
-    QMetaType::Void, QMetaType::Bool,   61,
-    QMetaType::Void, QMetaType::Bool,   64,
+    QMetaType::Void, QMetaType::Bool,   62,
+    QMetaType::Void, QMetaType::Bool,   62,
+    QMetaType::Void, QMetaType::Bool,   65,
     QMetaType::Void,
-    QMetaType::Void, 0x80000000 | 6,   67,
-    QMetaType::Void, 0x80000000 | 69, 0x80000000 | 69,   70,   71,
+    QMetaType::Void, 0x80000000 | 7,   68,
+    QMetaType::Void, 0x80000000 | 70, 0x80000000 | 70,   71,   72,
     QMetaType::Void,
-    QMetaType::Void, QMetaType::QPoint, 0x80000000 | 30,   74,   31,
-    QMetaType::Void, 0x80000000 | 6, QMetaType::QUrl, 0x80000000 | 78,   76,   77,   79,
-    QMetaType::Void, 0x80000000 | 15,   16,
-    QMetaType::Void, 0x80000000 | 18,   19,
-    QMetaType::Void, QMetaType::Bool,   21,
-    QMetaType::Void, 0x80000000 | 84,   85,
-    QMetaType::Void, 0x80000000 | 6,    7,
+    QMetaType::Void, QMetaType::QPoint, 0x80000000 | 31,   75,   32,
+    QMetaType::Void, 0x80000000 | 7, 0x80000000 | 4, 0x80000000 | 79,   77,   78,   80,
+    QMetaType::Void, 0x80000000 | 16,   17,
+    QMetaType::Void, 0x80000000 | 19,   20,
+    QMetaType::Void, QMetaType::Bool,   22,
+    QMetaType::Void, 0x80000000 | 85,   86,
+    QMetaType::Void, 0x80000000 | 7,    8,
     QMetaType::Void,
-    QMetaType::Void, 0x80000000 | 89,   90,
-    QMetaType::Void, QMetaType::QUrl,    4,
+    QMetaType::Void, 0x80000000 | 90,   91,
+    QMetaType::Void, 0x80000000 | 4,    5,
     QMetaType::Void,
     QMetaType::Void,
     QMetaType::Void,
-    QMetaType::Void, QMetaType::QUrl,    4,
+    QMetaType::Void, 0x80000000 | 4,    5,
     QMetaType::Void,
-    QMetaType::Void, QMetaType::QUrl, QMetaType::QUrl,   43,   44,
+    QMetaType::Void, 0x80000000 | 4, 0x80000000 | 4,   44,   45,
     QMetaType::Void,
-    QMetaType::Void, QMetaType::QUrl,    4,
+    QMetaType::Void, 0x80000000 | 4,    5,
 
        0        // eod
 };
@@ -334,10 +335,10 @@ void DolphinView::qt_static_metacall(QObject *_o, QMetaObject::Call _c, int _id,
         Q_UNUSED(_t)
         switch (_id) {
         case 0: _t->activated(); break;
-        case 1: _t->urlChanged((*reinterpret_cast< const QUrl(*)>(_a[1]))); break;
+        case 1: _t->urlChanged((*reinterpret_cast< const KUrl(*)>(_a[1]))); break;
         case 2: _t->itemTriggered((*reinterpret_cast< const KFileItem(*)>(_a[1]))); break;
         case 3: _t->itemCountChanged(); break;
-        case 4: _t->tabRequested((*reinterpret_cast< const QUrl(*)>(_a[1]))); break;
+        case 4: _t->tabRequested((*reinterpret_cast< const KUrl(*)>(_a[1]))); break;
         case 5: _t->modeChanged(); break;
         case 6: _t->showPreviewChanged(); break;
         case 7: _t->showHiddenFilesChanged(); break;
@@ -349,17 +350,17 @@ void DolphinView::qt_static_metacall(QObject *_o, QMetaObject::Call _c, int _id,
         case 13: _t->zoomLevelChanged((*reinterpret_cast< int(*)>(_a[1]))); break;
         case 14: _t->requestItemInfo((*reinterpret_cast< const KFileItem(*)>(_a[1]))); break;
         case 15: _t->selectionChanged((*reinterpret_cast< const KFileItemList(*)>(_a[1]))); break;
-        case 16: _t->requestContextMenu((*reinterpret_cast< const KFileItem(*)>(_a[1])),(*reinterpret_cast< const QUrl(*)>(_a[2])),(*reinterpret_cast< const QList<QAction*>(*)>(_a[3]))); break;
+        case 16: _t->requestContextMenu((*reinterpret_cast< const KFileItem(*)>(_a[1])),(*reinterpret_cast< const KUrl(*)>(_a[2])),(*reinterpret_cast< const QList<QAction*>(*)>(_a[3]))); break;
         case 17: _t->infoMessage((*reinterpret_cast< const QString(*)>(_a[1]))); break;
         case 18: _t->errorMessage((*reinterpret_cast< const QString(*)>(_a[1]))); break;
         case 19: _t->operationCompletedMessage((*reinterpret_cast< const QString(*)>(_a[1]))); break;
-        case 20: _t->startedPathLoading((*reinterpret_cast< const QUrl(*)>(_a[1]))); break;
-        case 21: _t->finishedPathLoading((*reinterpret_cast< const QUrl(*)>(_a[1]))); break;
+        case 20: _t->startedPathLoading((*reinterpret_cast< const KUrl(*)>(_a[1]))); break;
+        case 21: _t->finishedPathLoading((*reinterpret_cast< const KUrl(*)>(_a[1]))); break;
         case 22: _t->pathLoadingProgress((*reinterpret_cast< int(*)>(_a[1]))); break;
-        case 23: _t->urlIsFileError((*reinterpret_cast< const QUrl(*)>(_a[1]))); break;
-        case 24: _t->redirection((*reinterpret_cast< const QUrl(*)>(_a[1])),(*reinterpret_cast< const QUrl(*)>(_a[2]))); break;
+        case 23: _t->urlIsFileError((*reinterpret_cast< const KUrl(*)>(_a[1]))); break;
+        case 24: _t->redirection((*reinterpret_cast< const KUrl(*)>(_a[1])),(*reinterpret_cast< const KUrl(*)>(_a[2]))); break;
         case 25: _t->writeStateChanged((*reinterpret_cast< bool(*)>(_a[1]))); break;
-        case 26: _t->setUrl((*reinterpret_cast< const QUrl(*)>(_a[1]))); break;
+        case 26: _t->setUrl((*reinterpret_cast< const KUrl(*)>(_a[1]))); break;
         case 27: _t->selectAll(); break;
         case 28: _t->invertSelection(); break;
         case 29: _t->clearSelection(); break;
@@ -380,7 +381,7 @@ void DolphinView::qt_static_metacall(QObject *_o, QMetaObject::Call _c, int _id,
         case 44: _t->slotSelectionChanged((*reinterpret_cast< const QItemSelection(*)>(_a[1])),(*reinterpret_cast< const QItemSelection(*)>(_a[2]))); break;
         case 45: _t->emitSelectionChangedSignal(); break;
         case 46: _t->openContextMenu((*reinterpret_cast< const QPoint(*)>(_a[1])),(*reinterpret_cast< const QList<QAction*>(*)>(_a[2]))); break;
-        case 47: _t->dropUrls((*reinterpret_cast< const KFileItem(*)>(_a[1])),(*reinterpret_cast< const QUrl(*)>(_a[2])),(*reinterpret_cast< QDropEvent*(*)>(_a[3]))); break;
+        case 47: _t->dropUrls((*reinterpret_cast< const KFileItem(*)>(_a[1])),(*reinterpret_cast< const KUrl(*)>(_a[2])),(*reinterpret_cast< QDropEvent*(*)>(_a[3]))); break;
         case 48: _t->updateSorting((*reinterpret_cast< DolphinView::Sorting(*)>(_a[1]))); break;
         case 49: _t->updateSortOrder((*reinterpret_cast< Qt::SortOrder(*)>(_a[1]))); break;
         case 50: _t->updateSortFoldersFirst((*reinterpret_cast< bool(*)>(_a[1]))); break;
@@ -388,15 +389,15 @@ void DolphinView::qt_static_metacall(QObject *_o, QMetaObject::Call _c, int _id,
         case 52: _t->showHoverInformation((*reinterpret_cast< const KFileItem(*)>(_a[1]))); break;
         case 53: _t->clearHoverInformation(); break;
         case 54: _t->slotDeleteFileFinished((*reinterpret_cast< KJob*(*)>(_a[1]))); break;
-        case 55: _t->slotDirListerStarted((*reinterpret_cast< const QUrl(*)>(_a[1]))); break;
+        case 55: _t->slotDirListerStarted((*reinterpret_cast< const KUrl(*)>(_a[1]))); break;
         case 56: _t->slotDirListerCompleted(); break;
         case 57: _t->slotLoadingCompleted(); break;
         case 58: _t->slotRefreshItems(); break;
-        case 59: _t->observeCreatedItem((*reinterpret_cast< const QUrl(*)>(_a[1]))); break;
+        case 59: _t->observeCreatedItem((*reinterpret_cast< const KUrl(*)>(_a[1]))); break;
         case 60: _t->selectAndScrollToCreatedItem(); break;
-        case 61: _t->slotRedirection((*reinterpret_cast< const QUrl(*)>(_a[1])),(*reinterpret_cast< const QUrl(*)>(_a[2]))); break;
+        case 61: _t->slotRedirection((*reinterpret_cast< const KUrl(*)>(_a[1])),(*reinterpret_cast< const KUrl(*)>(_a[2]))); break;
         case 62: _t->restoreContentsPosition(); break;
-        case 63: _t->slotUrlChangeRequested((*reinterpret_cast< const QUrl(*)>(_a[1]))); break;
+        case 63: _t->slotUrlChangeRequested((*reinterpret_cast< const KUrl(*)>(_a[1]))); break;
         default: ;
         }
     } else if (_c == QMetaObject::RegisterMethodArgumentMetaType) {
@@ -471,7 +472,7 @@ void DolphinView::qt_static_metacall(QObject *_o, QMetaObject::Call _c, int _id,
             }
         }
         {
-            typedef void (DolphinView::*_t)(const QUrl & );
+            typedef void (DolphinView::*_t)(const KUrl & );
             if (*reinterpret_cast<_t *>(func) == static_cast<_t>(&DolphinView::urlChanged)) {
                 *result = 1;
                 return;
@@ -492,7 +493,7 @@ void DolphinView::qt_static_metacall(QObject *_o, QMetaObject::Call _c, int _id,
             }
         }
         {
-            typedef void (DolphinView::*_t)(const QUrl & );
+            typedef void (DolphinView::*_t)(const KUrl & );
             if (*reinterpret_cast<_t *>(func) == static_cast<_t>(&DolphinView::tabRequested)) {
                 *result = 4;
                 return;
@@ -576,7 +577,7 @@ void DolphinView::qt_static_metacall(QObject *_o, QMetaObject::Call _c, int _id,
             }
         }
         {
-            typedef void (DolphinView::*_t)(const KFileItem & , const QUrl & , const QList<QAction*> & );
+            typedef void (DolphinView::*_t)(const KFileItem & , const KUrl & , const QList<QAction*> & );
             if (*reinterpret_cast<_t *>(func) == static_cast<_t>(&DolphinView::requestContextMenu)) {
                 *result = 16;
                 return;
@@ -604,14 +605,14 @@ void DolphinView::qt_static_metacall(QObject *_o, QMetaObject::Call _c, int _id,
             }
         }
         {
-            typedef void (DolphinView::*_t)(const QUrl & );
+            typedef void (DolphinView::*_t)(const KUrl & );
             if (*reinterpret_cast<_t *>(func) == static_cast<_t>(&DolphinView::startedPathLoading)) {
                 *result = 20;
                 return;
             }
         }
         {
-            typedef void (DolphinView::*_t)(const QUrl & );
+            typedef void (DolphinView::*_t)(const KUrl & );
             if (*reinterpret_cast<_t *>(func) == static_cast<_t>(&DolphinView::finishedPathLoading)) {
                 *result = 21;
                 return;
@@ -625,14 +626,14 @@ void DolphinView::qt_static_metacall(QObject *_o, QMetaObject::Call _c, int _id,
             }
         }
         {
-            typedef void (DolphinView::*_t)(const QUrl & );
+            typedef void (DolphinView::*_t)(const KUrl & );
             if (*reinterpret_cast<_t *>(func) == static_cast<_t>(&DolphinView::urlIsFileError)) {
                 *result = 23;
                 return;
             }
         }
         {
-            typedef void (DolphinView::*_t)(const QUrl & , const QUrl & );
+            typedef void (DolphinView::*_t)(const KUrl & , const KUrl & );
             if (*reinterpret_cast<_t *>(func) == static_cast<_t>(&DolphinView::redirection)) {
                 *result = 24;
                 return;
@@ -691,7 +692,7 @@ void DolphinView::activated()
 }
 
 // SIGNAL 1
-void DolphinView::urlChanged(const QUrl & _t1)
+void DolphinView::urlChanged(const KUrl & _t1)
 {
     void *_a[] = { Q_NULLPTR, const_cast<void*>(reinterpret_cast<const void*>(&_t1)) };
     QMetaObject::activate(this, &staticMetaObject, 1, _a);
@@ -711,7 +712,7 @@ void DolphinView::itemCountChanged()
 }
 
 // SIGNAL 4
-void DolphinView::tabRequested(const QUrl & _t1)
+void DolphinView::tabRequested(const KUrl & _t1)
 {
     void *_a[] = { Q_NULLPTR, const_cast<void*>(reinterpret_cast<const void*>(&_t1)) };
     QMetaObject::activate(this, &staticMetaObject, 4, _a);
@@ -790,7 +791,7 @@ void DolphinView::selectionChanged(const KFileItemList & _t1)
 }
 
 // SIGNAL 16
-void DolphinView::requestContextMenu(const KFileItem & _t1, const QUrl & _t2, const QList<QAction*> & _t3)
+void DolphinView::requestContextMenu(const KFileItem & _t1, const KUrl & _t2, const QList<QAction*> & _t3)
 {
     void *_a[] = { Q_NULLPTR, const_cast<void*>(reinterpret_cast<const void*>(&_t1)), const_cast<void*>(reinterpret_cast<const void*>(&_t2)), const_cast<void*>(reinterpret_cast<const void*>(&_t3)) };
     QMetaObject::activate(this, &staticMetaObject, 16, _a);
@@ -818,14 +819,14 @@ void DolphinView::operationCompletedMessage(const QString & _t1)
 }
 
 // SIGNAL 20
-void DolphinView::startedPathLoading(const QUrl & _t1)
+void DolphinView::startedPathLoading(const KUrl & _t1)
 {
     void *_a[] = { Q_NULLPTR, const_cast<void*>(reinterpret_cast<const void*>(&_t1)) };
     QMetaObject::activate(this, &staticMetaObject, 20, _a);
 }
 
 // SIGNAL 21
-void DolphinView::finishedPathLoading(const QUrl & _t1)
+void DolphinView::finishedPathLoading(const KUrl & _t1)
 {
     void *_a[] = { Q_NULLPTR, const_cast<void*>(reinterpret_cast<const void*>(&_t1)) };
     QMetaObject::activate(this, &staticMetaObject, 21, _a);
@@ -839,14 +840,14 @@ void DolphinView::pathLoadingProgress(int _t1)
 }
 
 // SIGNAL 23
-void DolphinView::urlIsFileError(const QUrl & _t1)
+void DolphinView::urlIsFileError(const KUrl & _t1)
 {
     void *_a[] = { Q_NULLPTR, const_cast<void*>(reinterpret_cast<const void*>(&_t1)) };
     QMetaObject::activate(this, &staticMetaObject, 23, _a);
 }
 
 // SIGNAL 24
-void DolphinView::redirection(const QUrl & _t1, const QUrl & _t2)
+void DolphinView::redirection(const KUrl & _t1, const KUrl & _t2)
 {
     void *_a[] = { Q_NULLPTR, const_cast<void*>(reinterpret_cast<const void*>(&_t1)), const_cast<void*>(reinterpret_cast<const void*>(&_t2)) };
     QMetaObject::activate(this, &staticMetaObject, 24, _a);
