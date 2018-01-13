@@ -515,7 +515,6 @@ dolphin_columnmodesettings.o: dolphin_columnmodesettings.cpp.o
 
 # target to build an object file
 dolphin_columnmodesettings.cpp.o:
-	cd "/home/kyan/Ember Library/Ember satellite projects/wreathe-file-manager/cmake-2017jan12" && $(MAKE) -f src/CMakeFiles/dolphinprivate.dir/build.make src/CMakeFiles/dolphinprivate.dir/dolphin_columnmodesettings.cpp.o
 	cd "/home/kyan/Ember Library/Ember satellite projects/wreathe-file-manager/cmake-2017jan12" && $(MAKE) -f src/CMakeFiles/kcm_dolphinviewmodes.dir/build.make src/CMakeFiles/kcm_dolphinviewmodes.dir/dolphin_columnmodesettings.cpp.o
 .PHONY : dolphin_columnmodesettings.cpp.o
 
@@ -525,7 +524,6 @@ dolphin_columnmodesettings.i: dolphin_columnmodesettings.cpp.i
 
 # target to preprocess a source file
 dolphin_columnmodesettings.cpp.i:
-	cd "/home/kyan/Ember Library/Ember satellite projects/wreathe-file-manager/cmake-2017jan12" && $(MAKE) -f src/CMakeFiles/dolphinprivate.dir/build.make src/CMakeFiles/dolphinprivate.dir/dolphin_columnmodesettings.cpp.i
 	cd "/home/kyan/Ember Library/Ember satellite projects/wreathe-file-manager/cmake-2017jan12" && $(MAKE) -f src/CMakeFiles/kcm_dolphinviewmodes.dir/build.make src/CMakeFiles/kcm_dolphinviewmodes.dir/dolphin_columnmodesettings.cpp.i
 .PHONY : dolphin_columnmodesettings.cpp.i
 
@@ -535,7 +533,6 @@ dolphin_columnmodesettings.s: dolphin_columnmodesettings.cpp.s
 
 # target to generate assembly for a file
 dolphin_columnmodesettings.cpp.s:
-	cd "/home/kyan/Ember Library/Ember satellite projects/wreathe-file-manager/cmake-2017jan12" && $(MAKE) -f src/CMakeFiles/dolphinprivate.dir/build.make src/CMakeFiles/dolphinprivate.dir/dolphin_columnmodesettings.cpp.s
 	cd "/home/kyan/Ember Library/Ember satellite projects/wreathe-file-manager/cmake-2017jan12" && $(MAKE) -f src/CMakeFiles/kcm_dolphinviewmodes.dir/build.make src/CMakeFiles/kcm_dolphinviewmodes.dir/dolphin_columnmodesettings.cpp.s
 .PHONY : dolphin_columnmodesettings.cpp.s
 
@@ -545,7 +542,6 @@ dolphin_detailsmodesettings.o: dolphin_detailsmodesettings.cpp.o
 
 # target to build an object file
 dolphin_detailsmodesettings.cpp.o:
-	cd "/home/kyan/Ember Library/Ember satellite projects/wreathe-file-manager/cmake-2017jan12" && $(MAKE) -f src/CMakeFiles/dolphinprivate.dir/build.make src/CMakeFiles/dolphinprivate.dir/dolphin_detailsmodesettings.cpp.o
 	cd "/home/kyan/Ember Library/Ember satellite projects/wreathe-file-manager/cmake-2017jan12" && $(MAKE) -f src/CMakeFiles/kcm_dolphinviewmodes.dir/build.make src/CMakeFiles/kcm_dolphinviewmodes.dir/dolphin_detailsmodesettings.cpp.o
 .PHONY : dolphin_detailsmodesettings.cpp.o
 
@@ -555,7 +551,6 @@ dolphin_detailsmodesettings.i: dolphin_detailsmodesettings.cpp.i
 
 # target to preprocess a source file
 dolphin_detailsmodesettings.cpp.i:
-	cd "/home/kyan/Ember Library/Ember satellite projects/wreathe-file-manager/cmake-2017jan12" && $(MAKE) -f src/CMakeFiles/dolphinprivate.dir/build.make src/CMakeFiles/dolphinprivate.dir/dolphin_detailsmodesettings.cpp.i
 	cd "/home/kyan/Ember Library/Ember satellite projects/wreathe-file-manager/cmake-2017jan12" && $(MAKE) -f src/CMakeFiles/kcm_dolphinviewmodes.dir/build.make src/CMakeFiles/kcm_dolphinviewmodes.dir/dolphin_detailsmodesettings.cpp.i
 .PHONY : dolphin_detailsmodesettings.cpp.i
 
@@ -565,7 +560,6 @@ dolphin_detailsmodesettings.s: dolphin_detailsmodesettings.cpp.s
 
 # target to generate assembly for a file
 dolphin_detailsmodesettings.cpp.s:
-	cd "/home/kyan/Ember Library/Ember satellite projects/wreathe-file-manager/cmake-2017jan12" && $(MAKE) -f src/CMakeFiles/dolphinprivate.dir/build.make src/CMakeFiles/dolphinprivate.dir/dolphin_detailsmodesettings.cpp.s
 	cd "/home/kyan/Ember Library/Ember satellite projects/wreathe-file-manager/cmake-2017jan12" && $(MAKE) -f src/CMakeFiles/kcm_dolphinviewmodes.dir/build.make src/CMakeFiles/kcm_dolphinviewmodes.dir/dolphin_detailsmodesettings.cpp.s
 .PHONY : dolphin_detailsmodesettings.cpp.s
 
@@ -575,7 +569,6 @@ dolphin_directoryviewpropertysettings.o: dolphin_directoryviewpropertysettings.c
 
 # target to build an object file
 dolphin_directoryviewpropertysettings.cpp.o:
-	cd "/home/kyan/Ember Library/Ember satellite projects/wreathe-file-manager/cmake-2017jan12" && $(MAKE) -f src/CMakeFiles/dolphinprivate.dir/build.make src/CMakeFiles/dolphinprivate.dir/dolphin_directoryviewpropertysettings.cpp.o
 	cd "/home/kyan/Ember Library/Ember satellite projects/wreathe-file-manager/cmake-2017jan12" && $(MAKE) -f src/CMakeFiles/kcm_dolphinviewmodes.dir/build.make src/CMakeFiles/kcm_dolphinviewmodes.dir/dolphin_directoryviewpropertysettings.cpp.o
 .PHONY : dolphin_directoryviewpropertysettings.cpp.o
 
@@ -585,7 +578,6 @@ dolphin_directoryviewpropertysettings.i: dolphin_directoryviewpropertysettings.c
 
 # target to preprocess a source file
 dolphin_directoryviewpropertysettings.cpp.i:
-	cd "/home/kyan/Ember Library/Ember satellite projects/wreathe-file-manager/cmake-2017jan12" && $(MAKE) -f src/CMakeFiles/dolphinprivate.dir/build.make src/CMakeFiles/dolphinprivate.dir/dolphin_directoryviewpropertysettings.cpp.i
 	cd "/home/kyan/Ember Library/Ember satellite projects/wreathe-file-manager/cmake-2017jan12" && $(MAKE) -f src/CMakeFiles/kcm_dolphinviewmodes.dir/build.make src/CMakeFiles/kcm_dolphinviewmodes.dir/dolphin_directoryviewpropertysettings.cpp.i
 .PHONY : dolphin_directoryviewpropertysettings.cpp.i
 
@@ -595,7 +587,6 @@ dolphin_directoryviewpropertysettings.s: dolphin_directoryviewpropertysettings.c
 
 # target to generate assembly for a file
 dolphin_directoryviewpropertysettings.cpp.s:
-	cd "/home/kyan/Ember Library/Ember satellite projects/wreathe-file-manager/cmake-2017jan12" && $(MAKE) -f src/CMakeFiles/dolphinprivate.dir/build.make src/CMakeFiles/dolphinprivate.dir/dolphin_directoryviewpropertysettings.cpp.s
 	cd "/home/kyan/Ember Library/Ember satellite projects/wreathe-file-manager/cmake-2017jan12" && $(MAKE) -f src/CMakeFiles/kcm_dolphinviewmodes.dir/build.make src/CMakeFiles/kcm_dolphinviewmodes.dir/dolphin_directoryviewpropertysettings.cpp.s
 .PHONY : dolphin_directoryviewpropertysettings.cpp.s
 
@@ -660,7 +651,6 @@ dolphin_generalsettings.o: dolphin_generalsettings.cpp.o
 # target to build an object file
 dolphin_generalsettings.cpp.o:
 	cd "/home/kyan/Ember Library/Ember satellite projects/wreathe-file-manager/cmake-2017jan12" && $(MAKE) -f src/CMakeFiles/kcm_dolphingeneral.dir/build.make src/CMakeFiles/kcm_dolphingeneral.dir/dolphin_generalsettings.cpp.o
-	cd "/home/kyan/Ember Library/Ember satellite projects/wreathe-file-manager/cmake-2017jan12" && $(MAKE) -f src/CMakeFiles/dolphinprivate.dir/build.make src/CMakeFiles/dolphinprivate.dir/dolphin_generalsettings.cpp.o
 	cd "/home/kyan/Ember Library/Ember satellite projects/wreathe-file-manager/cmake-2017jan12" && $(MAKE) -f src/CMakeFiles/kcm_dolphinviewmodes.dir/build.make src/CMakeFiles/kcm_dolphinviewmodes.dir/dolphin_generalsettings.cpp.o
 	cd "/home/kyan/Ember Library/Ember satellite projects/wreathe-file-manager/cmake-2017jan12" && $(MAKE) -f src/CMakeFiles/kcm_dolphinnavigation.dir/build.make src/CMakeFiles/kcm_dolphinnavigation.dir/dolphin_generalsettings.cpp.o
 	cd "/home/kyan/Ember Library/Ember satellite projects/wreathe-file-manager/cmake-2017jan12" && $(MAKE) -f src/CMakeFiles/kcm_dolphinservices.dir/build.make src/CMakeFiles/kcm_dolphinservices.dir/dolphin_generalsettings.cpp.o
@@ -673,7 +663,6 @@ dolphin_generalsettings.i: dolphin_generalsettings.cpp.i
 # target to preprocess a source file
 dolphin_generalsettings.cpp.i:
 	cd "/home/kyan/Ember Library/Ember satellite projects/wreathe-file-manager/cmake-2017jan12" && $(MAKE) -f src/CMakeFiles/kcm_dolphingeneral.dir/build.make src/CMakeFiles/kcm_dolphingeneral.dir/dolphin_generalsettings.cpp.i
-	cd "/home/kyan/Ember Library/Ember satellite projects/wreathe-file-manager/cmake-2017jan12" && $(MAKE) -f src/CMakeFiles/dolphinprivate.dir/build.make src/CMakeFiles/dolphinprivate.dir/dolphin_generalsettings.cpp.i
 	cd "/home/kyan/Ember Library/Ember satellite projects/wreathe-file-manager/cmake-2017jan12" && $(MAKE) -f src/CMakeFiles/kcm_dolphinviewmodes.dir/build.make src/CMakeFiles/kcm_dolphinviewmodes.dir/dolphin_generalsettings.cpp.i
 	cd "/home/kyan/Ember Library/Ember satellite projects/wreathe-file-manager/cmake-2017jan12" && $(MAKE) -f src/CMakeFiles/kcm_dolphinnavigation.dir/build.make src/CMakeFiles/kcm_dolphinnavigation.dir/dolphin_generalsettings.cpp.i
 	cd "/home/kyan/Ember Library/Ember satellite projects/wreathe-file-manager/cmake-2017jan12" && $(MAKE) -f src/CMakeFiles/kcm_dolphinservices.dir/build.make src/CMakeFiles/kcm_dolphinservices.dir/dolphin_generalsettings.cpp.i
@@ -686,7 +675,6 @@ dolphin_generalsettings.s: dolphin_generalsettings.cpp.s
 # target to generate assembly for a file
 dolphin_generalsettings.cpp.s:
 	cd "/home/kyan/Ember Library/Ember satellite projects/wreathe-file-manager/cmake-2017jan12" && $(MAKE) -f src/CMakeFiles/kcm_dolphingeneral.dir/build.make src/CMakeFiles/kcm_dolphingeneral.dir/dolphin_generalsettings.cpp.s
-	cd "/home/kyan/Ember Library/Ember satellite projects/wreathe-file-manager/cmake-2017jan12" && $(MAKE) -f src/CMakeFiles/dolphinprivate.dir/build.make src/CMakeFiles/dolphinprivate.dir/dolphin_generalsettings.cpp.s
 	cd "/home/kyan/Ember Library/Ember satellite projects/wreathe-file-manager/cmake-2017jan12" && $(MAKE) -f src/CMakeFiles/kcm_dolphinviewmodes.dir/build.make src/CMakeFiles/kcm_dolphinviewmodes.dir/dolphin_generalsettings.cpp.s
 	cd "/home/kyan/Ember Library/Ember satellite projects/wreathe-file-manager/cmake-2017jan12" && $(MAKE) -f src/CMakeFiles/kcm_dolphinnavigation.dir/build.make src/CMakeFiles/kcm_dolphinnavigation.dir/dolphin_generalsettings.cpp.s
 	cd "/home/kyan/Ember Library/Ember satellite projects/wreathe-file-manager/cmake-2017jan12" && $(MAKE) -f src/CMakeFiles/kcm_dolphinservices.dir/build.make src/CMakeFiles/kcm_dolphinservices.dir/dolphin_generalsettings.cpp.s
@@ -698,7 +686,6 @@ dolphin_iconsmodesettings.o: dolphin_iconsmodesettings.cpp.o
 
 # target to build an object file
 dolphin_iconsmodesettings.cpp.o:
-	cd "/home/kyan/Ember Library/Ember satellite projects/wreathe-file-manager/cmake-2017jan12" && $(MAKE) -f src/CMakeFiles/dolphinprivate.dir/build.make src/CMakeFiles/dolphinprivate.dir/dolphin_iconsmodesettings.cpp.o
 	cd "/home/kyan/Ember Library/Ember satellite projects/wreathe-file-manager/cmake-2017jan12" && $(MAKE) -f src/CMakeFiles/kcm_dolphinviewmodes.dir/build.make src/CMakeFiles/kcm_dolphinviewmodes.dir/dolphin_iconsmodesettings.cpp.o
 .PHONY : dolphin_iconsmodesettings.cpp.o
 
@@ -708,7 +695,6 @@ dolphin_iconsmodesettings.i: dolphin_iconsmodesettings.cpp.i
 
 # target to preprocess a source file
 dolphin_iconsmodesettings.cpp.i:
-	cd "/home/kyan/Ember Library/Ember satellite projects/wreathe-file-manager/cmake-2017jan12" && $(MAKE) -f src/CMakeFiles/dolphinprivate.dir/build.make src/CMakeFiles/dolphinprivate.dir/dolphin_iconsmodesettings.cpp.i
 	cd "/home/kyan/Ember Library/Ember satellite projects/wreathe-file-manager/cmake-2017jan12" && $(MAKE) -f src/CMakeFiles/kcm_dolphinviewmodes.dir/build.make src/CMakeFiles/kcm_dolphinviewmodes.dir/dolphin_iconsmodesettings.cpp.i
 .PHONY : dolphin_iconsmodesettings.cpp.i
 
@@ -718,7 +704,6 @@ dolphin_iconsmodesettings.s: dolphin_iconsmodesettings.cpp.s
 
 # target to generate assembly for a file
 dolphin_iconsmodesettings.cpp.s:
-	cd "/home/kyan/Ember Library/Ember satellite projects/wreathe-file-manager/cmake-2017jan12" && $(MAKE) -f src/CMakeFiles/dolphinprivate.dir/build.make src/CMakeFiles/dolphinprivate.dir/dolphin_iconsmodesettings.cpp.s
 	cd "/home/kyan/Ember Library/Ember satellite projects/wreathe-file-manager/cmake-2017jan12" && $(MAKE) -f src/CMakeFiles/kcm_dolphinviewmodes.dir/build.make src/CMakeFiles/kcm_dolphinviewmodes.dir/dolphin_iconsmodesettings.cpp.s
 .PHONY : dolphin_iconsmodesettings.cpp.s
 
@@ -782,7 +767,6 @@ dolphin_versioncontrolsettings.o: dolphin_versioncontrolsettings.cpp.o
 
 # target to build an object file
 dolphin_versioncontrolsettings.cpp.o:
-	cd "/home/kyan/Ember Library/Ember satellite projects/wreathe-file-manager/cmake-2017jan12" && $(MAKE) -f src/CMakeFiles/dolphinprivate.dir/build.make src/CMakeFiles/dolphinprivate.dir/dolphin_versioncontrolsettings.cpp.o
 	cd "/home/kyan/Ember Library/Ember satellite projects/wreathe-file-manager/cmake-2017jan12" && $(MAKE) -f src/CMakeFiles/dolphinstatic.dir/build.make src/CMakeFiles/dolphinstatic.dir/dolphin_versioncontrolsettings.cpp.o
 	cd "/home/kyan/Ember Library/Ember satellite projects/wreathe-file-manager/cmake-2017jan12" && $(MAKE) -f src/CMakeFiles/kcm_dolphinviewmodes.dir/build.make src/CMakeFiles/kcm_dolphinviewmodes.dir/dolphin_versioncontrolsettings.cpp.o
 	cd "/home/kyan/Ember Library/Ember satellite projects/wreathe-file-manager/cmake-2017jan12" && $(MAKE) -f src/CMakeFiles/kcm_dolphinservices.dir/build.make src/CMakeFiles/kcm_dolphinservices.dir/dolphin_versioncontrolsettings.cpp.o
@@ -794,7 +778,6 @@ dolphin_versioncontrolsettings.i: dolphin_versioncontrolsettings.cpp.i
 
 # target to preprocess a source file
 dolphin_versioncontrolsettings.cpp.i:
-	cd "/home/kyan/Ember Library/Ember satellite projects/wreathe-file-manager/cmake-2017jan12" && $(MAKE) -f src/CMakeFiles/dolphinprivate.dir/build.make src/CMakeFiles/dolphinprivate.dir/dolphin_versioncontrolsettings.cpp.i
 	cd "/home/kyan/Ember Library/Ember satellite projects/wreathe-file-manager/cmake-2017jan12" && $(MAKE) -f src/CMakeFiles/dolphinstatic.dir/build.make src/CMakeFiles/dolphinstatic.dir/dolphin_versioncontrolsettings.cpp.i
 	cd "/home/kyan/Ember Library/Ember satellite projects/wreathe-file-manager/cmake-2017jan12" && $(MAKE) -f src/CMakeFiles/kcm_dolphinviewmodes.dir/build.make src/CMakeFiles/kcm_dolphinviewmodes.dir/dolphin_versioncontrolsettings.cpp.i
 	cd "/home/kyan/Ember Library/Ember satellite projects/wreathe-file-manager/cmake-2017jan12" && $(MAKE) -f src/CMakeFiles/kcm_dolphinservices.dir/build.make src/CMakeFiles/kcm_dolphinservices.dir/dolphin_versioncontrolsettings.cpp.i
@@ -806,7 +789,6 @@ dolphin_versioncontrolsettings.s: dolphin_versioncontrolsettings.cpp.s
 
 # target to generate assembly for a file
 dolphin_versioncontrolsettings.cpp.s:
-	cd "/home/kyan/Ember Library/Ember satellite projects/wreathe-file-manager/cmake-2017jan12" && $(MAKE) -f src/CMakeFiles/dolphinprivate.dir/build.make src/CMakeFiles/dolphinprivate.dir/dolphin_versioncontrolsettings.cpp.s
 	cd "/home/kyan/Ember Library/Ember satellite projects/wreathe-file-manager/cmake-2017jan12" && $(MAKE) -f src/CMakeFiles/dolphinstatic.dir/build.make src/CMakeFiles/dolphinstatic.dir/dolphin_versioncontrolsettings.cpp.s
 	cd "/home/kyan/Ember Library/Ember satellite projects/wreathe-file-manager/cmake-2017jan12" && $(MAKE) -f src/CMakeFiles/kcm_dolphinviewmodes.dir/build.make src/CMakeFiles/kcm_dolphinviewmodes.dir/dolphin_versioncontrolsettings.cpp.s
 	cd "/home/kyan/Ember Library/Ember satellite projects/wreathe-file-manager/cmake-2017jan12" && $(MAKE) -f src/CMakeFiles/kcm_dolphinservices.dir/build.make src/CMakeFiles/kcm_dolphinservices.dir/dolphin_versioncontrolsettings.cpp.s
@@ -1000,33 +982,6 @@ dolphinpart_autogen/moc_compilation.s: dolphinpart_autogen/moc_compilation.cpp.s
 dolphinpart_autogen/moc_compilation.cpp.s:
 	cd "/home/kyan/Ember Library/Ember satellite projects/wreathe-file-manager/cmake-2017jan12" && $(MAKE) -f src/CMakeFiles/dolphinpart.dir/build.make src/CMakeFiles/dolphinpart.dir/dolphinpart_autogen/moc_compilation.cpp.s
 .PHONY : dolphinpart_autogen/moc_compilation.cpp.s
-
-dolphinprivate_autogen/moc_compilation.o: dolphinprivate_autogen/moc_compilation.cpp.o
-
-.PHONY : dolphinprivate_autogen/moc_compilation.o
-
-# target to build an object file
-dolphinprivate_autogen/moc_compilation.cpp.o:
-	cd "/home/kyan/Ember Library/Ember satellite projects/wreathe-file-manager/cmake-2017jan12" && $(MAKE) -f src/CMakeFiles/dolphinprivate.dir/build.make src/CMakeFiles/dolphinprivate.dir/dolphinprivate_autogen/moc_compilation.cpp.o
-.PHONY : dolphinprivate_autogen/moc_compilation.cpp.o
-
-dolphinprivate_autogen/moc_compilation.i: dolphinprivate_autogen/moc_compilation.cpp.i
-
-.PHONY : dolphinprivate_autogen/moc_compilation.i
-
-# target to preprocess a source file
-dolphinprivate_autogen/moc_compilation.cpp.i:
-	cd "/home/kyan/Ember Library/Ember satellite projects/wreathe-file-manager/cmake-2017jan12" && $(MAKE) -f src/CMakeFiles/dolphinprivate.dir/build.make src/CMakeFiles/dolphinprivate.dir/dolphinprivate_autogen/moc_compilation.cpp.i
-.PHONY : dolphinprivate_autogen/moc_compilation.cpp.i
-
-dolphinprivate_autogen/moc_compilation.s: dolphinprivate_autogen/moc_compilation.cpp.s
-
-.PHONY : dolphinprivate_autogen/moc_compilation.s
-
-# target to generate assembly for a file
-dolphinprivate_autogen/moc_compilation.cpp.s:
-	cd "/home/kyan/Ember Library/Ember satellite projects/wreathe-file-manager/cmake-2017jan12" && $(MAKE) -f src/CMakeFiles/dolphinprivate.dir/build.make src/CMakeFiles/dolphinprivate.dir/dolphinprivate_autogen/moc_compilation.cpp.s
-.PHONY : dolphinprivate_autogen/moc_compilation.cpp.s
 
 dolphinstatic_autogen/moc_compilation.o: dolphinstatic_autogen/moc_compilation.cpp.o
 
@@ -1243,33 +1198,6 @@ kcm_dolphinviewmodes_autogen/moc_compilation.s: kcm_dolphinviewmodes_autogen/moc
 kcm_dolphinviewmodes_autogen/moc_compilation.cpp.s:
 	cd "/home/kyan/Ember Library/Ember satellite projects/wreathe-file-manager/cmake-2017jan12" && $(MAKE) -f src/CMakeFiles/kcm_dolphinviewmodes.dir/build.make src/CMakeFiles/kcm_dolphinviewmodes.dir/kcm_dolphinviewmodes_autogen/moc_compilation.cpp.s
 .PHONY : kcm_dolphinviewmodes_autogen/moc_compilation.cpp.s
-
-kitemviews/private/kbaloorolesprovider.o: kitemviews/private/kbaloorolesprovider.cpp.o
-
-.PHONY : kitemviews/private/kbaloorolesprovider.o
-
-# target to build an object file
-kitemviews/private/kbaloorolesprovider.cpp.o:
-	cd "/home/kyan/Ember Library/Ember satellite projects/wreathe-file-manager/cmake-2017jan12" && $(MAKE) -f src/CMakeFiles/dolphinprivate.dir/build.make src/CMakeFiles/dolphinprivate.dir/kitemviews/private/kbaloorolesprovider.cpp.o
-.PHONY : kitemviews/private/kbaloorolesprovider.cpp.o
-
-kitemviews/private/kbaloorolesprovider.i: kitemviews/private/kbaloorolesprovider.cpp.i
-
-.PHONY : kitemviews/private/kbaloorolesprovider.i
-
-# target to preprocess a source file
-kitemviews/private/kbaloorolesprovider.cpp.i:
-	cd "/home/kyan/Ember Library/Ember satellite projects/wreathe-file-manager/cmake-2017jan12" && $(MAKE) -f src/CMakeFiles/dolphinprivate.dir/build.make src/CMakeFiles/dolphinprivate.dir/kitemviews/private/kbaloorolesprovider.cpp.i
-.PHONY : kitemviews/private/kbaloorolesprovider.cpp.i
-
-kitemviews/private/kbaloorolesprovider.s: kitemviews/private/kbaloorolesprovider.cpp.s
-
-.PHONY : kitemviews/private/kbaloorolesprovider.s
-
-# target to generate assembly for a file
-kitemviews/private/kbaloorolesprovider.cpp.s:
-	cd "/home/kyan/Ember Library/Ember satellite projects/wreathe-file-manager/cmake-2017jan12" && $(MAKE) -f src/CMakeFiles/dolphinprivate.dir/build.make src/CMakeFiles/dolphinprivate.dir/kitemviews/private/kbaloorolesprovider.cpp.s
-.PHONY : kitemviews/private/kbaloorolesprovider.cpp.s
 
 main.o: main.cpp.o
 
@@ -1729,87 +1657,6 @@ search/dolphinsearchinformation.s: search/dolphinsearchinformation.cpp.s
 search/dolphinsearchinformation.cpp.s:
 	cd "/home/kyan/Ember Library/Ember satellite projects/wreathe-file-manager/cmake-2017jan12" && $(MAKE) -f src/CMakeFiles/dolphinstatic.dir/build.make src/CMakeFiles/dolphinstatic.dir/search/dolphinsearchinformation.cpp.s
 .PHONY : search/dolphinsearchinformation.cpp.s
-
-settings/additionalinfodialog.o: settings/additionalinfodialog.cpp.o
-
-.PHONY : settings/additionalinfodialog.o
-
-# target to build an object file
-settings/additionalinfodialog.cpp.o:
-	cd "/home/kyan/Ember Library/Ember satellite projects/wreathe-file-manager/cmake-2017jan12" && $(MAKE) -f src/CMakeFiles/dolphinprivate.dir/build.make src/CMakeFiles/dolphinprivate.dir/settings/additionalinfodialog.cpp.o
-.PHONY : settings/additionalinfodialog.cpp.o
-
-settings/additionalinfodialog.i: settings/additionalinfodialog.cpp.i
-
-.PHONY : settings/additionalinfodialog.i
-
-# target to preprocess a source file
-settings/additionalinfodialog.cpp.i:
-	cd "/home/kyan/Ember Library/Ember satellite projects/wreathe-file-manager/cmake-2017jan12" && $(MAKE) -f src/CMakeFiles/dolphinprivate.dir/build.make src/CMakeFiles/dolphinprivate.dir/settings/additionalinfodialog.cpp.i
-.PHONY : settings/additionalinfodialog.cpp.i
-
-settings/additionalinfodialog.s: settings/additionalinfodialog.cpp.s
-
-.PHONY : settings/additionalinfodialog.s
-
-# target to generate assembly for a file
-settings/additionalinfodialog.cpp.s:
-	cd "/home/kyan/Ember Library/Ember satellite projects/wreathe-file-manager/cmake-2017jan12" && $(MAKE) -f src/CMakeFiles/dolphinprivate.dir/build.make src/CMakeFiles/dolphinprivate.dir/settings/additionalinfodialog.cpp.s
-.PHONY : settings/additionalinfodialog.cpp.s
-
-settings/applyviewpropsjob.o: settings/applyviewpropsjob.cpp.o
-
-.PHONY : settings/applyviewpropsjob.o
-
-# target to build an object file
-settings/applyviewpropsjob.cpp.o:
-	cd "/home/kyan/Ember Library/Ember satellite projects/wreathe-file-manager/cmake-2017jan12" && $(MAKE) -f src/CMakeFiles/dolphinprivate.dir/build.make src/CMakeFiles/dolphinprivate.dir/settings/applyviewpropsjob.cpp.o
-.PHONY : settings/applyviewpropsjob.cpp.o
-
-settings/applyviewpropsjob.i: settings/applyviewpropsjob.cpp.i
-
-.PHONY : settings/applyviewpropsjob.i
-
-# target to preprocess a source file
-settings/applyviewpropsjob.cpp.i:
-	cd "/home/kyan/Ember Library/Ember satellite projects/wreathe-file-manager/cmake-2017jan12" && $(MAKE) -f src/CMakeFiles/dolphinprivate.dir/build.make src/CMakeFiles/dolphinprivate.dir/settings/applyviewpropsjob.cpp.i
-.PHONY : settings/applyviewpropsjob.cpp.i
-
-settings/applyviewpropsjob.s: settings/applyviewpropsjob.cpp.s
-
-.PHONY : settings/applyviewpropsjob.s
-
-# target to generate assembly for a file
-settings/applyviewpropsjob.cpp.s:
-	cd "/home/kyan/Ember Library/Ember satellite projects/wreathe-file-manager/cmake-2017jan12" && $(MAKE) -f src/CMakeFiles/dolphinprivate.dir/build.make src/CMakeFiles/dolphinprivate.dir/settings/applyviewpropsjob.cpp.s
-.PHONY : settings/applyviewpropsjob.cpp.s
-
-settings/dolphinsettings.o: settings/dolphinsettings.cpp.o
-
-.PHONY : settings/dolphinsettings.o
-
-# target to build an object file
-settings/dolphinsettings.cpp.o:
-	cd "/home/kyan/Ember Library/Ember satellite projects/wreathe-file-manager/cmake-2017jan12" && $(MAKE) -f src/CMakeFiles/dolphinprivate.dir/build.make src/CMakeFiles/dolphinprivate.dir/settings/dolphinsettings.cpp.o
-.PHONY : settings/dolphinsettings.cpp.o
-
-settings/dolphinsettings.i: settings/dolphinsettings.cpp.i
-
-.PHONY : settings/dolphinsettings.i
-
-# target to preprocess a source file
-settings/dolphinsettings.cpp.i:
-	cd "/home/kyan/Ember Library/Ember satellite projects/wreathe-file-manager/cmake-2017jan12" && $(MAKE) -f src/CMakeFiles/dolphinprivate.dir/build.make src/CMakeFiles/dolphinprivate.dir/settings/dolphinsettings.cpp.i
-.PHONY : settings/dolphinsettings.cpp.i
-
-settings/dolphinsettings.s: settings/dolphinsettings.cpp.s
-
-.PHONY : settings/dolphinsettings.s
-
-# target to generate assembly for a file
-settings/dolphinsettings.cpp.s:
-	cd "/home/kyan/Ember Library/Ember satellite projects/wreathe-file-manager/cmake-2017jan12" && $(MAKE) -f src/CMakeFiles/dolphinprivate.dir/build.make src/CMakeFiles/dolphinprivate.dir/settings/dolphinsettings.cpp.s
-.PHONY : settings/dolphinsettings.cpp.s
 
 settings/dolphinsettingsdialog.o: settings/dolphinsettingsdialog.cpp.o
 
@@ -2543,60 +2390,6 @@ settings/viewmodes/viewsettingspagebase.cpp.s:
 	cd "/home/kyan/Ember Library/Ember satellite projects/wreathe-file-manager/cmake-2017jan12" && $(MAKE) -f src/CMakeFiles/kcm_dolphinviewmodes.dir/build.make src/CMakeFiles/kcm_dolphinviewmodes.dir/settings/viewmodes/viewsettingspagebase.cpp.s
 .PHONY : settings/viewmodes/viewsettingspagebase.cpp.s
 
-settings/viewpropertiesdialog.o: settings/viewpropertiesdialog.cpp.o
-
-.PHONY : settings/viewpropertiesdialog.o
-
-# target to build an object file
-settings/viewpropertiesdialog.cpp.o:
-	cd "/home/kyan/Ember Library/Ember satellite projects/wreathe-file-manager/cmake-2017jan12" && $(MAKE) -f src/CMakeFiles/dolphinprivate.dir/build.make src/CMakeFiles/dolphinprivate.dir/settings/viewpropertiesdialog.cpp.o
-.PHONY : settings/viewpropertiesdialog.cpp.o
-
-settings/viewpropertiesdialog.i: settings/viewpropertiesdialog.cpp.i
-
-.PHONY : settings/viewpropertiesdialog.i
-
-# target to preprocess a source file
-settings/viewpropertiesdialog.cpp.i:
-	cd "/home/kyan/Ember Library/Ember satellite projects/wreathe-file-manager/cmake-2017jan12" && $(MAKE) -f src/CMakeFiles/dolphinprivate.dir/build.make src/CMakeFiles/dolphinprivate.dir/settings/viewpropertiesdialog.cpp.i
-.PHONY : settings/viewpropertiesdialog.cpp.i
-
-settings/viewpropertiesdialog.s: settings/viewpropertiesdialog.cpp.s
-
-.PHONY : settings/viewpropertiesdialog.s
-
-# target to generate assembly for a file
-settings/viewpropertiesdialog.cpp.s:
-	cd "/home/kyan/Ember Library/Ember satellite projects/wreathe-file-manager/cmake-2017jan12" && $(MAKE) -f src/CMakeFiles/dolphinprivate.dir/build.make src/CMakeFiles/dolphinprivate.dir/settings/viewpropertiesdialog.cpp.s
-.PHONY : settings/viewpropertiesdialog.cpp.s
-
-settings/viewpropsprogressinfo.o: settings/viewpropsprogressinfo.cpp.o
-
-.PHONY : settings/viewpropsprogressinfo.o
-
-# target to build an object file
-settings/viewpropsprogressinfo.cpp.o:
-	cd "/home/kyan/Ember Library/Ember satellite projects/wreathe-file-manager/cmake-2017jan12" && $(MAKE) -f src/CMakeFiles/dolphinprivate.dir/build.make src/CMakeFiles/dolphinprivate.dir/settings/viewpropsprogressinfo.cpp.o
-.PHONY : settings/viewpropsprogressinfo.cpp.o
-
-settings/viewpropsprogressinfo.i: settings/viewpropsprogressinfo.cpp.i
-
-.PHONY : settings/viewpropsprogressinfo.i
-
-# target to preprocess a source file
-settings/viewpropsprogressinfo.cpp.i:
-	cd "/home/kyan/Ember Library/Ember satellite projects/wreathe-file-manager/cmake-2017jan12" && $(MAKE) -f src/CMakeFiles/dolphinprivate.dir/build.make src/CMakeFiles/dolphinprivate.dir/settings/viewpropsprogressinfo.cpp.i
-.PHONY : settings/viewpropsprogressinfo.cpp.i
-
-settings/viewpropsprogressinfo.s: settings/viewpropsprogressinfo.cpp.s
-
-.PHONY : settings/viewpropsprogressinfo.s
-
-# target to generate assembly for a file
-settings/viewpropsprogressinfo.cpp.s:
-	cd "/home/kyan/Ember Library/Ember satellite projects/wreathe-file-manager/cmake-2017jan12" && $(MAKE) -f src/CMakeFiles/dolphinprivate.dir/build.make src/CMakeFiles/dolphinprivate.dir/settings/viewpropsprogressinfo.cpp.s
-.PHONY : settings/viewpropsprogressinfo.cpp.s
-
 statusbar/dolphinstatusbar.o: statusbar/dolphinstatusbar.cpp.o
 
 .PHONY : statusbar/dolphinstatusbar.o
@@ -2651,681 +2444,6 @@ statusbar/statusbarspaceinfo.cpp.s:
 	cd "/home/kyan/Ember Library/Ember satellite projects/wreathe-file-manager/cmake-2017jan12" && $(MAKE) -f src/CMakeFiles/dolphinstatic.dir/build.make src/CMakeFiles/dolphinstatic.dir/statusbar/statusbarspaceinfo.cpp.s
 .PHONY : statusbar/statusbarspaceinfo.cpp.s
 
-views/additionalinfoaccessor.o: views/additionalinfoaccessor.cpp.o
-
-.PHONY : views/additionalinfoaccessor.o
-
-# target to build an object file
-views/additionalinfoaccessor.cpp.o:
-	cd "/home/kyan/Ember Library/Ember satellite projects/wreathe-file-manager/cmake-2017jan12" && $(MAKE) -f src/CMakeFiles/dolphinprivate.dir/build.make src/CMakeFiles/dolphinprivate.dir/views/additionalinfoaccessor.cpp.o
-.PHONY : views/additionalinfoaccessor.cpp.o
-
-views/additionalinfoaccessor.i: views/additionalinfoaccessor.cpp.i
-
-.PHONY : views/additionalinfoaccessor.i
-
-# target to preprocess a source file
-views/additionalinfoaccessor.cpp.i:
-	cd "/home/kyan/Ember Library/Ember satellite projects/wreathe-file-manager/cmake-2017jan12" && $(MAKE) -f src/CMakeFiles/dolphinprivate.dir/build.make src/CMakeFiles/dolphinprivate.dir/views/additionalinfoaccessor.cpp.i
-.PHONY : views/additionalinfoaccessor.cpp.i
-
-views/additionalinfoaccessor.s: views/additionalinfoaccessor.cpp.s
-
-.PHONY : views/additionalinfoaccessor.s
-
-# target to generate assembly for a file
-views/additionalinfoaccessor.cpp.s:
-	cd "/home/kyan/Ember Library/Ember satellite projects/wreathe-file-manager/cmake-2017jan12" && $(MAKE) -f src/CMakeFiles/dolphinprivate.dir/build.make src/CMakeFiles/dolphinprivate.dir/views/additionalinfoaccessor.cpp.s
-.PHONY : views/additionalinfoaccessor.cpp.s
-
-views/dolphincategorydrawer.o: views/dolphincategorydrawer.cpp.o
-
-.PHONY : views/dolphincategorydrawer.o
-
-# target to build an object file
-views/dolphincategorydrawer.cpp.o:
-	cd "/home/kyan/Ember Library/Ember satellite projects/wreathe-file-manager/cmake-2017jan12" && $(MAKE) -f src/CMakeFiles/dolphinprivate.dir/build.make src/CMakeFiles/dolphinprivate.dir/views/dolphincategorydrawer.cpp.o
-.PHONY : views/dolphincategorydrawer.cpp.o
-
-views/dolphincategorydrawer.i: views/dolphincategorydrawer.cpp.i
-
-.PHONY : views/dolphincategorydrawer.i
-
-# target to preprocess a source file
-views/dolphincategorydrawer.cpp.i:
-	cd "/home/kyan/Ember Library/Ember satellite projects/wreathe-file-manager/cmake-2017jan12" && $(MAKE) -f src/CMakeFiles/dolphinprivate.dir/build.make src/CMakeFiles/dolphinprivate.dir/views/dolphincategorydrawer.cpp.i
-.PHONY : views/dolphincategorydrawer.cpp.i
-
-views/dolphincategorydrawer.s: views/dolphincategorydrawer.cpp.s
-
-.PHONY : views/dolphincategorydrawer.s
-
-# target to generate assembly for a file
-views/dolphincategorydrawer.cpp.s:
-	cd "/home/kyan/Ember Library/Ember satellite projects/wreathe-file-manager/cmake-2017jan12" && $(MAKE) -f src/CMakeFiles/dolphinprivate.dir/build.make src/CMakeFiles/dolphinprivate.dir/views/dolphincategorydrawer.cpp.s
-.PHONY : views/dolphincategorydrawer.cpp.s
-
-views/dolphincolumnview.o: views/dolphincolumnview.cpp.o
-
-.PHONY : views/dolphincolumnview.o
-
-# target to build an object file
-views/dolphincolumnview.cpp.o:
-	cd "/home/kyan/Ember Library/Ember satellite projects/wreathe-file-manager/cmake-2017jan12" && $(MAKE) -f src/CMakeFiles/dolphinprivate.dir/build.make src/CMakeFiles/dolphinprivate.dir/views/dolphincolumnview.cpp.o
-.PHONY : views/dolphincolumnview.cpp.o
-
-views/dolphincolumnview.i: views/dolphincolumnview.cpp.i
-
-.PHONY : views/dolphincolumnview.i
-
-# target to preprocess a source file
-views/dolphincolumnview.cpp.i:
-	cd "/home/kyan/Ember Library/Ember satellite projects/wreathe-file-manager/cmake-2017jan12" && $(MAKE) -f src/CMakeFiles/dolphinprivate.dir/build.make src/CMakeFiles/dolphinprivate.dir/views/dolphincolumnview.cpp.i
-.PHONY : views/dolphincolumnview.cpp.i
-
-views/dolphincolumnview.s: views/dolphincolumnview.cpp.s
-
-.PHONY : views/dolphincolumnview.s
-
-# target to generate assembly for a file
-views/dolphincolumnview.cpp.s:
-	cd "/home/kyan/Ember Library/Ember satellite projects/wreathe-file-manager/cmake-2017jan12" && $(MAKE) -f src/CMakeFiles/dolphinprivate.dir/build.make src/CMakeFiles/dolphinprivate.dir/views/dolphincolumnview.cpp.s
-.PHONY : views/dolphincolumnview.cpp.s
-
-views/dolphincolumnviewcontainer.o: views/dolphincolumnviewcontainer.cpp.o
-
-.PHONY : views/dolphincolumnviewcontainer.o
-
-# target to build an object file
-views/dolphincolumnviewcontainer.cpp.o:
-	cd "/home/kyan/Ember Library/Ember satellite projects/wreathe-file-manager/cmake-2017jan12" && $(MAKE) -f src/CMakeFiles/dolphinprivate.dir/build.make src/CMakeFiles/dolphinprivate.dir/views/dolphincolumnviewcontainer.cpp.o
-.PHONY : views/dolphincolumnviewcontainer.cpp.o
-
-views/dolphincolumnviewcontainer.i: views/dolphincolumnviewcontainer.cpp.i
-
-.PHONY : views/dolphincolumnviewcontainer.i
-
-# target to preprocess a source file
-views/dolphincolumnviewcontainer.cpp.i:
-	cd "/home/kyan/Ember Library/Ember satellite projects/wreathe-file-manager/cmake-2017jan12" && $(MAKE) -f src/CMakeFiles/dolphinprivate.dir/build.make src/CMakeFiles/dolphinprivate.dir/views/dolphincolumnviewcontainer.cpp.i
-.PHONY : views/dolphincolumnviewcontainer.cpp.i
-
-views/dolphincolumnviewcontainer.s: views/dolphincolumnviewcontainer.cpp.s
-
-.PHONY : views/dolphincolumnviewcontainer.s
-
-# target to generate assembly for a file
-views/dolphincolumnviewcontainer.cpp.s:
-	cd "/home/kyan/Ember Library/Ember satellite projects/wreathe-file-manager/cmake-2017jan12" && $(MAKE) -f src/CMakeFiles/dolphinprivate.dir/build.make src/CMakeFiles/dolphinprivate.dir/views/dolphincolumnviewcontainer.cpp.s
-.PHONY : views/dolphincolumnviewcontainer.cpp.s
-
-views/dolphindetailsview.o: views/dolphindetailsview.cpp.o
-
-.PHONY : views/dolphindetailsview.o
-
-# target to build an object file
-views/dolphindetailsview.cpp.o:
-	cd "/home/kyan/Ember Library/Ember satellite projects/wreathe-file-manager/cmake-2017jan12" && $(MAKE) -f src/CMakeFiles/dolphinprivate.dir/build.make src/CMakeFiles/dolphinprivate.dir/views/dolphindetailsview.cpp.o
-.PHONY : views/dolphindetailsview.cpp.o
-
-views/dolphindetailsview.i: views/dolphindetailsview.cpp.i
-
-.PHONY : views/dolphindetailsview.i
-
-# target to preprocess a source file
-views/dolphindetailsview.cpp.i:
-	cd "/home/kyan/Ember Library/Ember satellite projects/wreathe-file-manager/cmake-2017jan12" && $(MAKE) -f src/CMakeFiles/dolphinprivate.dir/build.make src/CMakeFiles/dolphinprivate.dir/views/dolphindetailsview.cpp.i
-.PHONY : views/dolphindetailsview.cpp.i
-
-views/dolphindetailsview.s: views/dolphindetailsview.cpp.s
-
-.PHONY : views/dolphindetailsview.s
-
-# target to generate assembly for a file
-views/dolphindetailsview.cpp.s:
-	cd "/home/kyan/Ember Library/Ember satellite projects/wreathe-file-manager/cmake-2017jan12" && $(MAKE) -f src/CMakeFiles/dolphinprivate.dir/build.make src/CMakeFiles/dolphinprivate.dir/views/dolphindetailsview.cpp.s
-.PHONY : views/dolphindetailsview.cpp.s
-
-views/dolphindetailsviewexpander.o: views/dolphindetailsviewexpander.cpp.o
-
-.PHONY : views/dolphindetailsviewexpander.o
-
-# target to build an object file
-views/dolphindetailsviewexpander.cpp.o:
-	cd "/home/kyan/Ember Library/Ember satellite projects/wreathe-file-manager/cmake-2017jan12" && $(MAKE) -f src/CMakeFiles/dolphinprivate.dir/build.make src/CMakeFiles/dolphinprivate.dir/views/dolphindetailsviewexpander.cpp.o
-.PHONY : views/dolphindetailsviewexpander.cpp.o
-
-views/dolphindetailsviewexpander.i: views/dolphindetailsviewexpander.cpp.i
-
-.PHONY : views/dolphindetailsviewexpander.i
-
-# target to preprocess a source file
-views/dolphindetailsviewexpander.cpp.i:
-	cd "/home/kyan/Ember Library/Ember satellite projects/wreathe-file-manager/cmake-2017jan12" && $(MAKE) -f src/CMakeFiles/dolphinprivate.dir/build.make src/CMakeFiles/dolphinprivate.dir/views/dolphindetailsviewexpander.cpp.i
-.PHONY : views/dolphindetailsviewexpander.cpp.i
-
-views/dolphindetailsviewexpander.s: views/dolphindetailsviewexpander.cpp.s
-
-.PHONY : views/dolphindetailsviewexpander.s
-
-# target to generate assembly for a file
-views/dolphindetailsviewexpander.cpp.s:
-	cd "/home/kyan/Ember Library/Ember satellite projects/wreathe-file-manager/cmake-2017jan12" && $(MAKE) -f src/CMakeFiles/dolphinprivate.dir/build.make src/CMakeFiles/dolphinprivate.dir/views/dolphindetailsviewexpander.cpp.s
-.PHONY : views/dolphindetailsviewexpander.cpp.s
-
-views/dolphindirlister.o: views/dolphindirlister.cpp.o
-
-.PHONY : views/dolphindirlister.o
-
-# target to build an object file
-views/dolphindirlister.cpp.o:
-	cd "/home/kyan/Ember Library/Ember satellite projects/wreathe-file-manager/cmake-2017jan12" && $(MAKE) -f src/CMakeFiles/dolphinprivate.dir/build.make src/CMakeFiles/dolphinprivate.dir/views/dolphindirlister.cpp.o
-.PHONY : views/dolphindirlister.cpp.o
-
-views/dolphindirlister.i: views/dolphindirlister.cpp.i
-
-.PHONY : views/dolphindirlister.i
-
-# target to preprocess a source file
-views/dolphindirlister.cpp.i:
-	cd "/home/kyan/Ember Library/Ember satellite projects/wreathe-file-manager/cmake-2017jan12" && $(MAKE) -f src/CMakeFiles/dolphinprivate.dir/build.make src/CMakeFiles/dolphinprivate.dir/views/dolphindirlister.cpp.i
-.PHONY : views/dolphindirlister.cpp.i
-
-views/dolphindirlister.s: views/dolphindirlister.cpp.s
-
-.PHONY : views/dolphindirlister.s
-
-# target to generate assembly for a file
-views/dolphindirlister.cpp.s:
-	cd "/home/kyan/Ember Library/Ember satellite projects/wreathe-file-manager/cmake-2017jan12" && $(MAKE) -f src/CMakeFiles/dolphinprivate.dir/build.make src/CMakeFiles/dolphinprivate.dir/views/dolphindirlister.cpp.s
-.PHONY : views/dolphindirlister.cpp.s
-
-views/dolphinfileitemdelegate.o: views/dolphinfileitemdelegate.cpp.o
-
-.PHONY : views/dolphinfileitemdelegate.o
-
-# target to build an object file
-views/dolphinfileitemdelegate.cpp.o:
-	cd "/home/kyan/Ember Library/Ember satellite projects/wreathe-file-manager/cmake-2017jan12" && $(MAKE) -f src/CMakeFiles/dolphinprivate.dir/build.make src/CMakeFiles/dolphinprivate.dir/views/dolphinfileitemdelegate.cpp.o
-.PHONY : views/dolphinfileitemdelegate.cpp.o
-
-views/dolphinfileitemdelegate.i: views/dolphinfileitemdelegate.cpp.i
-
-.PHONY : views/dolphinfileitemdelegate.i
-
-# target to preprocess a source file
-views/dolphinfileitemdelegate.cpp.i:
-	cd "/home/kyan/Ember Library/Ember satellite projects/wreathe-file-manager/cmake-2017jan12" && $(MAKE) -f src/CMakeFiles/dolphinprivate.dir/build.make src/CMakeFiles/dolphinprivate.dir/views/dolphinfileitemdelegate.cpp.i
-.PHONY : views/dolphinfileitemdelegate.cpp.i
-
-views/dolphinfileitemdelegate.s: views/dolphinfileitemdelegate.cpp.s
-
-.PHONY : views/dolphinfileitemdelegate.s
-
-# target to generate assembly for a file
-views/dolphinfileitemdelegate.cpp.s:
-	cd "/home/kyan/Ember Library/Ember satellite projects/wreathe-file-manager/cmake-2017jan12" && $(MAKE) -f src/CMakeFiles/dolphinprivate.dir/build.make src/CMakeFiles/dolphinprivate.dir/views/dolphinfileitemdelegate.cpp.s
-.PHONY : views/dolphinfileitemdelegate.cpp.s
-
-views/dolphiniconsview.o: views/dolphiniconsview.cpp.o
-
-.PHONY : views/dolphiniconsview.o
-
-# target to build an object file
-views/dolphiniconsview.cpp.o:
-	cd "/home/kyan/Ember Library/Ember satellite projects/wreathe-file-manager/cmake-2017jan12" && $(MAKE) -f src/CMakeFiles/dolphinprivate.dir/build.make src/CMakeFiles/dolphinprivate.dir/views/dolphiniconsview.cpp.o
-.PHONY : views/dolphiniconsview.cpp.o
-
-views/dolphiniconsview.i: views/dolphiniconsview.cpp.i
-
-.PHONY : views/dolphiniconsview.i
-
-# target to preprocess a source file
-views/dolphiniconsview.cpp.i:
-	cd "/home/kyan/Ember Library/Ember satellite projects/wreathe-file-manager/cmake-2017jan12" && $(MAKE) -f src/CMakeFiles/dolphinprivate.dir/build.make src/CMakeFiles/dolphinprivate.dir/views/dolphiniconsview.cpp.i
-.PHONY : views/dolphiniconsview.cpp.i
-
-views/dolphiniconsview.s: views/dolphiniconsview.cpp.s
-
-.PHONY : views/dolphiniconsview.s
-
-# target to generate assembly for a file
-views/dolphiniconsview.cpp.s:
-	cd "/home/kyan/Ember Library/Ember satellite projects/wreathe-file-manager/cmake-2017jan12" && $(MAKE) -f src/CMakeFiles/dolphinprivate.dir/build.make src/CMakeFiles/dolphinprivate.dir/views/dolphiniconsview.cpp.s
-.PHONY : views/dolphiniconsview.cpp.s
-
-views/dolphinmodel.o: views/dolphinmodel.cpp.o
-
-.PHONY : views/dolphinmodel.o
-
-# target to build an object file
-views/dolphinmodel.cpp.o:
-	cd "/home/kyan/Ember Library/Ember satellite projects/wreathe-file-manager/cmake-2017jan12" && $(MAKE) -f src/CMakeFiles/dolphinprivate.dir/build.make src/CMakeFiles/dolphinprivate.dir/views/dolphinmodel.cpp.o
-.PHONY : views/dolphinmodel.cpp.o
-
-views/dolphinmodel.i: views/dolphinmodel.cpp.i
-
-.PHONY : views/dolphinmodel.i
-
-# target to preprocess a source file
-views/dolphinmodel.cpp.i:
-	cd "/home/kyan/Ember Library/Ember satellite projects/wreathe-file-manager/cmake-2017jan12" && $(MAKE) -f src/CMakeFiles/dolphinprivate.dir/build.make src/CMakeFiles/dolphinprivate.dir/views/dolphinmodel.cpp.i
-.PHONY : views/dolphinmodel.cpp.i
-
-views/dolphinmodel.s: views/dolphinmodel.cpp.s
-
-.PHONY : views/dolphinmodel.s
-
-# target to generate assembly for a file
-views/dolphinmodel.cpp.s:
-	cd "/home/kyan/Ember Library/Ember satellite projects/wreathe-file-manager/cmake-2017jan12" && $(MAKE) -f src/CMakeFiles/dolphinprivate.dir/build.make src/CMakeFiles/dolphinprivate.dir/views/dolphinmodel.cpp.s
-.PHONY : views/dolphinmodel.cpp.s
-
-views/dolphinnewfilemenuobserver.o: views/dolphinnewfilemenuobserver.cpp.o
-
-.PHONY : views/dolphinnewfilemenuobserver.o
-
-# target to build an object file
-views/dolphinnewfilemenuobserver.cpp.o:
-	cd "/home/kyan/Ember Library/Ember satellite projects/wreathe-file-manager/cmake-2017jan12" && $(MAKE) -f src/CMakeFiles/dolphinprivate.dir/build.make src/CMakeFiles/dolphinprivate.dir/views/dolphinnewfilemenuobserver.cpp.o
-.PHONY : views/dolphinnewfilemenuobserver.cpp.o
-
-views/dolphinnewfilemenuobserver.i: views/dolphinnewfilemenuobserver.cpp.i
-
-.PHONY : views/dolphinnewfilemenuobserver.i
-
-# target to preprocess a source file
-views/dolphinnewfilemenuobserver.cpp.i:
-	cd "/home/kyan/Ember Library/Ember satellite projects/wreathe-file-manager/cmake-2017jan12" && $(MAKE) -f src/CMakeFiles/dolphinprivate.dir/build.make src/CMakeFiles/dolphinprivate.dir/views/dolphinnewfilemenuobserver.cpp.i
-.PHONY : views/dolphinnewfilemenuobserver.cpp.i
-
-views/dolphinnewfilemenuobserver.s: views/dolphinnewfilemenuobserver.cpp.s
-
-.PHONY : views/dolphinnewfilemenuobserver.s
-
-# target to generate assembly for a file
-views/dolphinnewfilemenuobserver.cpp.s:
-	cd "/home/kyan/Ember Library/Ember satellite projects/wreathe-file-manager/cmake-2017jan12" && $(MAKE) -f src/CMakeFiles/dolphinprivate.dir/build.make src/CMakeFiles/dolphinprivate.dir/views/dolphinnewfilemenuobserver.cpp.s
-.PHONY : views/dolphinnewfilemenuobserver.cpp.s
-
-views/dolphinremoteencoding.o: views/dolphinremoteencoding.cpp.o
-
-.PHONY : views/dolphinremoteencoding.o
-
-# target to build an object file
-views/dolphinremoteencoding.cpp.o:
-	cd "/home/kyan/Ember Library/Ember satellite projects/wreathe-file-manager/cmake-2017jan12" && $(MAKE) -f src/CMakeFiles/dolphinprivate.dir/build.make src/CMakeFiles/dolphinprivate.dir/views/dolphinremoteencoding.cpp.o
-.PHONY : views/dolphinremoteencoding.cpp.o
-
-views/dolphinremoteencoding.i: views/dolphinremoteencoding.cpp.i
-
-.PHONY : views/dolphinremoteencoding.i
-
-# target to preprocess a source file
-views/dolphinremoteencoding.cpp.i:
-	cd "/home/kyan/Ember Library/Ember satellite projects/wreathe-file-manager/cmake-2017jan12" && $(MAKE) -f src/CMakeFiles/dolphinprivate.dir/build.make src/CMakeFiles/dolphinprivate.dir/views/dolphinremoteencoding.cpp.i
-.PHONY : views/dolphinremoteencoding.cpp.i
-
-views/dolphinremoteencoding.s: views/dolphinremoteencoding.cpp.s
-
-.PHONY : views/dolphinremoteencoding.s
-
-# target to generate assembly for a file
-views/dolphinremoteencoding.cpp.s:
-	cd "/home/kyan/Ember Library/Ember satellite projects/wreathe-file-manager/cmake-2017jan12" && $(MAKE) -f src/CMakeFiles/dolphinprivate.dir/build.make src/CMakeFiles/dolphinprivate.dir/views/dolphinremoteencoding.cpp.s
-.PHONY : views/dolphinremoteencoding.cpp.s
-
-views/dolphinsortfilterproxymodel.o: views/dolphinsortfilterproxymodel.cpp.o
-
-.PHONY : views/dolphinsortfilterproxymodel.o
-
-# target to build an object file
-views/dolphinsortfilterproxymodel.cpp.o:
-	cd "/home/kyan/Ember Library/Ember satellite projects/wreathe-file-manager/cmake-2017jan12" && $(MAKE) -f src/CMakeFiles/dolphinprivate.dir/build.make src/CMakeFiles/dolphinprivate.dir/views/dolphinsortfilterproxymodel.cpp.o
-.PHONY : views/dolphinsortfilterproxymodel.cpp.o
-
-views/dolphinsortfilterproxymodel.i: views/dolphinsortfilterproxymodel.cpp.i
-
-.PHONY : views/dolphinsortfilterproxymodel.i
-
-# target to preprocess a source file
-views/dolphinsortfilterproxymodel.cpp.i:
-	cd "/home/kyan/Ember Library/Ember satellite projects/wreathe-file-manager/cmake-2017jan12" && $(MAKE) -f src/CMakeFiles/dolphinprivate.dir/build.make src/CMakeFiles/dolphinprivate.dir/views/dolphinsortfilterproxymodel.cpp.i
-.PHONY : views/dolphinsortfilterproxymodel.cpp.i
-
-views/dolphinsortfilterproxymodel.s: views/dolphinsortfilterproxymodel.cpp.s
-
-.PHONY : views/dolphinsortfilterproxymodel.s
-
-# target to generate assembly for a file
-views/dolphinsortfilterproxymodel.cpp.s:
-	cd "/home/kyan/Ember Library/Ember satellite projects/wreathe-file-manager/cmake-2017jan12" && $(MAKE) -f src/CMakeFiles/dolphinprivate.dir/build.make src/CMakeFiles/dolphinprivate.dir/views/dolphinsortfilterproxymodel.cpp.s
-.PHONY : views/dolphinsortfilterproxymodel.cpp.s
-
-views/dolphintreeview.o: views/dolphintreeview.cpp.o
-
-.PHONY : views/dolphintreeview.o
-
-# target to build an object file
-views/dolphintreeview.cpp.o:
-	cd "/home/kyan/Ember Library/Ember satellite projects/wreathe-file-manager/cmake-2017jan12" && $(MAKE) -f src/CMakeFiles/dolphinprivate.dir/build.make src/CMakeFiles/dolphinprivate.dir/views/dolphintreeview.cpp.o
-.PHONY : views/dolphintreeview.cpp.o
-
-views/dolphintreeview.i: views/dolphintreeview.cpp.i
-
-.PHONY : views/dolphintreeview.i
-
-# target to preprocess a source file
-views/dolphintreeview.cpp.i:
-	cd "/home/kyan/Ember Library/Ember satellite projects/wreathe-file-manager/cmake-2017jan12" && $(MAKE) -f src/CMakeFiles/dolphinprivate.dir/build.make src/CMakeFiles/dolphinprivate.dir/views/dolphintreeview.cpp.i
-.PHONY : views/dolphintreeview.cpp.i
-
-views/dolphintreeview.s: views/dolphintreeview.cpp.s
-
-.PHONY : views/dolphintreeview.s
-
-# target to generate assembly for a file
-views/dolphintreeview.cpp.s:
-	cd "/home/kyan/Ember Library/Ember satellite projects/wreathe-file-manager/cmake-2017jan12" && $(MAKE) -f src/CMakeFiles/dolphinprivate.dir/build.make src/CMakeFiles/dolphinprivate.dir/views/dolphintreeview.cpp.s
-.PHONY : views/dolphintreeview.cpp.s
-
-views/dolphinview.o: views/dolphinview.cpp.o
-
-.PHONY : views/dolphinview.o
-
-# target to build an object file
-views/dolphinview.cpp.o:
-	cd "/home/kyan/Ember Library/Ember satellite projects/wreathe-file-manager/cmake-2017jan12" && $(MAKE) -f src/CMakeFiles/dolphinprivate.dir/build.make src/CMakeFiles/dolphinprivate.dir/views/dolphinview.cpp.o
-.PHONY : views/dolphinview.cpp.o
-
-views/dolphinview.i: views/dolphinview.cpp.i
-
-.PHONY : views/dolphinview.i
-
-# target to preprocess a source file
-views/dolphinview.cpp.i:
-	cd "/home/kyan/Ember Library/Ember satellite projects/wreathe-file-manager/cmake-2017jan12" && $(MAKE) -f src/CMakeFiles/dolphinprivate.dir/build.make src/CMakeFiles/dolphinprivate.dir/views/dolphinview.cpp.i
-.PHONY : views/dolphinview.cpp.i
-
-views/dolphinview.s: views/dolphinview.cpp.s
-
-.PHONY : views/dolphinview.s
-
-# target to generate assembly for a file
-views/dolphinview.cpp.s:
-	cd "/home/kyan/Ember Library/Ember satellite projects/wreathe-file-manager/cmake-2017jan12" && $(MAKE) -f src/CMakeFiles/dolphinprivate.dir/build.make src/CMakeFiles/dolphinprivate.dir/views/dolphinview.cpp.s
-.PHONY : views/dolphinview.cpp.s
-
-views/dolphinviewactionhandler.o: views/dolphinviewactionhandler.cpp.o
-
-.PHONY : views/dolphinviewactionhandler.o
-
-# target to build an object file
-views/dolphinviewactionhandler.cpp.o:
-	cd "/home/kyan/Ember Library/Ember satellite projects/wreathe-file-manager/cmake-2017jan12" && $(MAKE) -f src/CMakeFiles/dolphinprivate.dir/build.make src/CMakeFiles/dolphinprivate.dir/views/dolphinviewactionhandler.cpp.o
-.PHONY : views/dolphinviewactionhandler.cpp.o
-
-views/dolphinviewactionhandler.i: views/dolphinviewactionhandler.cpp.i
-
-.PHONY : views/dolphinviewactionhandler.i
-
-# target to preprocess a source file
-views/dolphinviewactionhandler.cpp.i:
-	cd "/home/kyan/Ember Library/Ember satellite projects/wreathe-file-manager/cmake-2017jan12" && $(MAKE) -f src/CMakeFiles/dolphinprivate.dir/build.make src/CMakeFiles/dolphinprivate.dir/views/dolphinviewactionhandler.cpp.i
-.PHONY : views/dolphinviewactionhandler.cpp.i
-
-views/dolphinviewactionhandler.s: views/dolphinviewactionhandler.cpp.s
-
-.PHONY : views/dolphinviewactionhandler.s
-
-# target to generate assembly for a file
-views/dolphinviewactionhandler.cpp.s:
-	cd "/home/kyan/Ember Library/Ember satellite projects/wreathe-file-manager/cmake-2017jan12" && $(MAKE) -f src/CMakeFiles/dolphinprivate.dir/build.make src/CMakeFiles/dolphinprivate.dir/views/dolphinviewactionhandler.cpp.s
-.PHONY : views/dolphinviewactionhandler.cpp.s
-
-views/dolphinviewautoscroller.o: views/dolphinviewautoscroller.cpp.o
-
-.PHONY : views/dolphinviewautoscroller.o
-
-# target to build an object file
-views/dolphinviewautoscroller.cpp.o:
-	cd "/home/kyan/Ember Library/Ember satellite projects/wreathe-file-manager/cmake-2017jan12" && $(MAKE) -f src/CMakeFiles/dolphinprivate.dir/build.make src/CMakeFiles/dolphinprivate.dir/views/dolphinviewautoscroller.cpp.o
-.PHONY : views/dolphinviewautoscroller.cpp.o
-
-views/dolphinviewautoscroller.i: views/dolphinviewautoscroller.cpp.i
-
-.PHONY : views/dolphinviewautoscroller.i
-
-# target to preprocess a source file
-views/dolphinviewautoscroller.cpp.i:
-	cd "/home/kyan/Ember Library/Ember satellite projects/wreathe-file-manager/cmake-2017jan12" && $(MAKE) -f src/CMakeFiles/dolphinprivate.dir/build.make src/CMakeFiles/dolphinprivate.dir/views/dolphinviewautoscroller.cpp.i
-.PHONY : views/dolphinviewautoscroller.cpp.i
-
-views/dolphinviewautoscroller.s: views/dolphinviewautoscroller.cpp.s
-
-.PHONY : views/dolphinviewautoscroller.s
-
-# target to generate assembly for a file
-views/dolphinviewautoscroller.cpp.s:
-	cd "/home/kyan/Ember Library/Ember satellite projects/wreathe-file-manager/cmake-2017jan12" && $(MAKE) -f src/CMakeFiles/dolphinprivate.dir/build.make src/CMakeFiles/dolphinprivate.dir/views/dolphinviewautoscroller.cpp.s
-.PHONY : views/dolphinviewautoscroller.cpp.s
-
-views/dolphinviewcontroller.o: views/dolphinviewcontroller.cpp.o
-
-.PHONY : views/dolphinviewcontroller.o
-
-# target to build an object file
-views/dolphinviewcontroller.cpp.o:
-	cd "/home/kyan/Ember Library/Ember satellite projects/wreathe-file-manager/cmake-2017jan12" && $(MAKE) -f src/CMakeFiles/dolphinprivate.dir/build.make src/CMakeFiles/dolphinprivate.dir/views/dolphinviewcontroller.cpp.o
-.PHONY : views/dolphinviewcontroller.cpp.o
-
-views/dolphinviewcontroller.i: views/dolphinviewcontroller.cpp.i
-
-.PHONY : views/dolphinviewcontroller.i
-
-# target to preprocess a source file
-views/dolphinviewcontroller.cpp.i:
-	cd "/home/kyan/Ember Library/Ember satellite projects/wreathe-file-manager/cmake-2017jan12" && $(MAKE) -f src/CMakeFiles/dolphinprivate.dir/build.make src/CMakeFiles/dolphinprivate.dir/views/dolphinviewcontroller.cpp.i
-.PHONY : views/dolphinviewcontroller.cpp.i
-
-views/dolphinviewcontroller.s: views/dolphinviewcontroller.cpp.s
-
-.PHONY : views/dolphinviewcontroller.s
-
-# target to generate assembly for a file
-views/dolphinviewcontroller.cpp.s:
-	cd "/home/kyan/Ember Library/Ember satellite projects/wreathe-file-manager/cmake-2017jan12" && $(MAKE) -f src/CMakeFiles/dolphinprivate.dir/build.make src/CMakeFiles/dolphinprivate.dir/views/dolphinviewcontroller.cpp.s
-.PHONY : views/dolphinviewcontroller.cpp.s
-
-views/draganddrophelper.o: views/draganddrophelper.cpp.o
-
-.PHONY : views/draganddrophelper.o
-
-# target to build an object file
-views/draganddrophelper.cpp.o:
-	cd "/home/kyan/Ember Library/Ember satellite projects/wreathe-file-manager/cmake-2017jan12" && $(MAKE) -f src/CMakeFiles/dolphinprivate.dir/build.make src/CMakeFiles/dolphinprivate.dir/views/draganddrophelper.cpp.o
-.PHONY : views/draganddrophelper.cpp.o
-
-views/draganddrophelper.i: views/draganddrophelper.cpp.i
-
-.PHONY : views/draganddrophelper.i
-
-# target to preprocess a source file
-views/draganddrophelper.cpp.i:
-	cd "/home/kyan/Ember Library/Ember satellite projects/wreathe-file-manager/cmake-2017jan12" && $(MAKE) -f src/CMakeFiles/dolphinprivate.dir/build.make src/CMakeFiles/dolphinprivate.dir/views/draganddrophelper.cpp.i
-.PHONY : views/draganddrophelper.cpp.i
-
-views/draganddrophelper.s: views/draganddrophelper.cpp.s
-
-.PHONY : views/draganddrophelper.s
-
-# target to generate assembly for a file
-views/draganddrophelper.cpp.s:
-	cd "/home/kyan/Ember Library/Ember satellite projects/wreathe-file-manager/cmake-2017jan12" && $(MAKE) -f src/CMakeFiles/dolphinprivate.dir/build.make src/CMakeFiles/dolphinprivate.dir/views/draganddrophelper.cpp.s
-.PHONY : views/draganddrophelper.cpp.s
-
-views/folderexpander.o: views/folderexpander.cpp.o
-
-.PHONY : views/folderexpander.o
-
-# target to build an object file
-views/folderexpander.cpp.o:
-	cd "/home/kyan/Ember Library/Ember satellite projects/wreathe-file-manager/cmake-2017jan12" && $(MAKE) -f src/CMakeFiles/dolphinprivate.dir/build.make src/CMakeFiles/dolphinprivate.dir/views/folderexpander.cpp.o
-.PHONY : views/folderexpander.cpp.o
-
-views/folderexpander.i: views/folderexpander.cpp.i
-
-.PHONY : views/folderexpander.i
-
-# target to preprocess a source file
-views/folderexpander.cpp.i:
-	cd "/home/kyan/Ember Library/Ember satellite projects/wreathe-file-manager/cmake-2017jan12" && $(MAKE) -f src/CMakeFiles/dolphinprivate.dir/build.make src/CMakeFiles/dolphinprivate.dir/views/folderexpander.cpp.i
-.PHONY : views/folderexpander.cpp.i
-
-views/folderexpander.s: views/folderexpander.cpp.s
-
-.PHONY : views/folderexpander.s
-
-# target to generate assembly for a file
-views/folderexpander.cpp.s:
-	cd "/home/kyan/Ember Library/Ember satellite projects/wreathe-file-manager/cmake-2017jan12" && $(MAKE) -f src/CMakeFiles/dolphinprivate.dir/build.make src/CMakeFiles/dolphinprivate.dir/views/folderexpander.cpp.s
-.PHONY : views/folderexpander.cpp.s
-
-views/renamedialog.o: views/renamedialog.cpp.o
-
-.PHONY : views/renamedialog.o
-
-# target to build an object file
-views/renamedialog.cpp.o:
-	cd "/home/kyan/Ember Library/Ember satellite projects/wreathe-file-manager/cmake-2017jan12" && $(MAKE) -f src/CMakeFiles/dolphinprivate.dir/build.make src/CMakeFiles/dolphinprivate.dir/views/renamedialog.cpp.o
-.PHONY : views/renamedialog.cpp.o
-
-views/renamedialog.i: views/renamedialog.cpp.i
-
-.PHONY : views/renamedialog.i
-
-# target to preprocess a source file
-views/renamedialog.cpp.i:
-	cd "/home/kyan/Ember Library/Ember satellite projects/wreathe-file-manager/cmake-2017jan12" && $(MAKE) -f src/CMakeFiles/dolphinprivate.dir/build.make src/CMakeFiles/dolphinprivate.dir/views/renamedialog.cpp.i
-.PHONY : views/renamedialog.cpp.i
-
-views/renamedialog.s: views/renamedialog.cpp.s
-
-.PHONY : views/renamedialog.s
-
-# target to generate assembly for a file
-views/renamedialog.cpp.s:
-	cd "/home/kyan/Ember Library/Ember satellite projects/wreathe-file-manager/cmake-2017jan12" && $(MAKE) -f src/CMakeFiles/dolphinprivate.dir/build.make src/CMakeFiles/dolphinprivate.dir/views/renamedialog.cpp.s
-.PHONY : views/renamedialog.cpp.s
-
-views/selectionmanager.o: views/selectionmanager.cpp.o
-
-.PHONY : views/selectionmanager.o
-
-# target to build an object file
-views/selectionmanager.cpp.o:
-	cd "/home/kyan/Ember Library/Ember satellite projects/wreathe-file-manager/cmake-2017jan12" && $(MAKE) -f src/CMakeFiles/dolphinprivate.dir/build.make src/CMakeFiles/dolphinprivate.dir/views/selectionmanager.cpp.o
-.PHONY : views/selectionmanager.cpp.o
-
-views/selectionmanager.i: views/selectionmanager.cpp.i
-
-.PHONY : views/selectionmanager.i
-
-# target to preprocess a source file
-views/selectionmanager.cpp.i:
-	cd "/home/kyan/Ember Library/Ember satellite projects/wreathe-file-manager/cmake-2017jan12" && $(MAKE) -f src/CMakeFiles/dolphinprivate.dir/build.make src/CMakeFiles/dolphinprivate.dir/views/selectionmanager.cpp.i
-.PHONY : views/selectionmanager.cpp.i
-
-views/selectionmanager.s: views/selectionmanager.cpp.s
-
-.PHONY : views/selectionmanager.s
-
-# target to generate assembly for a file
-views/selectionmanager.cpp.s:
-	cd "/home/kyan/Ember Library/Ember satellite projects/wreathe-file-manager/cmake-2017jan12" && $(MAKE) -f src/CMakeFiles/dolphinprivate.dir/build.make src/CMakeFiles/dolphinprivate.dir/views/selectionmanager.cpp.s
-.PHONY : views/selectionmanager.cpp.s
-
-views/selectiontoggle.o: views/selectiontoggle.cpp.o
-
-.PHONY : views/selectiontoggle.o
-
-# target to build an object file
-views/selectiontoggle.cpp.o:
-	cd "/home/kyan/Ember Library/Ember satellite projects/wreathe-file-manager/cmake-2017jan12" && $(MAKE) -f src/CMakeFiles/dolphinprivate.dir/build.make src/CMakeFiles/dolphinprivate.dir/views/selectiontoggle.cpp.o
-.PHONY : views/selectiontoggle.cpp.o
-
-views/selectiontoggle.i: views/selectiontoggle.cpp.i
-
-.PHONY : views/selectiontoggle.i
-
-# target to preprocess a source file
-views/selectiontoggle.cpp.i:
-	cd "/home/kyan/Ember Library/Ember satellite projects/wreathe-file-manager/cmake-2017jan12" && $(MAKE) -f src/CMakeFiles/dolphinprivate.dir/build.make src/CMakeFiles/dolphinprivate.dir/views/selectiontoggle.cpp.i
-.PHONY : views/selectiontoggle.cpp.i
-
-views/selectiontoggle.s: views/selectiontoggle.cpp.s
-
-.PHONY : views/selectiontoggle.s
-
-# target to generate assembly for a file
-views/selectiontoggle.cpp.s:
-	cd "/home/kyan/Ember Library/Ember satellite projects/wreathe-file-manager/cmake-2017jan12" && $(MAKE) -f src/CMakeFiles/dolphinprivate.dir/build.make src/CMakeFiles/dolphinprivate.dir/views/selectiontoggle.cpp.s
-.PHONY : views/selectiontoggle.cpp.s
-
-views/tooltips/filemetadatatooltip.o: views/tooltips/filemetadatatooltip.cpp.o
-
-.PHONY : views/tooltips/filemetadatatooltip.o
-
-# target to build an object file
-views/tooltips/filemetadatatooltip.cpp.o:
-	cd "/home/kyan/Ember Library/Ember satellite projects/wreathe-file-manager/cmake-2017jan12" && $(MAKE) -f src/CMakeFiles/dolphinprivate.dir/build.make src/CMakeFiles/dolphinprivate.dir/views/tooltips/filemetadatatooltip.cpp.o
-.PHONY : views/tooltips/filemetadatatooltip.cpp.o
-
-views/tooltips/filemetadatatooltip.i: views/tooltips/filemetadatatooltip.cpp.i
-
-.PHONY : views/tooltips/filemetadatatooltip.i
-
-# target to preprocess a source file
-views/tooltips/filemetadatatooltip.cpp.i:
-	cd "/home/kyan/Ember Library/Ember satellite projects/wreathe-file-manager/cmake-2017jan12" && $(MAKE) -f src/CMakeFiles/dolphinprivate.dir/build.make src/CMakeFiles/dolphinprivate.dir/views/tooltips/filemetadatatooltip.cpp.i
-.PHONY : views/tooltips/filemetadatatooltip.cpp.i
-
-views/tooltips/filemetadatatooltip.s: views/tooltips/filemetadatatooltip.cpp.s
-
-.PHONY : views/tooltips/filemetadatatooltip.s
-
-# target to generate assembly for a file
-views/tooltips/filemetadatatooltip.cpp.s:
-	cd "/home/kyan/Ember Library/Ember satellite projects/wreathe-file-manager/cmake-2017jan12" && $(MAKE) -f src/CMakeFiles/dolphinprivate.dir/build.make src/CMakeFiles/dolphinprivate.dir/views/tooltips/filemetadatatooltip.cpp.s
-.PHONY : views/tooltips/filemetadatatooltip.cpp.s
-
-views/tooltips/tooltipmanager.o: views/tooltips/tooltipmanager.cpp.o
-
-.PHONY : views/tooltips/tooltipmanager.o
-
-# target to build an object file
-views/tooltips/tooltipmanager.cpp.o:
-	cd "/home/kyan/Ember Library/Ember satellite projects/wreathe-file-manager/cmake-2017jan12" && $(MAKE) -f src/CMakeFiles/dolphinprivate.dir/build.make src/CMakeFiles/dolphinprivate.dir/views/tooltips/tooltipmanager.cpp.o
-.PHONY : views/tooltips/tooltipmanager.cpp.o
-
-views/tooltips/tooltipmanager.i: views/tooltips/tooltipmanager.cpp.i
-
-.PHONY : views/tooltips/tooltipmanager.i
-
-# target to preprocess a source file
-views/tooltips/tooltipmanager.cpp.i:
-	cd "/home/kyan/Ember Library/Ember satellite projects/wreathe-file-manager/cmake-2017jan12" && $(MAKE) -f src/CMakeFiles/dolphinprivate.dir/build.make src/CMakeFiles/dolphinprivate.dir/views/tooltips/tooltipmanager.cpp.i
-.PHONY : views/tooltips/tooltipmanager.cpp.i
-
-views/tooltips/tooltipmanager.s: views/tooltips/tooltipmanager.cpp.s
-
-.PHONY : views/tooltips/tooltipmanager.s
-
-# target to generate assembly for a file
-views/tooltips/tooltipmanager.cpp.s:
-	cd "/home/kyan/Ember Library/Ember satellite projects/wreathe-file-manager/cmake-2017jan12" && $(MAKE) -f src/CMakeFiles/dolphinprivate.dir/build.make src/CMakeFiles/dolphinprivate.dir/views/tooltips/tooltipmanager.cpp.s
-.PHONY : views/tooltips/tooltipmanager.cpp.s
-
 views/versioncontrol/kversioncontrolplugin.o: views/versioncontrol/kversioncontrolplugin.cpp.o
 
 .PHONY : views/versioncontrol/kversioncontrolplugin.o
@@ -3353,148 +2471,12 @@ views/versioncontrol/kversioncontrolplugin.cpp.s:
 	cd "/home/kyan/Ember Library/Ember satellite projects/wreathe-file-manager/cmake-2017jan12" && $(MAKE) -f src/CMakeFiles/dolphinvcs.dir/build.make src/CMakeFiles/dolphinvcs.dir/views/versioncontrol/kversioncontrolplugin.cpp.s
 .PHONY : views/versioncontrol/kversioncontrolplugin.cpp.s
 
-views/versioncontrol/updateitemstatesthread.o: views/versioncontrol/updateitemstatesthread.cpp.o
-
-.PHONY : views/versioncontrol/updateitemstatesthread.o
-
-# target to build an object file
-views/versioncontrol/updateitemstatesthread.cpp.o:
-	cd "/home/kyan/Ember Library/Ember satellite projects/wreathe-file-manager/cmake-2017jan12" && $(MAKE) -f src/CMakeFiles/dolphinprivate.dir/build.make src/CMakeFiles/dolphinprivate.dir/views/versioncontrol/updateitemstatesthread.cpp.o
-.PHONY : views/versioncontrol/updateitemstatesthread.cpp.o
-
-views/versioncontrol/updateitemstatesthread.i: views/versioncontrol/updateitemstatesthread.cpp.i
-
-.PHONY : views/versioncontrol/updateitemstatesthread.i
-
-# target to preprocess a source file
-views/versioncontrol/updateitemstatesthread.cpp.i:
-	cd "/home/kyan/Ember Library/Ember satellite projects/wreathe-file-manager/cmake-2017jan12" && $(MAKE) -f src/CMakeFiles/dolphinprivate.dir/build.make src/CMakeFiles/dolphinprivate.dir/views/versioncontrol/updateitemstatesthread.cpp.i
-.PHONY : views/versioncontrol/updateitemstatesthread.cpp.i
-
-views/versioncontrol/updateitemstatesthread.s: views/versioncontrol/updateitemstatesthread.cpp.s
-
-.PHONY : views/versioncontrol/updateitemstatesthread.s
-
-# target to generate assembly for a file
-views/versioncontrol/updateitemstatesthread.cpp.s:
-	cd "/home/kyan/Ember Library/Ember satellite projects/wreathe-file-manager/cmake-2017jan12" && $(MAKE) -f src/CMakeFiles/dolphinprivate.dir/build.make src/CMakeFiles/dolphinprivate.dir/views/versioncontrol/updateitemstatesthread.cpp.s
-.PHONY : views/versioncontrol/updateitemstatesthread.cpp.s
-
-views/versioncontrol/versioncontrolobserver.o: views/versioncontrol/versioncontrolobserver.cpp.o
-
-.PHONY : views/versioncontrol/versioncontrolobserver.o
-
-# target to build an object file
-views/versioncontrol/versioncontrolobserver.cpp.o:
-	cd "/home/kyan/Ember Library/Ember satellite projects/wreathe-file-manager/cmake-2017jan12" && $(MAKE) -f src/CMakeFiles/dolphinprivate.dir/build.make src/CMakeFiles/dolphinprivate.dir/views/versioncontrol/versioncontrolobserver.cpp.o
-.PHONY : views/versioncontrol/versioncontrolobserver.cpp.o
-
-views/versioncontrol/versioncontrolobserver.i: views/versioncontrol/versioncontrolobserver.cpp.i
-
-.PHONY : views/versioncontrol/versioncontrolobserver.i
-
-# target to preprocess a source file
-views/versioncontrol/versioncontrolobserver.cpp.i:
-	cd "/home/kyan/Ember Library/Ember satellite projects/wreathe-file-manager/cmake-2017jan12" && $(MAKE) -f src/CMakeFiles/dolphinprivate.dir/build.make src/CMakeFiles/dolphinprivate.dir/views/versioncontrol/versioncontrolobserver.cpp.i
-.PHONY : views/versioncontrol/versioncontrolobserver.cpp.i
-
-views/versioncontrol/versioncontrolobserver.s: views/versioncontrol/versioncontrolobserver.cpp.s
-
-.PHONY : views/versioncontrol/versioncontrolobserver.s
-
-# target to generate assembly for a file
-views/versioncontrol/versioncontrolobserver.cpp.s:
-	cd "/home/kyan/Ember Library/Ember satellite projects/wreathe-file-manager/cmake-2017jan12" && $(MAKE) -f src/CMakeFiles/dolphinprivate.dir/build.make src/CMakeFiles/dolphinprivate.dir/views/versioncontrol/versioncontrolobserver.cpp.s
-.PHONY : views/versioncontrol/versioncontrolobserver.cpp.s
-
-views/viewextensionsfactory.o: views/viewextensionsfactory.cpp.o
-
-.PHONY : views/viewextensionsfactory.o
-
-# target to build an object file
-views/viewextensionsfactory.cpp.o:
-	cd "/home/kyan/Ember Library/Ember satellite projects/wreathe-file-manager/cmake-2017jan12" && $(MAKE) -f src/CMakeFiles/dolphinprivate.dir/build.make src/CMakeFiles/dolphinprivate.dir/views/viewextensionsfactory.cpp.o
-.PHONY : views/viewextensionsfactory.cpp.o
-
-views/viewextensionsfactory.i: views/viewextensionsfactory.cpp.i
-
-.PHONY : views/viewextensionsfactory.i
-
-# target to preprocess a source file
-views/viewextensionsfactory.cpp.i:
-	cd "/home/kyan/Ember Library/Ember satellite projects/wreathe-file-manager/cmake-2017jan12" && $(MAKE) -f src/CMakeFiles/dolphinprivate.dir/build.make src/CMakeFiles/dolphinprivate.dir/views/viewextensionsfactory.cpp.i
-.PHONY : views/viewextensionsfactory.cpp.i
-
-views/viewextensionsfactory.s: views/viewextensionsfactory.cpp.s
-
-.PHONY : views/viewextensionsfactory.s
-
-# target to generate assembly for a file
-views/viewextensionsfactory.cpp.s:
-	cd "/home/kyan/Ember Library/Ember satellite projects/wreathe-file-manager/cmake-2017jan12" && $(MAKE) -f src/CMakeFiles/dolphinprivate.dir/build.make src/CMakeFiles/dolphinprivate.dir/views/viewextensionsfactory.cpp.s
-.PHONY : views/viewextensionsfactory.cpp.s
-
-views/viewmodecontroller.o: views/viewmodecontroller.cpp.o
-
-.PHONY : views/viewmodecontroller.o
-
-# target to build an object file
-views/viewmodecontroller.cpp.o:
-	cd "/home/kyan/Ember Library/Ember satellite projects/wreathe-file-manager/cmake-2017jan12" && $(MAKE) -f src/CMakeFiles/dolphinprivate.dir/build.make src/CMakeFiles/dolphinprivate.dir/views/viewmodecontroller.cpp.o
-.PHONY : views/viewmodecontroller.cpp.o
-
-views/viewmodecontroller.i: views/viewmodecontroller.cpp.i
-
-.PHONY : views/viewmodecontroller.i
-
-# target to preprocess a source file
-views/viewmodecontroller.cpp.i:
-	cd "/home/kyan/Ember Library/Ember satellite projects/wreathe-file-manager/cmake-2017jan12" && $(MAKE) -f src/CMakeFiles/dolphinprivate.dir/build.make src/CMakeFiles/dolphinprivate.dir/views/viewmodecontroller.cpp.i
-.PHONY : views/viewmodecontroller.cpp.i
-
-views/viewmodecontroller.s: views/viewmodecontroller.cpp.s
-
-.PHONY : views/viewmodecontroller.s
-
-# target to generate assembly for a file
-views/viewmodecontroller.cpp.s:
-	cd "/home/kyan/Ember Library/Ember satellite projects/wreathe-file-manager/cmake-2017jan12" && $(MAKE) -f src/CMakeFiles/dolphinprivate.dir/build.make src/CMakeFiles/dolphinprivate.dir/views/viewmodecontroller.cpp.s
-.PHONY : views/viewmodecontroller.cpp.s
-
-views/viewproperties.o: views/viewproperties.cpp.o
-
-.PHONY : views/viewproperties.o
-
-# target to build an object file
-views/viewproperties.cpp.o:
-	cd "/home/kyan/Ember Library/Ember satellite projects/wreathe-file-manager/cmake-2017jan12" && $(MAKE) -f src/CMakeFiles/dolphinprivate.dir/build.make src/CMakeFiles/dolphinprivate.dir/views/viewproperties.cpp.o
-.PHONY : views/viewproperties.cpp.o
-
-views/viewproperties.i: views/viewproperties.cpp.i
-
-.PHONY : views/viewproperties.i
-
-# target to preprocess a source file
-views/viewproperties.cpp.i:
-	cd "/home/kyan/Ember Library/Ember satellite projects/wreathe-file-manager/cmake-2017jan12" && $(MAKE) -f src/CMakeFiles/dolphinprivate.dir/build.make src/CMakeFiles/dolphinprivate.dir/views/viewproperties.cpp.i
-.PHONY : views/viewproperties.cpp.i
-
-views/viewproperties.s: views/viewproperties.cpp.s
-
-.PHONY : views/viewproperties.s
-
-# target to generate assembly for a file
-views/viewproperties.cpp.s:
-	cd "/home/kyan/Ember Library/Ember satellite projects/wreathe-file-manager/cmake-2017jan12" && $(MAKE) -f src/CMakeFiles/dolphinprivate.dir/build.make src/CMakeFiles/dolphinprivate.dir/views/viewproperties.cpp.s
-.PHONY : views/viewproperties.cpp.s
-
 views/zoomlevelinfo.o: views/zoomlevelinfo.cpp.o
 
 .PHONY : views/zoomlevelinfo.o
 
 # target to build an object file
 views/zoomlevelinfo.cpp.o:
-	cd "/home/kyan/Ember Library/Ember satellite projects/wreathe-file-manager/cmake-2017jan12" && $(MAKE) -f src/CMakeFiles/dolphinprivate.dir/build.make src/CMakeFiles/dolphinprivate.dir/views/zoomlevelinfo.cpp.o
 	cd "/home/kyan/Ember Library/Ember satellite projects/wreathe-file-manager/cmake-2017jan12" && $(MAKE) -f src/CMakeFiles/dolphinstatic.dir/build.make src/CMakeFiles/dolphinstatic.dir/views/zoomlevelinfo.cpp.o
 	cd "/home/kyan/Ember Library/Ember satellite projects/wreathe-file-manager/cmake-2017jan12" && $(MAKE) -f src/CMakeFiles/kcm_dolphinviewmodes.dir/build.make src/CMakeFiles/kcm_dolphinviewmodes.dir/views/zoomlevelinfo.cpp.o
 .PHONY : views/zoomlevelinfo.cpp.o
@@ -3505,7 +2487,6 @@ views/zoomlevelinfo.i: views/zoomlevelinfo.cpp.i
 
 # target to preprocess a source file
 views/zoomlevelinfo.cpp.i:
-	cd "/home/kyan/Ember Library/Ember satellite projects/wreathe-file-manager/cmake-2017jan12" && $(MAKE) -f src/CMakeFiles/dolphinprivate.dir/build.make src/CMakeFiles/dolphinprivate.dir/views/zoomlevelinfo.cpp.i
 	cd "/home/kyan/Ember Library/Ember satellite projects/wreathe-file-manager/cmake-2017jan12" && $(MAKE) -f src/CMakeFiles/dolphinstatic.dir/build.make src/CMakeFiles/dolphinstatic.dir/views/zoomlevelinfo.cpp.i
 	cd "/home/kyan/Ember Library/Ember satellite projects/wreathe-file-manager/cmake-2017jan12" && $(MAKE) -f src/CMakeFiles/kcm_dolphinviewmodes.dir/build.make src/CMakeFiles/kcm_dolphinviewmodes.dir/views/zoomlevelinfo.cpp.i
 .PHONY : views/zoomlevelinfo.cpp.i
@@ -3516,7 +2497,6 @@ views/zoomlevelinfo.s: views/zoomlevelinfo.cpp.s
 
 # target to generate assembly for a file
 views/zoomlevelinfo.cpp.s:
-	cd "/home/kyan/Ember Library/Ember satellite projects/wreathe-file-manager/cmake-2017jan12" && $(MAKE) -f src/CMakeFiles/dolphinprivate.dir/build.make src/CMakeFiles/dolphinprivate.dir/views/zoomlevelinfo.cpp.s
 	cd "/home/kyan/Ember Library/Ember satellite projects/wreathe-file-manager/cmake-2017jan12" && $(MAKE) -f src/CMakeFiles/dolphinstatic.dir/build.make src/CMakeFiles/dolphinstatic.dir/views/zoomlevelinfo.cpp.s
 	cd "/home/kyan/Ember Library/Ember satellite projects/wreathe-file-manager/cmake-2017jan12" && $(MAKE) -f src/CMakeFiles/kcm_dolphinviewmodes.dir/build.make src/CMakeFiles/kcm_dolphinviewmodes.dir/views/zoomlevelinfo.cpp.s
 .PHONY : views/zoomlevelinfo.cpp.s
@@ -3609,9 +2589,6 @@ help:
 	@echo "... dolphinpart_autogen/moc_compilation.o"
 	@echo "... dolphinpart_autogen/moc_compilation.i"
 	@echo "... dolphinpart_autogen/moc_compilation.s"
-	@echo "... dolphinprivate_autogen/moc_compilation.o"
-	@echo "... dolphinprivate_autogen/moc_compilation.i"
-	@echo "... dolphinprivate_autogen/moc_compilation.s"
 	@echo "... dolphinstatic_autogen/moc_compilation.o"
 	@echo "... dolphinstatic_autogen/moc_compilation.i"
 	@echo "... dolphinstatic_autogen/moc_compilation.s"
@@ -3636,9 +2613,6 @@ help:
 	@echo "... kcm_dolphinviewmodes_autogen/moc_compilation.o"
 	@echo "... kcm_dolphinviewmodes_autogen/moc_compilation.i"
 	@echo "... kcm_dolphinviewmodes_autogen/moc_compilation.s"
-	@echo "... kitemviews/private/kbaloorolesprovider.o"
-	@echo "... kitemviews/private/kbaloorolesprovider.i"
-	@echo "... kitemviews/private/kbaloorolesprovider.s"
 	@echo "... main.o"
 	@echo "... main.i"
 	@echo "... main.s"
@@ -3690,15 +2664,6 @@ help:
 	@echo "... search/dolphinsearchinformation.o"
 	@echo "... search/dolphinsearchinformation.i"
 	@echo "... search/dolphinsearchinformation.s"
-	@echo "... settings/additionalinfodialog.o"
-	@echo "... settings/additionalinfodialog.i"
-	@echo "... settings/additionalinfodialog.s"
-	@echo "... settings/applyviewpropsjob.o"
-	@echo "... settings/applyviewpropsjob.i"
-	@echo "... settings/applyviewpropsjob.s"
-	@echo "... settings/dolphinsettings.o"
-	@echo "... settings/dolphinsettings.i"
-	@echo "... settings/dolphinsettings.s"
 	@echo "... settings/dolphinsettingsdialog.o"
 	@echo "... settings/dolphinsettingsdialog.i"
 	@echo "... settings/dolphinsettingsdialog.s"
@@ -3774,111 +2739,15 @@ help:
 	@echo "... settings/viewmodes/viewsettingspagebase.o"
 	@echo "... settings/viewmodes/viewsettingspagebase.i"
 	@echo "... settings/viewmodes/viewsettingspagebase.s"
-	@echo "... settings/viewpropertiesdialog.o"
-	@echo "... settings/viewpropertiesdialog.i"
-	@echo "... settings/viewpropertiesdialog.s"
-	@echo "... settings/viewpropsprogressinfo.o"
-	@echo "... settings/viewpropsprogressinfo.i"
-	@echo "... settings/viewpropsprogressinfo.s"
 	@echo "... statusbar/dolphinstatusbar.o"
 	@echo "... statusbar/dolphinstatusbar.i"
 	@echo "... statusbar/dolphinstatusbar.s"
 	@echo "... statusbar/statusbarspaceinfo.o"
 	@echo "... statusbar/statusbarspaceinfo.i"
 	@echo "... statusbar/statusbarspaceinfo.s"
-	@echo "... views/additionalinfoaccessor.o"
-	@echo "... views/additionalinfoaccessor.i"
-	@echo "... views/additionalinfoaccessor.s"
-	@echo "... views/dolphincategorydrawer.o"
-	@echo "... views/dolphincategorydrawer.i"
-	@echo "... views/dolphincategorydrawer.s"
-	@echo "... views/dolphincolumnview.o"
-	@echo "... views/dolphincolumnview.i"
-	@echo "... views/dolphincolumnview.s"
-	@echo "... views/dolphincolumnviewcontainer.o"
-	@echo "... views/dolphincolumnviewcontainer.i"
-	@echo "... views/dolphincolumnviewcontainer.s"
-	@echo "... views/dolphindetailsview.o"
-	@echo "... views/dolphindetailsview.i"
-	@echo "... views/dolphindetailsview.s"
-	@echo "... views/dolphindetailsviewexpander.o"
-	@echo "... views/dolphindetailsviewexpander.i"
-	@echo "... views/dolphindetailsviewexpander.s"
-	@echo "... views/dolphindirlister.o"
-	@echo "... views/dolphindirlister.i"
-	@echo "... views/dolphindirlister.s"
-	@echo "... views/dolphinfileitemdelegate.o"
-	@echo "... views/dolphinfileitemdelegate.i"
-	@echo "... views/dolphinfileitemdelegate.s"
-	@echo "... views/dolphiniconsview.o"
-	@echo "... views/dolphiniconsview.i"
-	@echo "... views/dolphiniconsview.s"
-	@echo "... views/dolphinmodel.o"
-	@echo "... views/dolphinmodel.i"
-	@echo "... views/dolphinmodel.s"
-	@echo "... views/dolphinnewfilemenuobserver.o"
-	@echo "... views/dolphinnewfilemenuobserver.i"
-	@echo "... views/dolphinnewfilemenuobserver.s"
-	@echo "... views/dolphinremoteencoding.o"
-	@echo "... views/dolphinremoteencoding.i"
-	@echo "... views/dolphinremoteencoding.s"
-	@echo "... views/dolphinsortfilterproxymodel.o"
-	@echo "... views/dolphinsortfilterproxymodel.i"
-	@echo "... views/dolphinsortfilterproxymodel.s"
-	@echo "... views/dolphintreeview.o"
-	@echo "... views/dolphintreeview.i"
-	@echo "... views/dolphintreeview.s"
-	@echo "... views/dolphinview.o"
-	@echo "... views/dolphinview.i"
-	@echo "... views/dolphinview.s"
-	@echo "... views/dolphinviewactionhandler.o"
-	@echo "... views/dolphinviewactionhandler.i"
-	@echo "... views/dolphinviewactionhandler.s"
-	@echo "... views/dolphinviewautoscroller.o"
-	@echo "... views/dolphinviewautoscroller.i"
-	@echo "... views/dolphinviewautoscroller.s"
-	@echo "... views/dolphinviewcontroller.o"
-	@echo "... views/dolphinviewcontroller.i"
-	@echo "... views/dolphinviewcontroller.s"
-	@echo "... views/draganddrophelper.o"
-	@echo "... views/draganddrophelper.i"
-	@echo "... views/draganddrophelper.s"
-	@echo "... views/folderexpander.o"
-	@echo "... views/folderexpander.i"
-	@echo "... views/folderexpander.s"
-	@echo "... views/renamedialog.o"
-	@echo "... views/renamedialog.i"
-	@echo "... views/renamedialog.s"
-	@echo "... views/selectionmanager.o"
-	@echo "... views/selectionmanager.i"
-	@echo "... views/selectionmanager.s"
-	@echo "... views/selectiontoggle.o"
-	@echo "... views/selectiontoggle.i"
-	@echo "... views/selectiontoggle.s"
-	@echo "... views/tooltips/filemetadatatooltip.o"
-	@echo "... views/tooltips/filemetadatatooltip.i"
-	@echo "... views/tooltips/filemetadatatooltip.s"
-	@echo "... views/tooltips/tooltipmanager.o"
-	@echo "... views/tooltips/tooltipmanager.i"
-	@echo "... views/tooltips/tooltipmanager.s"
 	@echo "... views/versioncontrol/kversioncontrolplugin.o"
 	@echo "... views/versioncontrol/kversioncontrolplugin.i"
 	@echo "... views/versioncontrol/kversioncontrolplugin.s"
-	@echo "... views/versioncontrol/updateitemstatesthread.o"
-	@echo "... views/versioncontrol/updateitemstatesthread.i"
-	@echo "... views/versioncontrol/updateitemstatesthread.s"
-	@echo "... views/versioncontrol/versioncontrolobserver.o"
-	@echo "... views/versioncontrol/versioncontrolobserver.i"
-	@echo "... views/versioncontrol/versioncontrolobserver.s"
-	@echo "... views/viewextensionsfactory.o"
-	@echo "... views/viewextensionsfactory.i"
-	@echo "... views/viewextensionsfactory.s"
-	@echo "... views/viewmodecontroller.o"
-	@echo "... views/viewmodecontroller.i"
-	@echo "... views/viewmodecontroller.s"
-	@echo "... views/viewproperties.o"
-	@echo "... views/viewproperties.i"
-	@echo "... views/viewproperties.s"
 	@echo "... views/zoomlevelinfo.o"
 	@echo "... views/zoomlevelinfo.i"
 	@echo "... views/zoomlevelinfo.s"

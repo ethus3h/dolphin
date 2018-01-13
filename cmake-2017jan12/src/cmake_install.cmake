@@ -84,36 +84,13 @@ if("${CMAKE_INSTALL_COMPONENT}" STREQUAL "Devel" OR NOT CMAKE_INSTALL_COMPONENT)
 endif()
 
 if("${CMAKE_INSTALL_COMPONENT}" STREQUAL "Dolphin" OR NOT CMAKE_INSTALL_COMPONENT)
-  foreach(file
-      "$ENV{DESTDIR}${CMAKE_INSTALL_PREFIX}/lib64/libdolphinprivate.so.5.0.0"
-      "$ENV{DESTDIR}${CMAKE_INSTALL_PREFIX}/lib64/libdolphinprivate.so.5"
-      )
-    if(EXISTS "${file}" AND
-       NOT IS_SYMLINK "${file}")
-      file(RPATH_CHECK
-           FILE "${file}"
-           RPATH "/usr/local/lib64")
+  file(INSTALL DESTINATION "${CMAKE_INSTALL_PREFIX}/lib64" TYPE SHARED_LIBRARY FILES "/home/kyan/Ember Library/Ember satellite projects/wreathe-file-manager/cmake-2017jan12/src/libdolphinprivate.so")
+  if(EXISTS "$ENV{DESTDIR}${CMAKE_INSTALL_PREFIX}/lib64/libdolphinprivate.so" AND
+     NOT IS_SYMLINK "$ENV{DESTDIR}${CMAKE_INSTALL_PREFIX}/lib64/libdolphinprivate.so")
+    if(CMAKE_INSTALL_DO_STRIP)
+      execute_process(COMMAND "/usr/bin/strip" "$ENV{DESTDIR}${CMAKE_INSTALL_PREFIX}/lib64/libdolphinprivate.so")
     endif()
-  endforeach()
-  file(INSTALL DESTINATION "${CMAKE_INSTALL_PREFIX}/lib64" TYPE SHARED_LIBRARY FILES
-    "/home/kyan/Ember Library/Ember satellite projects/wreathe-file-manager/cmake-2017jan12/src/libdolphinprivate.so.5.0.0"
-    "/home/kyan/Ember Library/Ember satellite projects/wreathe-file-manager/cmake-2017jan12/src/libdolphinprivate.so.5"
-    )
-  foreach(file
-      "$ENV{DESTDIR}${CMAKE_INSTALL_PREFIX}/lib64/libdolphinprivate.so.5.0.0"
-      "$ENV{DESTDIR}${CMAKE_INSTALL_PREFIX}/lib64/libdolphinprivate.so.5"
-      )
-    if(EXISTS "${file}" AND
-       NOT IS_SYMLINK "${file}")
-      file(RPATH_CHANGE
-           FILE "${file}"
-           OLD_RPATH "/home/kyan/Ember Library/Ember satellite projects/wreathe-file-manager/cmake-2017jan12/src:"
-           NEW_RPATH "/usr/local/lib64")
-      if(CMAKE_INSTALL_DO_STRIP)
-        execute_process(COMMAND "/usr/bin/strip" "${file}")
-      endif()
-    endif()
-  endforeach()
+  endif()
 endif()
 
 if("${CMAKE_INSTALL_COMPONENT}" STREQUAL "Devel" OR NOT CMAKE_INSTALL_COMPONENT)
