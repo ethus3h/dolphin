@@ -19,15 +19,15 @@
 
 #include "updateitemstatesthread.h"
 
-#include <QVector>
 #include <QMutexLocker>
 
-UpdateItemStatesThread::UpdateItemStatesThread(KVersionControlPlugin* plugin,
-                                               const QMap<QString, QVector<VersionControlObserver::ItemState> >& itemStates) :
+UpdateItemStatesThread::UpdateItemStatesThread() :
     QThread(),
-    m_globalPluginMutex(nullptr),
-    m_plugin(plugin),
-    m_itemStates(itemStates)
+    m_globalPluginMutex(0),
+    m_plugin(0),
+    m_itemMutex(),
+    m_retrievedItems(false),
+    m_itemStates()
 {
     // Several threads may share one instance of a plugin. A global
     // mutex is required to serialize the retrieval of version control
@@ -40,30 +40,62 @@ UpdateItemStatesThread::~UpdateItemStatesThread()
 {
 }
 
+void UpdateItemStatesThread::setData(KVersionControlPlugin* plugin,
+                                     const QList<VersionControlObserver::ItemState>& itemStates)
+{
+    QMutexLocker itemLocker(&m_itemMutex);
+    m_itemStates = itemStates;
+
+    QMutexLocker pluginLocker(m_globalPluginMutex);
+    m_plugin = plugin;
+}
+
 void UpdateItemStatesThread::run()
 {
     Q_ASSERT(!m_itemStates.isEmpty());
     Q_ASSERT(m_plugin);
 
-    QMutexLocker pluginLocker(m_globalPluginMutex);
-    QMap<QString, QVector<VersionControlObserver::ItemState> >::iterator it = m_itemStates.begin();
-    for (; it != m_itemStates.end(); ++it) {
-        if (m_plugin->beginRetrieval(it.key())) {
-            QVector<VersionControlObserver::ItemState>& items = it.value();
-            const int count = items.count();
-            for (int i = 0; i < count; ++i) {
-                const KFileItem& item = items.at(i).first;
-                const KVersionControlPlugin::ItemVersion version = m_plugin->itemVersion(item);
-                items[i].second = version;
-            }
-        }
+    // The items from m_itemStates may be located in different directory levels. The version
+    // plugin requires the root directory for KVersionControlPlugin::beginRetrieval(). Instead
+    // of doing an expensive search, we utilize the knowledge of the implementation of
+    // VersionControlObserver::addDirectory() to be sure that the last item contains the root.
+    QMutexLocker itemLocker(&m_itemMutex);
+    const QString directory = m_itemStates.last().item.url().directory(KUrl::AppendTrailingSlash);
+    itemLocker.unlock();
 
+    QMutexLocker pluginLocker(m_globalPluginMutex);
+    m_retrievedItems = false;
+    if (m_plugin->beginRetrieval(directory)) {
+        itemLocker.relock();
+        const int count = m_itemStates.count();
+        for (int i = 0; i < count; ++i) {
+            m_itemStates[i].version = m_plugin->versionState(m_itemStates[i].item);
+        }
         m_plugin->endRetrieval();
+        m_retrievedItems = true;
     }
 }
 
-QMap<QString, QVector<VersionControlObserver::ItemState> > UpdateItemStatesThread::itemStates() const
+bool UpdateItemStatesThread::lockPlugin()
 {
+    return m_globalPluginMutex->tryLock(300);
+}
+
+void UpdateItemStatesThread::unlockPlugin()
+{
+    m_globalPluginMutex->unlock();
+}
+
+QList<VersionControlObserver::ItemState> UpdateItemStatesThread::itemStates() const
+{
+    QMutexLocker locker(&m_itemMutex);
     return m_itemStates;
 }
 
+bool UpdateItemStatesThread::retrievedItems() const
+{
+    QMutexLocker locker(&m_itemMutex);
+    return m_retrievedItems;
+}
+
+#include "updateitemstatesthread.moc"
