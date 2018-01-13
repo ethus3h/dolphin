@@ -36,8 +36,8 @@ class DolphinSettingsDialog : public KPageDialog
     Q_OBJECT
 
 public:
-    explicit DolphinSettingsDialog(const QUrl& url, QWidget* parent = 0);
-    virtual ~DolphinSettingsDialog();
+    explicit DolphinSettingsDialog(const QUrl& url, QWidget* parent = nullptr);
+    ~DolphinSettingsDialog() override;
 
 signals:
     void settingsChanged();

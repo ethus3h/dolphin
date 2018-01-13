@@ -58,7 +58,7 @@ public:
     int styleHint(StyleHint hint,
                   const QStyleOption* option = nullptr,
                   const QWidget* widget = nullptr,
-                  QStyleHintReturn* returnData = nullptr) const Q_DECL_OVERRIDE
+                  QStyleHintReturn* returnData = nullptr) const override
     {
         switch (hint) {
         case QStyle::SH_ItemView_ActivateItemOnSingleClick:
@@ -149,10 +149,10 @@ void KItemListControllerTest::initTestCase()
 void KItemListControllerTest::cleanupTestCase()
 {
     delete m_container;
-    m_container = 0;
+    m_container = nullptr;
 
     delete m_testDir;
-    m_testDir = 0;
+    m_testDir = nullptr;
 }
 
 /** Before each test, the current item, selection, and item size are reset to the defaults. */

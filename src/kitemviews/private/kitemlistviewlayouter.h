@@ -50,8 +50,8 @@ class DOLPHIN_EXPORT KItemListViewLayouter : public QObject
     Q_OBJECT
 
 public:
-    KItemListViewLayouter(KItemListSizeHintResolver* sizeHintResolver, QObject* parent = 0);
-    virtual ~KItemListViewLayouter();
+    KItemListViewLayouter(KItemListSizeHintResolver* sizeHintResolver, QObject* parent = nullptr);
+    ~KItemListViewLayouter() override;
 
     void setScrollOrientation(Qt::Orientation orientation);
     Qt::Orientation scrollOrientation() const;

@@ -31,8 +31,8 @@ class SettingsPageBase : public QWidget
     Q_OBJECT
 
 public:
-    explicit SettingsPageBase(QWidget* parent = 0);
-    virtual ~SettingsPageBase();
+    explicit SettingsPageBase(QWidget* parent = nullptr);
+    ~SettingsPageBase() override;
 
     /**
      * Must be implemented by a derived class to

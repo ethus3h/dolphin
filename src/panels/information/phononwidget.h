@@ -43,7 +43,7 @@ class PhononWidget : public QWidget
 {
     Q_OBJECT
     public:
-        PhononWidget(QWidget *parent = 0);
+        PhononWidget(QWidget *parent = nullptr);
 
         void setUrl(const QUrl &url);
         QUrl url() const;
@@ -63,8 +63,8 @@ class PhononWidget : public QWidget
         void hasVideoChanged(bool hasVideo);
 
     protected:
-        virtual void showEvent(QShowEvent *event) Q_DECL_OVERRIDE;
-        virtual void hideEvent(QHideEvent *event) Q_DECL_OVERRIDE;
+        void showEvent(QShowEvent *event) override;
+        void hideEvent(QHideEvent *event) override;
 
     private slots:
         void stateChanged(Phonon::State);

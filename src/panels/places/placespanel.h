@@ -31,6 +31,7 @@ class PlacesItemModel;
 class PlacesView;
 class QGraphicsSceneDragDropEvent;
 class KJob;
+class QMenu;
 /**
  * @brief Combines bookmarks and mounted devices as list.
  */
@@ -40,7 +41,7 @@ class PlacesPanel : public Panel
 
 public:
     explicit PlacesPanel(QWidget* parent);
-    virtual ~PlacesPanel();
+    ~PlacesPanel() override;
     void proceedWithTearDown();
 
 signals:
@@ -51,11 +52,11 @@ signals:
     void storageTearDownExternallyRequested(const QString& mountPath);
 
 protected:
-    virtual bool urlChanged() Q_DECL_OVERRIDE;
-    virtual void showEvent(QShowEvent* event) Q_DECL_OVERRIDE;
+    bool urlChanged() override;
+    void showEvent(QShowEvent* event) override;
 
 public slots:
-    virtual void readSettings() Q_DECL_OVERRIDE;
+    void readSettings() override;
 
 private slots:
     void slotItemActivated(int index);
@@ -81,6 +82,8 @@ private:
     void selectClosestItem();
 
     void triggerItem(int index, Qt::MouseButton button);
+
+    QAction* buildGroupContextMenu(QMenu* menu, int index);
 
 private:
     KItemListController* m_controller;

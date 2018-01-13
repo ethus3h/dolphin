@@ -38,8 +38,8 @@ class PlacesItemEditDialog: public QDialog
     Q_OBJECT
 
 public:
-    explicit PlacesItemEditDialog(QWidget* parent = 0);
-    virtual ~PlacesItemEditDialog();
+    explicit PlacesItemEditDialog(QWidget* parent = nullptr);
+    ~PlacesItemEditDialog() override;
 
     void setIcon(const QString& icon);
     QString icon() const;
@@ -54,7 +54,7 @@ public:
     bool allowGlobal() const;
 
 protected:
-    virtual bool event(QEvent* event) Q_DECL_OVERRIDE;
+    bool event(QEvent* event) override;
 
 private slots:
     void slotUrlChanged(const QString& text);

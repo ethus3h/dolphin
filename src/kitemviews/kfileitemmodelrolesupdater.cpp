@@ -88,21 +88,18 @@ KFileItemModelRolesUpdater::KFileItemModelRolesUpdater(KFileItemModel* model, QO
     m_pendingIndexes(),
     m_pendingPreviewItems(),
     m_previewJob(),
-    m_recentlyChangedItemsTimer(0),
+    m_recentlyChangedItemsTimer(nullptr),
     m_recentlyChangedItems(),
     m_changedItems(),
-    m_directoryContentsCounter(0)
+    m_directoryContentsCounter(nullptr)
   #ifdef HAVE_BALOO
-  , m_balooFileMonitor(0)
+  , m_balooFileMonitor(nullptr)
   #endif
 {
     Q_ASSERT(model);
 
     const KConfigGroup globalConfig(KSharedConfig::openConfig(), "PreviewSettings");
-    m_enabledPlugins = globalConfig.readEntry("Plugins", QStringList()
-                                                         << QStringLiteral("directorythumbnail")
-                                                         << QStringLiteral("imagethumbnail")
-                                                         << QStringLiteral("jpegthumbnail"));
+    m_enabledPlugins = globalConfig.readEntry("Plugins", KIO::PreviewJob::defaultPlugins());
 
     connect(m_model, &KFileItemModel::itemsInserted,
             this,    &KFileItemModelRolesUpdater::slotItemsInserted);
@@ -299,7 +296,7 @@ void KFileItemModelRolesUpdater::setRoles(const QSet<QByteArray>& roles)
                     this, &KFileItemModelRolesUpdater::applyChangedBalooRoles);
         } else if (!hasBalooRole && m_balooFileMonitor) {
             delete m_balooFileMonitor;
-            m_balooFileMonitor = 0;
+            m_balooFileMonitor = nullptr;
         }
 #endif
 
@@ -597,7 +594,7 @@ void KFileItemModelRolesUpdater::slotPreviewFailed(const KFileItem& item)
 
 void KFileItemModelRolesUpdater::slotPreviewJobFinished()
 {
-    m_previewJob = 0;
+    m_previewJob = nullptr;
 
     if (m_state != PreviewJobRunning) {
         return;
@@ -1141,7 +1138,7 @@ void KFileItemModelRolesUpdater::killPreviewJob()
         disconnect(m_previewJob,  &KIO::PreviewJob::finished,
                    this, &KFileItemModelRolesUpdater::slotPreviewJobFinished);
         m_previewJob->kill();
-        m_previewJob = 0;
+        m_previewJob = nullptr;
         m_pendingPreviewItems.clear();
     }
 }

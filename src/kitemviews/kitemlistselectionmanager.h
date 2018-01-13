@@ -51,8 +51,8 @@ public:
         Toggle
     };
 
-    KItemListSelectionManager(QObject* parent = 0);
-    virtual ~KItemListSelectionManager();
+    KItemListSelectionManager(QObject* parent = nullptr);
+    ~KItemListSelectionManager() override;
 
     void setCurrentItem(int current);
     int currentItem() const;

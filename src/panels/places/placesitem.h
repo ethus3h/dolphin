@@ -40,16 +40,8 @@ class PlacesItem : public KStandardItem
 {
 
 public:
-    enum GroupType
-    {
-        PlacesType,
-        SearchForType,
-        RecentlySavedType,
-        DevicesType
-    };
-
-    explicit PlacesItem(const KBookmark& bookmark, PlacesItem* parent = 0);
-    virtual ~PlacesItem();
+    explicit PlacesItem(const KBookmark& bookmark, PlacesItem* parent = nullptr);
+    ~PlacesItem() override;
 
     void setUrl(const QUrl& url);
     QUrl url() const;
@@ -60,6 +52,9 @@ public:
     void setHidden(bool hidden);
     bool isHidden() const;
 
+    void setGroupHidden(bool hidden);
+    bool isGroupHidden() const;
+
     void setSystemItem(bool isSystemItem);
     bool isSystemItem() const;
 
@@ -68,26 +63,19 @@ public:
     void setBookmark(const KBookmark& bookmark);
     KBookmark bookmark() const;
 
-    GroupType groupType() const;
-
     bool storageSetupNeeded() const;
 
-    static KBookmark createBookmark(KBookmarkManager* manager,
-                                    const QString& text,
-                                    const QUrl& url,
-                                    const QString& iconName);
-    static KBookmark createDeviceBookmark(KBookmarkManager* manager,
-                                          const QString& udi);
+    bool isSearchOrTimelineUrl() const;
 
     PlacesItemSignalHandler* signalHandler() const;
 
 protected:
-    virtual void onDataValueChanged(const QByteArray& role,
+    void onDataValueChanged(const QByteArray& role,
                                     const QVariant& current,
-                                    const QVariant& previous) Q_DECL_OVERRIDE;
+                                    const QVariant& previous) override;
 
-    virtual void onDataChanged(const QHash<QByteArray, QVariant>& current,
-                               const QHash<QByteArray, QVariant>& previous) Q_DECL_OVERRIDE;
+    void onDataChanged(const QHash<QByteArray, QVariant>& current,
+                               const QHash<QByteArray, QVariant>& previous) override;
 
 private:
     PlacesItem(const PlacesItem& item);
