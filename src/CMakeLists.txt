@@ -100,6 +100,7 @@ set(dolphinprivate_LIB_SRCS
     views/selectionmanager.cpp
     views/tooltips/filemetadatatooltip.cpp
     views/tooltips/tooltipmanager.cpp
+    views/versioncontrol/pendingthreadsmaintainer.cpp
     views/versioncontrol/updateitemstatesthread.cpp
     views/versioncontrol/versioncontrolobserver.cpp
     views/viewextensionsfactory.cpp
