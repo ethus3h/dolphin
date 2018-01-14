@@ -47,7 +47,7 @@
   remotes/upstream/Applications/16.12       3a496c534 GIT_SILENT Upgrade KDE Applications version to 16.12.3.
   remotes/upstream/Applications/17.04       df0741ce3 GIT_SILENT Upgrade KDE Applications version to 17.04.3.
   remotes/upstream/Applications/17.08       507594879 GIT_SILENT made messages (after extraction)
-  remotes/upstream/Applications/17.12       65c099716 infopanel fully resizable
+  remotes/upstream/Applications/17.12       3cb3d58fb folderspanel context-menu option "Limit to Home Directory" should be always visible
   remotes/upstream/KDE/4.0                  fa907ecba SVN_SILENT made messages (.desktop file)
   remotes/upstream/KDE/4.1                  7731abf98 SVN_SILENT made messages (.desktop file)
   remotes/upstream/KDE/4.10                 4c99efe4d Dolphin Search Date: Set the proper date
