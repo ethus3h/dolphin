@@ -122,7 +122,7 @@ DolphinColumnView::DolphinColumnView(QWidget* parent,
     m_dirLister->setDelayedMimeTypes(true);
     const bool showHiddenFiles = m_container->m_dolphinViewController->view()->showHiddenFiles();
     m_dirLister->setShowingDotFiles(showHiddenFiles);
-    m_dirLister->setHiddenList(QStringList::QStringList(m_container->m_dolphinViewController->view()->hiddenList()));
+    m_dirLister->setHiddenList(QStringList(m_container->m_dolphinViewController->view()->hiddenList()));
     connect(m_dirLister, SIGNAL(completed()), this, SLOT(slotDirListerCompleted()));
 
     m_dolphinModel = new DolphinModel(this);
