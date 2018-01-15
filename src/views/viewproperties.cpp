@@ -77,7 +77,7 @@ ViewProperties::ViewProperties(const KUrl& url) :
     const QString file = m_filePath + QDir::separator() + QLatin1String(".directory");
     const QString hiddenfile = m_filePath + QDir::separator() + QLatin1String(".hidden");
     QFile thefile(hiddenfile);
-    m_hiddenList = QStringList::QStringList();
+    QStringList m_hiddenList = QStringList();
     if (thefile.open(QIODevice::ReadOnly | QIODevice::Text)) {
         while (!thefile.atEnd()) {
             QString string = thefile.readLine();
@@ -111,7 +111,7 @@ ViewProperties::ViewProperties(const KUrl& url) :
             m_changedProps = false;
         }
     } else {
-        QStringList directoryList = QStringList::QStringList(m_node->hideSpecificFiles());
+        QStringList directoryList = QStringList(m_node->hideSpecificFiles());
         for (QStringList::Iterator it = directoryList.begin();
                                   it != directoryList.end(); ++it) {
               m_hiddenList.append(*it);
@@ -183,7 +183,7 @@ bool ViewProperties::showHiddenFiles() const
 
 QStringList ViewProperties::hiddenList() const
 {
-    return QStringList::QStringList(m_hiddenList);
+    return QStringList(m_hiddenList);
 }
 
 void ViewProperties::setSorting(DolphinView::Sorting sorting)
