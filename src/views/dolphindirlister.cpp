@@ -48,7 +48,7 @@ void DolphinDirLister::handleError(KIO::Job* job)
 
 void DolphinDirLister::setHiddenList(const QStringList& list)
 {
-    const QStringList& hiddenlist = QStringList(list);
+    QStringList* hiddenlist = QStringList(list);
 }
 
 QStringList DolphinDirLister::hiddenList()
