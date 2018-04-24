@@ -284,7 +284,7 @@
   remotes/upstream/Applications/17.04                                                                                  df0741ce3 GIT_SILENT Upgrade KDE Applications version to 17.04.3.
   remotes/upstream/Applications/17.08                                                                                  507594879 GIT_SILENT made messages (after extraction)
   remotes/upstream/Applications/17.12                                                                                  9342b73b2 SVN_SILENT made messages (.desktop file) - always resolve ours
-  remotes/upstream/Applications/18.04                                                                                  ed5102a5f Fix untranslated places panel entries
+  remotes/upstream/Applications/18.04                                                                                  e15d9f266 Fix inconsistent preview spacing and icon wiggly-ness when toggling previews in Icon mode
   remotes/upstream/KDE/4.0                                                                                             fa907ecba SVN_SILENT made messages (.desktop file)
   remotes/upstream/KDE/4.1                                                                                             7731abf98 SVN_SILENT made messages (.desktop file)
   remotes/upstream/KDE/4.10                                                                                            4c99efe4d Dolphin Search Date: Set the proper date
@@ -309,7 +309,7 @@
   remotes/upstream/isemenov/qml                                                                                        7a7cfa6ad Revert "Hide context menu plugins unless enabled by default or by the user"
   remotes/upstream/kdepim/enterprise-4.0.83                                                                            91607d4c4 Correcting icon name from "view_icon" to "view-icon"
   remotes/upstream/kdepim/enterprise-4.1                                                                               d5967230c Merge the complete kdebase 4.1 branch. -- Merged revisions 887116,888693,889150,889439,889778,890768,890935,891080,891882,891931,892345,892604,892739,893179,893661,894203,894623,895611,896304,897397,897472,897799,898019,898088,898397,899045,899546,900427,901203,904056,904386,905309,906142,906305,906307,906309,906316,906401,908189,908691,910155,910340,911265,911280 via svnmerge from  svn+ssh://tmcguire@svn.kde.org/home/kde//branches/KDE/4.1/kdebase
-  remotes/upstream/master                                                                                              ec12391a1 Convert hard coded shortcuts to standard keys
+  remotes/upstream/master                                                                                              b9143a55a Move "Open" actions to the top of the context menu for files
   remotes/upstream/origin                                                                                              ce69bb06e Improve performance when turning on the preview mode
   remotes/upstream/plasma/isemenov/fvport                                                                              6bc77951e Merge remote-tracking branch 'origin' into fvport
   remotes/upstream/plasma/isemenov/qml                                                                                 7a7cfa6ad Revert "Hide context menu plugins unless enabled by default or by the user"
