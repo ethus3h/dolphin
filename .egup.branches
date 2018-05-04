@@ -284,7 +284,7 @@
   remotes/upstream/Applications/17.04                                                                                  df0741ce3 GIT_SILENT Upgrade KDE Applications version to 17.04.3.
   remotes/upstream/Applications/17.08                                                                                  507594879 GIT_SILENT made messages (after extraction)
   remotes/upstream/Applications/17.12                                                                                  9342b73b2 SVN_SILENT made messages (.desktop file) - always resolve ours
-  remotes/upstream/Applications/18.04                                                                                  94ba6a097 SVN_SILENT made messages (.desktop file) - always resolve ours
+  remotes/upstream/Applications/18.04                                                                                  8d9e0c242 GIT_SILENT Upgrade KDE Applications version to 18.04.1.
   remotes/upstream/KDE/4.0                                                                                             fa907ecba SVN_SILENT made messages (.desktop file)
   remotes/upstream/KDE/4.1                                                                                             7731abf98 SVN_SILENT made messages (.desktop file)
   remotes/upstream/KDE/4.10                                                                                            4c99efe4d Dolphin Search Date: Set the proper date
