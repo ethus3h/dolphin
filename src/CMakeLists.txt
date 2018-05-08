@@ -16,12 +16,23 @@ if(NepomukCore_FOUND AND NepomukWidgets_FOUND)
     set(HAVE_NEPOMUK TRUE)
 endif()
 
-include_directories( ${KDE4_INCLUDE_DIR} ${QT_INCLUDES} )
+configure_file(config-nepomuk.h.cmake ${CMAKE_CURRENT_BINARY_DIR}/config-nepomuk.h )
 
-if (Nepomuk_FOUND)
-  # Yes, Soprano includes is what we need here
-  include_directories( ${SOPRANO_INCLUDE_DIR} ${NEPOMUK_INCLUDE_DIR} )
-endif (Nepomuk_FOUND)
+macro_bool_to_01(X11_Xrender_FOUND HAVE_XRENDER)
+configure_file(config-X11.h.cmake ${CMAKE_CURRENT_BINARY_DIR}/config-X11.h )
+
+include_directories( ${KACTIVITIES_INCLUDE_DIRS} )
+
+if(HAVE_NEPOMUK)
+  find_package(Soprano 2.7.56)
+  set_package_properties(Soprano PROPERTIES DESCRIPTION "Qt-based RDF storage and parsing solution"
+                         URL "http://soprano.sourceforge.net"
+                         TYPE REQUIRED
+                         PURPOSE "Required for everything (storage and general data management)"
+                        )
+
+  include_directories( ${SOPRANO_INCLUDE_DIR} ${NEPOMUK_CORE_INCLUDE_DIR} ${NEPOMUK_WIDGETS_INCLUDE_DIR} )
+endif()
 
 add_subdirectory(tests)
 
