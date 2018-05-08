@@ -187,9 +187,9 @@ if(NOT WIN32)
    set(dolphin_SRCS ${dolphin_SRCS} panels/terminal/terminalpanel.cpp)
 endif(NOT WIN32)
 
-ecm_add_app_icon(dolphin_SRCS ICONS "${KDE4_ICON_INSTALL_DIR}/oxygen/*/apps/system-file-manager.png")
+#kde4_add_app_icon(dolphin_SRCS "${KDE4_ICON_INSTALL_DIR}/oxygen/*/apps/system-file-manager.png")
 
-kde4_add_kdeinit_executable(dolphin ${dolphin_SRCS})
+kf5_add_kdeinit_executable(dolphin ${dolphin_SRCS})
 
 target_link_libraries(kdeinit_dolphin
     ${KDE4_KDEPRINT_LIBS}
