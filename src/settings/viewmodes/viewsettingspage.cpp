@@ -37,6 +37,11 @@ ViewSettingsPage::ViewSettingsPage(QWidget* parent) :
 
     QTabWidget* tabWidget = new QTabWidget(this);
 
+    // Initialize 'Columns' tab
+    ViewSettingsTab* columnsTab = new ViewSettingsTab(ViewSettingsTab::ColumnsMode, tabWidget);
+    tabWidget->addTab(columnsTab, QIcon::fromTheme(QStringLiteral("view-list-columns")), i18nc("@title:tab", "Columns"));
+    connect(columnsTab, &ViewSettingsTab::changed, this, &ViewSettingsPage::changed);
+
     // Initialize 'Icons' tab
     ViewSettingsTab* iconsTab = new ViewSettingsTab(ViewSettingsTab::IconsMode, tabWidget);
     tabWidget->addTab(iconsTab, QIcon::fromTheme(QStringLiteral("view-list-icons")), i18nc("@title:tab", "Icons"));
@@ -76,4 +81,3 @@ void ViewSettingsPage::restoreDefaults()
         tab->restoreDefaultSettings();
     }
 }
-

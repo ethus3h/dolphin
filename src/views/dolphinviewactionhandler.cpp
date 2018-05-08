@@ -146,12 +146,14 @@ void DolphinViewActionHandler::createActions()
     connect(propertiesAction, &QAction::triggered, this, &DolphinViewActionHandler::slotProperties);
 
     // View menu
+    KToggleAction* columnsAction = columnsModeAction();
     KToggleAction* iconsAction = iconsModeAction();
     KToggleAction* compactAction = compactModeAction();
     KToggleAction* detailsAction = detailsModeAction();
 
     KSelectAction* viewModeActions = m_actionCollection->add<KSelectAction>(QStringLiteral("view_mode"));
     viewModeActions->setText(i18nc("@action:intoolbar", "View Mode"));
+    viewModeActions->addAction(columnsAction);
     viewModeActions->addAction(iconsAction);
     viewModeActions->addAction(compactAction);
     viewModeActions->addAction(detailsAction);
@@ -342,6 +344,8 @@ void DolphinViewActionHandler::slotPreviewsShownChanged(bool shown)
 QString DolphinViewActionHandler::currentViewModeActionName() const
 {
     switch (m_currentView->mode()) {
+    case DolphinView::ColumnsView:
+        return QStringLiteral("columns");
     case DolphinView::IconsView:
         return QStringLiteral("icons");
     case DolphinView::DetailsView:
