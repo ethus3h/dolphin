@@ -1,10 +1,20 @@
-find_package(Nepomuk)
-if(Nepomuk_FOUND)
-    set(HAVE_NEPOMUK 1)
-else()
-    set(HAVE_NEPOMUK 0)
+find_package(NepomukCore)
+set_package_properties(NepomukCore PROPERTIES DESCRIPTION "Nepomuk Core libraries"
+                       URL "http://www.kde.org"
+                       TYPE OPTIONAL
+                       PURPOSE "For adding desktop-wide tagging support to dolphin"
+                      )
+
+find_package(NepomukWidgets)
+set_package_properties(NepomukWidgets PROPERTIES DESCRIPTION "Nepomuk Widgets"
+                       URL "http://www.kde.org"
+                       TYPE OPTIONAL
+                       PURPOSE "For adding desktop-wide tagging support to dolphin"
+                      )
+
+if(NepomukCore_FOUND AND NepomukWidgets_FOUND)
+    set(HAVE_NEPOMUK TRUE)
 endif()
-configure_file(config-nepomuk.h.cmake ${CMAKE_CURRENT_BINARY_DIR}/config-nepomuk.h )
 
 include_directories( ${KDE4_INCLUDE_DIR} ${QT_INCLUDES} )
 
