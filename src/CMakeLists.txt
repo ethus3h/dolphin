@@ -18,7 +18,11 @@ endif()
 
 configure_file(config-nepomuk.h.cmake ${CMAKE_CURRENT_BINARY_DIR}/config-nepomuk.h )
 
-macro_bool_to_01(X11_Xrender_FOUND HAVE_XRENDER)
+if(X11_Xrender_FOUND)
+    set(HAVE_XRENDER 1)
+else()
+    set(HAVE_XRENDER 0)
+endif()
 configure_file(config-X11.h.cmake ${CMAKE_CURRENT_BINARY_DIR}/config-X11.h )
 
 include_directories( ${KACTIVITIES_INCLUDE_DIRS} )
