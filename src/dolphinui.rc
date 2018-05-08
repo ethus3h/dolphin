@@ -108,6 +108,7 @@
         <Action priority="0" name="stop"/>
         <Action priority="0" name="icons"/>
         <Action priority="0" name="compact"/>
+        <Action priority="0" name="columns"/>
         <Action priority="0" name="details"/>
         <Action priority="0" name="view_zoom_in"/>
         <Action priority="0" name="view_zoom_out"/>
