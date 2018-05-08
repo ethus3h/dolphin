@@ -118,6 +118,7 @@
   upstream-branches/upstream/plasma/isemenov/qml                                                                       7a7cfa6ad Revert "Hide context menu plugins unless enabled by default or by the user"
   upstream-branches/upstream/plasma/sebas/dirlister                                                                    bc6625430 Merge branch '4.9'
   upstream-branches/upstream/stashAction                                                                               3e32ee5e8 need to fix async conditions
+  wreathe/implement-miller-columns-on-current                                                                          3051c1991 Update Git repository using egup-single
   remotes/origin/7                                                                                                     16db90c79 Dolphin Part: Update the paste action at the end of the listing
   remotes/origin/Applications/14.12                                                                                    85957c72f SVN_SILENT made messages (after extraction)
   remotes/origin/Applications/15.08                                                                                    3d54caadb SVN_SILENT made messages (.desktop file)
