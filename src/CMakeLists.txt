@@ -1,3 +1,4 @@
+include(ECMAddAppIcon)
 find_package(NepomukCore)
 set_package_properties(NepomukCore PROPERTIES DESCRIPTION "Nepomuk Core libraries"
                        URL "http://www.kde.org"
