@@ -141,6 +141,7 @@
   remotes/origin/KDE/4.7                                                                                               1f7b83ff3 SVN_SILENT made messages (.desktop file)
   remotes/origin/KDE/4.8                                                                                               87d1db1f3 SVN_SILENT made messages (.desktop file)
   remotes/origin/KDE/4.9                                                                                               6d7481079 SVN_SILENT made messages (.desktop file)
+  remotes/origin/as-of-snapshot-2018may07                                                                              0a5390201 [egup] Update repository metadata
   remotes/origin/davidedmundson/highdpi                                                                                35c097267 Make KPixmapModifier::applyFrame handle high DPI images
   remotes/origin/emmanuelp/tabhandling                                                                                 1961bfc3a Update the window and tab title on url redirection.
   remotes/origin/feature/baloo                                                                                         2a0221b6b dolphin: stop being a retard and pushing not added changes
@@ -310,7 +311,7 @@
   remotes/upstream/isemenov/qml                                                                                        7a7cfa6ad Revert "Hide context menu plugins unless enabled by default or by the user"
   remotes/upstream/kdepim/enterprise-4.0.83                                                                            91607d4c4 Correcting icon name from "view_icon" to "view-icon"
   remotes/upstream/kdepim/enterprise-4.1                                                                               d5967230c Merge the complete kdebase 4.1 branch. -- Merged revisions 887116,888693,889150,889439,889778,890768,890935,891080,891882,891931,892345,892604,892739,893179,893661,894203,894623,895611,896304,897397,897472,897799,898019,898088,898397,899045,899546,900427,901203,904056,904386,905309,906142,906305,906307,906309,906316,906401,908189,908691,910155,910340,911265,911280 via svnmerge from  svn+ssh://tmcguire@svn.kde.org/home/kde//branches/KDE/4.1/kdebase
-  remotes/upstream/master                                                                                              90e1cc9c0 SVN_SILENT made messages (.desktop file) - always resolve ours
+  remotes/upstream/master                                                                                              e133c4557 Disable all the 'create new' items when in the Trash
   remotes/upstream/origin                                                                                              ce69bb06e Improve performance when turning on the preview mode
   remotes/upstream/plasma/isemenov/fvport                                                                              6bc77951e Merge remote-tracking branch 'origin' into fvport
   remotes/upstream/plasma/isemenov/qml                                                                                 7a7cfa6ad Revert "Hide context menu plugins unless enabled by default or by the user"

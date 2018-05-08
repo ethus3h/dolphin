@@ -140,6 +140,7 @@ a1649952b842afa83d819d9c43832f8bdb912301 refs/remotes/origin/KDE/4.3
 1f7b83ff3c6d27b4638be3dd44a1d32c4aaba834 refs/remotes/origin/KDE/4.7
 87d1db1f379661cd5ab80e92669247706fa801ac refs/remotes/origin/KDE/4.8
 6d748107999a9ee8da52770c7fdd1726dfd4f6f0 refs/remotes/origin/KDE/4.9
+0a5390201a4646ace29568bcbb640a8da5c1668b refs/remotes/origin/as-of-snapshot-2018may07
 35c0972671c1f90f76d8d86b002b2e1f8bac79dd refs/remotes/origin/davidedmundson/highdpi
 1961bfc3a5ed459d01057d7d53a68fca16a67239 refs/remotes/origin/emmanuelp/tabhandling
 2a0221b6b4ee0d2b2c68d8f623a64e5af2fa1906 refs/remotes/origin/feature/baloo
@@ -309,7 +310,7 @@ a1649952b842afa83d819d9c43832f8bdb912301 refs/remotes/upstream/KDE/4.3
 7a7cfa6addc3c6089a0d48e17ec623d248b97df2 refs/remotes/upstream/isemenov/qml
 91607d4c4d60d7d51827e770e5504aa4ff552e48 refs/remotes/upstream/kdepim/enterprise-4.0.83
 d5967230c0e8c5d6d22982b341c9123fae211e9f refs/remotes/upstream/kdepim/enterprise-4.1
-90e1cc9c03aed8299583f7714e05809d32d73357 refs/remotes/upstream/master
+e133c4557ecc37ed3f7e1b9418306aa8cc516865 refs/remotes/upstream/master
 ce69bb06e6e0e3e588a797a5e5a057e9bf529eec refs/remotes/upstream/origin
 6bc77951e49ed070bc70ceba5d510acc6c71c02d refs/remotes/upstream/plasma/isemenov/fvport
 7a7cfa6addc3c6089a0d48e17ec623d248b97df2 refs/remotes/upstream/plasma/isemenov/qml
