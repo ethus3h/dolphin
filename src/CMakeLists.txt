@@ -1,6 +1,9 @@
 find_package(Nepomuk)
-macro_log_feature(Nepomuk_FOUND "Nepomuk" "Nepomuk" "http://www.kde.org" FALSE "" "For adding desktop-wide tagging support to dolphin")
-macro_bool_to_01(Nepomuk_FOUND HAVE_NEPOMUK)
+if(Nepomuk_FOUND)
+    set(HAVE_NEPOMUK 1)
+else()
+    set(HAVE_NEPOMUK 0)
+endif()
 configure_file(config-nepomuk.h.cmake ${CMAKE_CURRENT_BINARY_DIR}/config-nepomuk.h )
 
 include_directories( ${KDE4_INCLUDE_DIR} ${QT_INCLUDES} )
