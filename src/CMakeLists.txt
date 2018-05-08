@@ -169,7 +169,7 @@ set(dolphin_SRCS
     views/zoomlevelinfo.cpp
 )
 
-kde4_add_kcfg_files(dolphin_SRCS
+kconfig_add_kcfg_files(dolphin_SRCS
     panels/folders/dolphin_folderspanelsettings.kcfgc
     panels/information/dolphin_informationpanelsettings.kcfgc
     search/dolphin_searchsettings.kcfgc
@@ -248,7 +248,7 @@ set(kcm_dolphingeneral_PART_SRCS
     settings/serviceitemdelegate.cpp
     settings/servicemodel.cpp)
 
-kde4_add_kcfg_files(kcm_dolphinviewmodes_PART_SRCS
+kconfig_add_kcfg_files(kcm_dolphinviewmodes_PART_SRCS
     settings/dolphin_columnmodesettings.kcfgc
     settings/dolphin_directoryviewpropertysettings.kcfgc
     settings/dolphin_detailsmodesettings.kcfgc
@@ -257,20 +257,20 @@ kde4_add_kcfg_files(kcm_dolphinviewmodes_PART_SRCS
     settings/dolphin_versioncontrolsettings.kcfgc
 )
 
-kde4_add_kcfg_files(kcm_dolphinnavigation_PART_SRCS
+kconfig_add_kcfg_files(kcm_dolphinnavigation_PART_SRCS
     settings/dolphin_generalsettings.kcfgc)
 
-kde4_add_kcfg_files(kcm_dolphinservices_PART_SRCS
+kconfig_add_kcfg_files(kcm_dolphinservices_PART_SRCS
     settings/dolphin_generalsettings.kcfgc
     settings/dolphin_versioncontrolsettings.kcfgc)
 
-kde4_add_kcfg_files(kcm_dolphingeneral_PART_SRCS
+kconfig_add_kcfg_files(kcm_dolphingeneral_PART_SRCS
     settings/dolphin_generalsettings.kcfgc)
 
-kde4_add_plugin(kcm_dolphinviewmodes ${kcm_dolphinviewmodes_PART_SRCS})
-kde4_add_plugin(kcm_dolphinnavigation ${kcm_dolphinnavigation_PART_SRCS})
-kde4_add_plugin(kcm_dolphinservices ${kcm_dolphinservices_PART_SRCS})
-kde4_add_plugin(kcm_dolphingeneral ${kcm_dolphingeneral_PART_SRCS})
+add_library(kcm_dolphinviewmodes ${kcm_dolphinviewmodes_PART_SRCS})
+add_library(kcm_dolphinnavigation ${kcm_dolphinnavigation_PART_SRCS})
+add_library(kcm_dolphinservices ${kcm_dolphinservices_PART_SRCS})
+add_library(kcm_dolphingeneral ${kcm_dolphingeneral_PART_SRCS})
 
 target_link_libraries(kcm_dolphinviewmodes  ${KDE4_KDEUI_LIBS} ${KDE4_KFILE_LIBS} dolphinprivate)
 target_link_libraries(kcm_dolphinnavigation  ${KDE4_KDEUI_LIBS} ${KDE4_KFILE_LIBS} dolphinprivate)
@@ -292,7 +292,7 @@ install(TARGETS kcm_dolphingeneral DESTINATION ${PLUGIN_INSTALL_DIR} )
 
 set(kio_search_PART_SRCS
     search/filenamesearchprotocol.cpp)
-kde4_add_plugin(kio_filenamesearch ${kio_search_PART_SRCS})
+add_library(kio_filenamesearch ${kio_search_PART_SRCS})
 target_link_libraries(kio_filenamesearch ${KDE4_KIO_LIBS})
 install(TARGETS kio_filenamesearch DESTINATION ${PLUGIN_INSTALL_DIR})
 
