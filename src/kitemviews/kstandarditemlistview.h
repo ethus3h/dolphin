@@ -25,7 +25,7 @@
 #include <kitemviews/kitemlistview.h>
 
 /**
- * @brief Provides layouts for icons-, compact- and details-view.
+ * @brief Provides layouts for columns-, icons-, compact- and details-view.
  *
  * Together with the KStandardItemModel lists for standard usecases
  * can be created in a straight forward way.
@@ -47,6 +47,7 @@ class DOLPHIN_EXPORT KStandardItemListView : public KItemListView
 public:
     enum ItemLayout
     {
+        ColumnsLayout,
         IconsLayout,
         CompactLayout,
         DetailsLayout
@@ -78,5 +79,3 @@ private:
 };
 
 #endif
-
-

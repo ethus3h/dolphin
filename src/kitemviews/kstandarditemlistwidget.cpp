@@ -56,6 +56,10 @@ KStandardItemListWidgetInformant::~KStandardItemListWidgetInformant()
 void KStandardItemListWidgetInformant::calculateItemSizeHints(QVector<qreal>& logicalHeightHints, qreal& logicalWidthHint, const KItemListView* view) const
 {
     switch (static_cast<const KStandardItemListView*>(view)->itemLayout()) {
+    case KStandardItemListWidget::ColumnsLayout:
+        calculateColumnsLayoutItemSizeHints(logicalHeightHints, logicalWidthHint, view);
+        break;
+
     case KStandardItemListWidget::IconsLayout:
         calculateIconsLayoutItemSizeHints(logicalHeightHints, logicalWidthHint, view);
         break;
@@ -136,6 +140,14 @@ QString KStandardItemListWidgetInformant::roleText(const QByteArray& role,
 QFont KStandardItemListWidgetInformant::customizedFontForLinks(const QFont& baseFont) const
 {
     return baseFont;
+}
+
+void KStandardItemListWidgetInformant::calculateColumnsLayoutItemSizeHints(QVector<qreal>& logicalHeightHints, qreal& logicalWidthHint, const KItemListView* view) const
+{
+    const KItemListStyleOption& option = view->styleOption();
+    const qreal height = option.padding * 2 + qMax(option.iconSize, option.fontMetrics.height());
+    logicalHeightHints.fill(height);
+    logicalWidthHint = -1.0;
 }
 
 void KStandardItemListWidgetInformant::calculateIconsLayoutItemSizeHints(QVector<qreal>& logicalHeightHints, qreal& logicalWidthHint, const KItemListView* view) const
@@ -1513,4 +1525,3 @@ qreal KStandardItemListWidget::columnPadding(const KItemListStyleOption& option)
 {
     return option.padding * 6;
 }
-

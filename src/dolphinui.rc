@@ -91,6 +91,7 @@
         <Action name="go_back" />
         <Action name="go_forward" />
         <Separator name="separator_1" />
+        <Action name="columns" />
         <Action name="icons" />
         <Action name="compact" />
         <Action name="details" />
@@ -106,9 +107,9 @@
         <Action priority="0" name="go_up"/>
         <Action priority="0" name="go_home"/>
         <Action priority="0" name="stop"/>
+        <Action priority="0" name="columns"/>
         <Action priority="0" name="icons"/>
         <Action priority="0" name="compact"/>
-        <Action priority="0" name="columns"/>
         <Action priority="0" name="details"/>
         <Action priority="0" name="view_zoom_in"/>
         <Action priority="0" name="view_zoom_out"/>
