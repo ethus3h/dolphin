@@ -1,4 +1,4 @@
-macro_optional_find_package(Nepomuk)
+find_package(Nepomuk)
 macro_log_feature(Nepomuk_FOUND "Nepomuk" "Nepomuk" "http://www.kde.org" FALSE "" "For adding desktop-wide tagging support to dolphin")
 macro_bool_to_01(Nepomuk_FOUND HAVE_NEPOMUK)
 configure_file(config-nepomuk.h.cmake ${CMAKE_CURRENT_BINARY_DIR}/config-nepomuk.h )
@@ -288,4 +288,3 @@ install( FILES settings/kcm/kcmdolphingeneral.desktop DESTINATION ${SERVICES_INS
 install( FILES settings/services/servicemenu.knsrc DESTINATION ${CONFIG_INSTALL_DIR} )
 install( PROGRAMS settings/services/servicemenuinstallation DESTINATION ${BIN_INSTALL_DIR} )
 install( PROGRAMS settings/services/servicemenudeinstallation DESTINATION ${BIN_INSTALL_DIR} )
-
