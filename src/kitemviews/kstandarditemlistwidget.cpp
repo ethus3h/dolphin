@@ -516,6 +516,7 @@ QRectF KStandardItemListWidget::selectionRect() const
     case IconsLayout:
         return m_textRect;
 
+    case ColumnsLayout:
     case CompactLayout:
     case DetailsLayout: {
         const int padding = styleOption().padding;
@@ -1083,6 +1084,7 @@ void KStandardItemListWidget::updateTextsCache()
     }
 
     switch (m_layout) {
+    case ColumnsLayout: updateColumnsLayoutTextCache(); break;
     case IconsLayout:   updateIconsLayoutTextCache(); break;
     case CompactLayout: updateCompactLayoutTextCache(); break;
     case DetailsLayout: updateDetailsLayoutTextCache(); break;
@@ -1284,6 +1286,73 @@ void KStandardItemListWidget::updateCompactLayoutTextCache()
     }
 
     m_textRect = QRectF(x - 2 * option.padding, 0, maximumRequiredTextWidth + 3 * option.padding, widgetHeight);
+}
+
+void KStandardItemListWidget::updateColumnsLayoutTextCache()
+{
+    // Precondition: Requires already updated m_expansionArea
+    // to determine the left position.
+
+    // +------+
+    // | Icon |  Name role   Additional role 1   Additional role 2
+    // +------+
+    m_textRect = QRectF();
+
+    const KItemListStyleOption& option = styleOption();
+    const QHash<QByteArray, QVariant> values = data();
+
+    const qreal widgetHeight = size().height();
+    const int scaledIconSize = widgetHeight - 2 * option.padding;
+    const int fontHeight = m_customizedFontMetrics.height();
+
+    const qreal columnWidthInc = columnPadding(option);
+    qreal firstColumnInc = scaledIconSize;
+    if (m_supportsItemExpanding) {
+        firstColumnInc += (m_expansionArea.left() + m_expansionArea.right() + widgetHeight) / 2;
+    } else {
+        firstColumnInc += option.padding;
+    }
+
+    qreal x = firstColumnInc;
+    const qreal y = qMax(qreal(option.padding), (widgetHeight - fontHeight) / 2);
+
+    foreach (const QByteArray& role, m_sortedVisibleRoles) {
+        QString text = roleText(role, values);
+
+        // Elide the text in case it does not fit into the available column-width
+        qreal requiredWidth = m_customizedFontMetrics.width(text);
+        const qreal roleWidth = columnWidth(role);
+        qreal availableTextWidth = roleWidth - columnWidthInc;
+
+        const bool isTextRole = (role == "text");
+        if (isTextRole) {
+            availableTextWidth -= firstColumnInc;
+        }
+
+        if (requiredWidth > availableTextWidth) {
+            text = m_customizedFontMetrics.elidedText(text, Qt::ElideRight, availableTextWidth);
+            requiredWidth = m_customizedFontMetrics.width(text);
+        }
+
+        TextInfo* textInfo = m_textInfo.value(role);
+        textInfo->staticText.setText(text);
+        textInfo->pos = QPointF(x + columnWidthInc / 2, y);
+        x += roleWidth;
+
+        if (isTextRole) {
+            const qreal textWidth = option.extendedSelectionRegion
+                                    ? size().width() - textInfo->pos.x()
+                                    : requiredWidth + 2 * option.padding;
+            m_textRect = QRectF(textInfo->pos.x() - 2 * option.padding, 0,
+                                textWidth + option.padding, size().height());
+
+            // The column after the name should always be aligned on the same x-position independent
+            // from the expansion-level shown in the name column
+            x -= firstColumnInc;
+        } else if (isRoleRightAligned(role)) {
+            textInfo->pos.rx() += roleWidth - requiredWidth - columnWidthInc;
+        }
+    }
 }
 
 void KStandardItemListWidget::updateDetailsLayoutTextCache()

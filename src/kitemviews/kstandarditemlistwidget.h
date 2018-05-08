@@ -73,6 +73,7 @@ protected:
     */
     virtual QFont customizedFontForLinks(const QFont& baseFont) const;
 
+    void calculateColumnsLayoutItemSizeHints(QVector<qreal>& logicalHeightHints, qreal& logicalWidthHint, const KItemListView* view) const;
     void calculateIconsLayoutItemSizeHints(QVector<qreal>& logicalHeightHints, qreal& logicalWidthHint, const KItemListView* view) const;
     void calculateCompactLayoutItemSizeHints(QVector<qreal>& logicalHeightHints, qreal& logicalWidthHint, const KItemListView* view) const;
     void calculateDetailsLayoutItemSizeHints(QVector<qreal>& logicalHeightHints, qreal& logicalWidthHint, const KItemListView* view) const;
@@ -90,6 +91,7 @@ class DOLPHIN_EXPORT KStandardItemListWidget : public KItemListWidget
 public:
     enum Layout
     {
+        ColumnsLayout,
         IconsLayout,
         CompactLayout,
         DetailsLayout
@@ -196,6 +198,7 @@ private:
     void updatePixmapCache();
 
     void updateTextsCache();
+    void updateColumnsLayoutTextCache();
     void updateIconsLayoutTextCache();
     void updateCompactLayoutTextCache();
     void updateDetailsLayoutTextCache();

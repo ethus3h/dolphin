@@ -76,6 +76,7 @@ void KStandardItemListView::initializeItemListWidget(KItemListWidget* item)
     Q_ASSERT(standardItemListWidget);
 
     switch (itemLayout()) {
+    case ColumnsLayout: standardItemListWidget->setLayout(KStandardItemListWidget::ColumnsLayout); break;
     case IconsLayout:   standardItemListWidget->setLayout(KStandardItemListWidget::IconsLayout); break;
     case CompactLayout: standardItemListWidget->setLayout(KStandardItemListWidget::CompactLayout); break;
     case DetailsLayout: standardItemListWidget->setLayout(KStandardItemListWidget::DetailsLayout); break;
@@ -177,4 +178,3 @@ void KStandardItemListView::updateLayoutOfVisibleItems()
         }
     }
 }
-
