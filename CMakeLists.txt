@@ -29,11 +29,11 @@ ecm_setup_version(${KDE_APPLICATIONS_VERSION} VARIABLE_PREFIX DOLPHIN
                   VERSION_HEADER "${CMAKE_CURRENT_BINARY_DIR}/src/dolphin_version.h"
 )
 
-ecm_setup_version("5.0.0" VARIABLE_PREFIX DOLPHINVCS
-                  VERSION_HEADER "${CMAKE_CURRENT_BINARY_DIR}/dolphinvcs_version.h"
-                  PACKAGE_VERSION_FILE "${CMAKE_CURRENT_BINARY_DIR}/DolphinVcsConfigVersion.cmake"
-                  SOVERSION 5
-)
+# ecm_setup_version("5.0.0" VARIABLE_PREFIX DOLPHINVCS
+#                   VERSION_HEADER "${CMAKE_CURRENT_BINARY_DIR}/dolphinvcs_version.h"
+#                   PACKAGE_VERSION_FILE "${CMAKE_CURRENT_BINARY_DIR}/DolphinVcsConfigVersion.cmake"
+#                   SOVERSION 5
+# )
 
 ecm_setup_version("5.0.0" VARIABLE_PREFIX DOLPHINPRIVATE
                   SOVERSION 5
@@ -106,32 +106,32 @@ add_definitions(-DQT_NO_URL_CAST_FROM_STRING)
 add_subdirectory(src)
 add_subdirectory(doc)
 
-# CMake files
-set(CMAKECONFIG_INSTALL_DIR "${KDE_INSTALL_CMAKEPACKAGEDIR}/DolphinVcs")
-
-ecm_configure_package_config_file(
-    "${CMAKE_CURRENT_SOURCE_DIR}/DolphinVcsConfig.cmake.in"
-    "${CMAKE_CURRENT_BINARY_DIR}/DolphinVcsConfig.cmake"
-    INSTALL_DESTINATION ${CMAKECONFIG_INSTALL_DIR}
-)
-
-install(FILES
-    "${CMAKE_CURRENT_BINARY_DIR}/DolphinVcsConfig.cmake"
-    "${CMAKE_CURRENT_BINARY_DIR}/DolphinVcsConfigVersion.cmake"
-    DESTINATION "${CMAKECONFIG_INSTALL_DIR}"
-    COMPONENT Devel
-)
-
-install(EXPORT DolphinVcsTargets
-    DESTINATION "${CMAKECONFIG_INSTALL_DIR}"
-    FILE DolphinVcsTargets.cmake
-)
-
-install(FILES
-    "${CMAKE_CURRENT_BINARY_DIR}/dolphinvcs_version.h"
-    DESTINATION "${KDE_INSTALL_INCLUDEDIR}/Dolphin"
-    COMPONENT Devel
-)
+# # CMake files
+# set(CMAKECONFIG_INSTALL_DIR "${KDE_INSTALL_CMAKEPACKAGEDIR}/DolphinVcs")
+# 
+# ecm_configure_package_config_file(
+#     "${CMAKE_CURRENT_SOURCE_DIR}/DolphinVcsConfig.cmake.in"
+#     "${CMAKE_CURRENT_BINARY_DIR}/DolphinVcsConfig.cmake"
+#     INSTALL_DESTINATION ${CMAKECONFIG_INSTALL_DIR}
+# )
+# 
+# install(FILES
+#     "${CMAKE_CURRENT_BINARY_DIR}/DolphinVcsConfig.cmake"
+#     "${CMAKE_CURRENT_BINARY_DIR}/DolphinVcsConfigVersion.cmake"
+#     DESTINATION "${CMAKECONFIG_INSTALL_DIR}"
+#     COMPONENT Devel
+# )
+# 
+# install(EXPORT DolphinVcsTargets
+#     DESTINATION "${CMAKECONFIG_INSTALL_DIR}"
+#     FILE DolphinVcsTargets.cmake
+# )
+# 
+# install(FILES
+#     "${CMAKE_CURRENT_BINARY_DIR}/dolphinvcs_version.h"
+#     DESTINATION "${KDE_INSTALL_INCLUDEDIR}/Dolphin"
+#     COMPONENT Devel
+# )
 
 configure_file(org.kde.dolphin.FileManager1.service.in
                ${CMAKE_CURRENT_BINARY_DIR}/org.kde.dolphin.FileManager1.service)
@@ -139,4 +139,3 @@ install(FILES ${CMAKE_CURRENT_BINARY_DIR}/org.kde.dolphin.FileManager1.service
         DESTINATION ${DBUS_SERVICES_INSTALL_DIR})
 
 feature_summary(WHAT ALL FATAL_ON_MISSING_REQUIRED_PACKAGES)
-
