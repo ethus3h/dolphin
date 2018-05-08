@@ -49,7 +49,7 @@ class QRegExp;
 /**
  * @short Represents a view for the directory content.
  *
- * View modes for icons, compact and details are supported. It's
+ * View modes for columns, icons, compact and details are supported. It's
  * possible to adjust:
  * - sort order
  * - sort type
@@ -70,9 +70,14 @@ public:
     enum Mode
     {
         /**
+         * Miller columns
+         */
+        ColmunsView = 0,
+
+        /**
          * The items are shown as icons with a name-label below.
          */
-        IconsView = 0,
+        IconsView,
 
         /**
          * The icon, the name and the size of the items are

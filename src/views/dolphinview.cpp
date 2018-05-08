@@ -1675,6 +1675,7 @@ void DolphinView::applyViewProperties(const ViewProperties& props)
 void DolphinView::applyModeToView()
 {
     switch (m_mode) {
+    case ColumnsView: m_view->setItemLayout(KFileItemListView::ColumnsLayout); break;
     case IconsView:   m_view->setItemLayout(KFileItemListView::IconsLayout); break;
     case CompactView: m_view->setItemLayout(KFileItemListView::CompactLayout); break;
     case DetailsView: m_view->setItemLayout(KFileItemListView::DetailsLayout); break;
