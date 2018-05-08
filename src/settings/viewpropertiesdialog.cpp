@@ -91,6 +91,7 @@ ViewPropertiesDialog::ViewPropertiesDialog(DolphinView* dolphinView) :
 
     QLabel* viewModeLabel = new QLabel(i18nc("@label:listbox", "View mode:"), propsGrid);
     m_viewMode = new KComboBox(propsGrid);
+    m_viewMode->addItem(QIcon::fromTheme(QStringLiteral("view-list-columns")), i18nc("@item:inlistbox", "Columns"), DolphinView::ColumnsView);
     m_viewMode->addItem(QIcon::fromTheme(QStringLiteral("view-list-icons")), i18nc("@item:inlistbox", "Icons"), DolphinView::IconsView);
     m_viewMode->addItem(QIcon::fromTheme(QStringLiteral("view-list-details")), i18nc("@item:inlistbox", "Compact"), DolphinView::CompactView);
     m_viewMode->addItem(QIcon::fromTheme(QStringLiteral("view-list-tree")), i18nc("@item:inlistbox", "Details"), DolphinView::DetailsView);
@@ -386,9 +387,10 @@ void ViewPropertiesDialog::loadSettings()
 {
     // Load view mode
     switch (m_viewProps->viewMode()) {
-    case DolphinView::IconsView:   m_viewMode->setCurrentIndex(0); break;
-    case DolphinView::CompactView: m_viewMode->setCurrentIndex(1); break;
-    case DolphinView::DetailsView: m_viewMode->setCurrentIndex(2); break;
+    case DolphinView::ColumnsView: m_viewMode->setCurrentIndex(0); break;
+    case DolphinView::IconsView:   m_viewMode->setCurrentIndex(1); break;
+    case DolphinView::CompactView: m_viewMode->setCurrentIndex(2); break;
+    case DolphinView::DetailsView: m_viewMode->setCurrentIndex(3); break;
     default: break;
     }
 
@@ -414,4 +416,3 @@ void ViewPropertiesDialog::loadSettings()
     m_showHiddenFiles->setChecked(m_viewProps->hiddenFilesShown());
     markAsDirty(false);
 }
-

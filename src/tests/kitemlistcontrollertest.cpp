@@ -231,6 +231,8 @@ void KItemListControllerTest::testKeyboardNavigation_data()
 
     QList<KFileItemListView::ItemLayout> layoutList;
     QHash<KFileItemListView::ItemLayout, QString> layoutNames;
+    layoutList.append(KFileItemListView::ColumnsLayout);
+    layoutNames[KFileItemListView::ColumnsLayout] = "Columns";
     layoutList.append(KFileItemListView::IconsLayout);
     layoutNames[KFileItemListView::IconsLayout] = "Icons";
     layoutList.append(KFileItemListView::CompactLayout);
@@ -266,6 +268,14 @@ void KItemListControllerTest::testKeyboardNavigation_data()
         Qt::Key previousRowKey;
 
         switch (layout) {
+        case KFileItemListView::ColumnsLayout:
+            scrollOrientation = Qt::Vertical;
+            columnCountList << 1;
+            nextItemKey = Qt::Key_Down;
+            previousItemKey = Qt::Key_Up;
+            nextRowKey = Qt::Key_Down;
+            previousRowKey = Qt::Key_Up;
+            break;
         case KFileItemListView::IconsLayout:
             scrollOrientation = Qt::Vertical;
             columnCountList << 1 << 3 << 5;

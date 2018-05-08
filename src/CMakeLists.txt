@@ -122,6 +122,7 @@ if(HAVE_BALOO)
 endif()
 
 kconfig_add_kcfg_files(dolphinprivate_LIB_SRCS GENERATE_MOC
+    settings/dolphin_columnsmodesettings.kcfgc
     settings/dolphin_compactmodesettings.kcfgc
     settings/dolphin_directoryviewpropertysettings.kcfgc
     settings/dolphin_detailsmodesettings.kcfgc
@@ -256,6 +257,7 @@ kconfig_add_kcfg_files(dolphinstatic_SRCS GENERATE_MOC
     panels/folders/dolphin_folderspanelsettings.kcfgc
     panels/information/dolphin_informationpanelsettings.kcfgc
     panels/places/dolphin_placespanelsettings.kcfgc
+    settings/dolphin_columnsmodesettings.kcfgc
     settings/dolphin_compactmodesettings.kcfgc
     settings/dolphin_detailsmodesettings.kcfgc
     settings/dolphin_generalsettings.kcfgc
@@ -349,6 +351,7 @@ set(kcm_dolphingeneral_PART_SRCS
     settings/servicemodel.cpp)
 
 kconfig_add_kcfg_files(kcm_dolphinviewmodes_PART_SRCS
+    settings/dolphin_columnsmodesettings.kcfgc
     settings/dolphin_compactmodesettings.kcfgc
     settings/dolphin_directoryviewpropertysettings.kcfgc
     settings/dolphin_detailsmodesettings.kcfgc
@@ -387,6 +390,7 @@ install(TARGETS kcm_dolphingeneral DESTINATION ${KDE_INSTALL_PLUGINDIR} )
 install( PROGRAMS org.kde.dolphin.desktop DESTINATION ${KDE_INSTALL_APPDIR} )
 install( FILES settings/dolphin_directoryviewpropertysettings.kcfg
                settings/dolphin_generalsettings.kcfg
+               settings/dolphin_columnsmodesettings.kcfg
                settings/dolphin_compactmodesettings.kcfg
                settings/dolphin_iconsmodesettings.kcfg
                settings/dolphin_detailsmodesettings.kcfg

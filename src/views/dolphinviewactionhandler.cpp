@@ -498,6 +498,17 @@ void DolphinViewActionHandler::slotWriteStateChanged(bool isFolderWritable)
                                                                          KProtocolManager::supportsMakeDir(currentView()->url()));
 }
 
+KToggleAction* DolphinViewActionHandler::columnsModeAction()
+{
+    KToggleAction* columnsView = m_actionCollection->add<KToggleAction>(QStringLiteral("columns"));
+    columnsView->setText(i18nc("@action:inmenu View Mode", "Columns"));
+    columnsView->setToolTip(i18nc("@info", "Columns view mode"));
+    m_actionCollection->setDefaultShortcut(columnsView, Qt::CTRL | Qt::Key_3);
+    columnsView->setIcon(QIcon::fromTheme(QStringLiteral("view-list-columns")));
+    columnsView->setData(QVariant::fromValue(DolphinView::ColumnsView));
+    return columnsView;
+}
+
 KToggleAction* DolphinViewActionHandler::iconsModeAction()
 {
     KToggleAction* iconsView = m_actionCollection->add<KToggleAction>(QStringLiteral("icons"));

@@ -38,6 +38,7 @@ class ViewSettingsTab : public QWidget
 public:
     enum Mode
     {
+        ColumnsMode,
         IconsMode,
         CompactMode,
         DetailsMode
