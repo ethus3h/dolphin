@@ -20,13 +20,13 @@
 
 #include "viewsettingspage.h"
 
-#include "views/dolphinview.h"
+#include <views/dolphinview.h>
 #include "viewsettingstab.h"
 
-#include <KLocalizedString>
-
-#include <QTabWidget>
 #include <QVBoxLayout>
+#include <QTabWidget>
+
+#include <KLocalizedString>
 
 ViewSettingsPage::ViewSettingsPage(QWidget* parent) :
     SettingsPageBase(parent),
@@ -56,7 +56,7 @@ ViewSettingsPage::ViewSettingsPage(QWidget* parent) :
     m_tabs.append(compactTab);
     m_tabs.append(detailsTab);
 
-    topLayout->addWidget(tabWidget, 0, nullptr);
+    topLayout->addWidget(tabWidget, 0, 0);
 }
 
 ViewSettingsPage::~ViewSettingsPage()

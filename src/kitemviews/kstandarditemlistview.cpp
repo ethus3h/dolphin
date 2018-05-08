@@ -19,9 +19,9 @@
 
 #include "kstandarditemlistview.h"
 
-#include "kstandarditemlistwidget.h"
-
 #include <KIconLoader>
+#include "kstandarditemlistwidget.h"
+#include "kstandarditemlistgroupheader.h"
 
 KStandardItemListView::KStandardItemListView(QGraphicsWidget* parent) :
     KItemListView(parent),
@@ -146,20 +146,27 @@ void KStandardItemListView::applyDefaultStyleOption(int iconSize,
 {
     KItemListStyleOption option = styleOption();
 
+    bool changed = false;
     if (option.iconSize < 0) {
         option.iconSize = iconSize;
+        changed = true;
     }
     if (option.padding < 0) {
         option.padding = padding;
+        changed = true;
     }
     if (option.horizontalMargin < 0) {
         option.horizontalMargin = horizontalMargin;
+        changed = true;
     }
     if (option.verticalMargin < 0) {
         option.verticalMargin = verticalMargin;
+        changed = true;
     }
 
-    setStyleOption(option);
+    if (changed) {
+        setStyleOption(option);
+    }
 }
 
 void KStandardItemListView::updateLayoutOfVisibleItems()

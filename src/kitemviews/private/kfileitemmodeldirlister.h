@@ -21,9 +21,7 @@
 #define KFILEITEMMODELDIRLISTER_H
 
 #include "dolphin_export.h"
-
 #include <KDirLister>
-
 #include <QUrl>
 
 /**
@@ -36,8 +34,8 @@ class DOLPHIN_EXPORT KFileItemModelDirLister : public KDirLister
     Q_OBJECT
 
 public:
-    explicit KFileItemModelDirLister(QObject* parent = nullptr);
-    ~KFileItemModelDirLister() override;
+    KFileItemModelDirLister(QObject* parent = 0);
+    virtual ~KFileItemModelDirLister();
 
 signals:
     /** Is emitted whenever an error has occurred. */
@@ -50,7 +48,7 @@ signals:
     void urlIsFileError(const QUrl& url);
 
 protected:
-    void handleError(KIO::Job* job) override;
+    void handleError(KIO::Job* job) Q_DECL_OVERRIDE;
 };
 
 #endif

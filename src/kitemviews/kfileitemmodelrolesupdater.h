@@ -20,11 +20,12 @@
 #ifndef KFILEITEMMODELROLESUPDATER_H
 #define KFILEITEMMODELROLESUPDATER_H
 
-#include "dolphin_export.h"
-#include "kitemviews/kitemmodelbase.h"
+#include <config-baloo.h>
 
 #include <KFileItem>
-#include <config-baloo.h>
+#include <kitemviews/kitemmodelbase.h>
+
+#include "dolphin_export.h"
 
 #include <QObject>
 #include <QSet>
@@ -93,8 +94,8 @@ class DOLPHIN_EXPORT KFileItemModelRolesUpdater : public QObject
     Q_OBJECT
 
 public:
-    explicit KFileItemModelRolesUpdater(KFileItemModel* model, QObject* parent = nullptr);
-    ~KFileItemModelRolesUpdater() override;
+    explicit KFileItemModelRolesUpdater(KFileItemModel* model, QObject* parent = 0);
+    virtual ~KFileItemModelRolesUpdater();
 
     void setIconSize(const QSize& size);
     QSize iconSize() const;

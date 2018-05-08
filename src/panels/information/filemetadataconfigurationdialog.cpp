@@ -24,20 +24,19 @@
 #else
 #include <Baloo/FileMetaDataConfigWidget>
 #endif
-#include <KConfigGroup>
-#include <KLocalizedString>
 #include <KSharedConfig>
-#include <KWindowConfig>
-
-#include <QDialogButtonBox>
+#include <KLocalizedString>
 #include <QLabel>
-#include <QPushButton>
 #include <QVBoxLayout>
+#include <KConfigGroup>
+#include <KWindowConfig>
+#include <QDialogButtonBox>
+#include <QPushButton>
 
 FileMetaDataConfigurationDialog::FileMetaDataConfigurationDialog(QWidget* parent) :
     QDialog(parent),
-    m_descriptionLabel(nullptr),
-    m_configWidget(nullptr)
+    m_descriptionLabel(0),
+    m_configWidget(0)
 
 {
     setWindowTitle(i18nc("@title:window", "Configure Shown Data"));
@@ -46,7 +45,7 @@ FileMetaDataConfigurationDialog::FileMetaDataConfigurationDialog(QWidget* parent
     setLayout(mainLayout);
     QPushButton *okButton = buttonBox->button(QDialogButtonBox::Ok);
     okButton->setDefault(true);
-    okButton->setShortcut(Qt::CTRL + Qt::Key_Return);
+    okButton->setShortcut(Qt::CTRL | Qt::Key_Return);
     connect(buttonBox, &QDialogButtonBox::accepted, this, &FileMetaDataConfigurationDialog::slotAccepted);
     connect(buttonBox, &QDialogButtonBox::rejected, this, &FileMetaDataConfigurationDialog::reject);
     buttonBox->button(QDialogButtonBox::Ok)->setDefault(true);

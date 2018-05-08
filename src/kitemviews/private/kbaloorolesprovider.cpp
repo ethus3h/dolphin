@@ -20,15 +20,16 @@
 
 #include "kbaloorolesprovider.h"
 
+#include <QDebug>
+#include <KLocalizedString>
+
 #include <Baloo/File>
 #include <KFileMetaData/PropertyInfo>
 #include <KFileMetaData/UserMetaData>
-#include <KFormat>
-#include <KLocalizedString>
 
-#include <QCollator>
-#include <QDebug>
 #include <QTime>
+#include <QMap>
+#include <QCollator>
 
 struct KBalooRolesProviderSingleton
 {
@@ -56,6 +57,9 @@ QHash<QByteArray, QVariant> KBalooRolesProvider::roleValues(const Baloo::File& f
 {
     QHash<QByteArray, QVariant> values;
 
+    int width = -1;
+    int height = -1;
+
     QMapIterator<KFileMetaData::Property::Property, QVariant> it(file.properties());
     while (it.hasNext()) {
         it.next();
@@ -69,15 +73,28 @@ QHash<QByteArray, QVariant> KBalooRolesProvider::roleValues(const Baloo::File& f
 
         const QVariant value = it.value();
 
-        if (role == "orientation") {
+        if (role == "imageSize") {
+            // Merge the two properties for width and height
+            // as one string into the "imageSize" role
+            if (property == QLatin1String("width")) {
+                width = value.toInt();
+            }
+            else if (property == QLatin1String("height")) {
+                height = value.toInt();
+            }
+
+            if (width >= 0 && height >= 0) {
+                QString widthAndHeight = QString::number(width);
+                widthAndHeight += QLatin1String(" x ");
+                widthAndHeight += QString::number(height);
+                values.insert(role, widthAndHeight);
+            }
+        } else if (role == "orientation") {
             const QString orientation = orientationFromValue(value.toInt());
             values.insert(role, orientation);
         } else if (role == "duration") {
             const QString duration = durationFromValue(value.toInt());
             values.insert(role, duration);
-        } else if (role == "bitrate") {
-            const QString bitrate = bitrateFromValue(value.toInt());
-            values.insert(role, bitrate);
         } else {
             values.insert(role, value.toString());
         }
@@ -116,7 +133,8 @@ KBalooRolesProvider::KBalooRolesProvider() :
     };
 
     // Mapping from the URIs to the KFileItemModel roles. Note that this must not be
-    // a 1:1 mapping: One role may contain several URI-values
+    // a 1:1 mapping: One role may contain several URI-values (e.g. the URIs for height and
+    // width of an image are mapped to the role "imageSize")
     static const PropertyInfo propertyInfoList[] = {
         { "rating", "rating" },
         { "tag",        "tags" },
@@ -124,16 +142,12 @@ KBalooRolesProvider::KBalooRolesProvider() :
         { "title",         "title" },
         { "wordCount",     "wordCount" },
         { "lineCount",     "lineCount" },
-        { "width",         "width" },
-        { "height",        "height" },
-        { "imageDateTime",   "imageDateTime"},
+        { "width",         "imageSize" },
+        { "height",        "imageSize" },
         { "nexif.orientation", "orientation", },
         { "artist",     "artist" },
-        { "genre",	"genre"  },
         { "album",    "album" },
         { "duration",      "duration" },
-        { "bitRate", "bitrate" },
-        { "releaseYear",    "releaseYear" },
         { "trackNumber",   "track" },
         { "originUrl", "originUrl" }
     };
@@ -176,13 +190,5 @@ QString KBalooRolesProvider::durationFromValue(int value) const
     QTime duration(0, 0, 0);
     duration = duration.addSecs(value);
     return duration.toString(QStringLiteral("hh:mm:ss"));
-}
-
-
-QString KBalooRolesProvider::bitrateFromValue(int value) const
-{
-    KFormat form;
-    QString bitrate = i18nc("@label bitrate (per second)", "%1/s", form.formatByteSize(value, 1, KFormat::MetricBinaryDialect));
-    return bitrate;
 }
 

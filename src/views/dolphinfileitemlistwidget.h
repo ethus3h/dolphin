@@ -21,7 +21,8 @@
 #define DOLPHINFILEITEMLISTWIDGET_H
 
 #include "dolphin_export.h"
-#include "kitemviews/kfileitemlistwidget.h"
+
+#include <kitemviews/kfileitemlistwidget.h>
 #include "versioncontrol/kversioncontrolplugin.h"
 
 /**
@@ -36,10 +37,10 @@ class DOLPHIN_EXPORT DolphinFileItemListWidget : public KFileItemListWidget
 
 public:
     DolphinFileItemListWidget(KItemListWidgetInformant* informant, QGraphicsItem* parent);
-    ~DolphinFileItemListWidget() override;
+    virtual ~DolphinFileItemListWidget();
 
 protected:
-    void refreshCache() override;
+    virtual void refreshCache() Q_DECL_OVERRIDE;
 
 private:
     static QPixmap overlayForState(KVersionControlPlugin::ItemVersion version, int size);

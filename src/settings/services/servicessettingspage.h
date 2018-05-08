@@ -19,7 +19,7 @@
 #ifndef SERVICESSETTINGSPAGE_H
 #define SERVICESSETTINGSPAGE_H
 
-#include "settings/settingspagebase.h"
+#include <settings/settingspagebase.h>
 
 #include <QString>
 
@@ -35,17 +35,17 @@ class ServicesSettingsPage : public SettingsPageBase
     Q_OBJECT
 
 public:
-    explicit ServicesSettingsPage(QWidget* parent);
-    ~ServicesSettingsPage() override;
+    ServicesSettingsPage(QWidget* parent);
+    virtual ~ServicesSettingsPage();
 
     /** @see SettingsPageBase::applySettings() */
-    void applySettings() override;
+    virtual void applySettings() Q_DECL_OVERRIDE;
 
     /** @see SettingsPageBase::restoreDefaults() */
-    void restoreDefaults() override;
+    virtual void restoreDefaults() Q_DECL_OVERRIDE;
 
 protected:
-    void showEvent(QShowEvent* event) override;
+    virtual void showEvent(QShowEvent* event) Q_DECL_OVERRIDE;
 
 private slots:
     /**

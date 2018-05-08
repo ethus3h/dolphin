@@ -21,9 +21,11 @@
 
 #include "mountpointobserver.h"
 
+#include <QUrl>
+
 SpaceInfoObserver::SpaceInfoObserver(const QUrl& url, QObject* parent) :
     QObject(parent),
-    m_mountPointObserver(nullptr),
+    m_mountPointObserver(0),
     m_dataSize(0),
     m_dataAvailable(0)
 {
@@ -37,7 +39,7 @@ SpaceInfoObserver::~SpaceInfoObserver()
 {
     if (m_mountPointObserver) {
         m_mountPointObserver->deref();
-        m_mountPointObserver = nullptr;
+        m_mountPointObserver = 0;
     }
 }
 
@@ -58,7 +60,7 @@ void SpaceInfoObserver::setUrl(const QUrl& url)
         if (m_mountPointObserver) {
             disconnect(m_mountPointObserver, &MountPointObserver::spaceInfoChanged, this, &SpaceInfoObserver::spaceInfoChanged);
             m_mountPointObserver->deref();
-            m_mountPointObserver = nullptr;
+            m_mountPointObserver = 0;
         }
 
         m_mountPointObserver = newObserver;

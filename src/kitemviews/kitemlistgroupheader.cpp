@@ -29,7 +29,7 @@
 #include <QStyleOptionGraphicsItem>
 
 KItemListGroupHeader::KItemListGroupHeader(QGraphicsWidget* parent) :
-    QGraphicsWidget(parent, nullptr),
+    QGraphicsWidget(parent, 0),
     m_dirtyCache(true),
     m_role(),
     m_data(),
@@ -78,10 +78,6 @@ QVariant KItemListGroupHeader::data() const
 
 void KItemListGroupHeader::setStyleOption(const KItemListStyleOption& option)
 {
-    if (m_styleOption == option) {
-        return;
-    }
-
     const KItemListStyleOption previous = m_styleOption;
     m_styleOption = option;
     m_dirtyCache = true;

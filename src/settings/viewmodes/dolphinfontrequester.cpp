@@ -19,18 +19,18 @@
 
 #include "dolphinfontrequester.h"
 
-#include <KComboBox>
 #include <KLocalizedString>
+#include <KComboBox>
 
-#include <QFontDatabase>
-#include <QFontDialog>
 #include <QHBoxLayout>
 #include <QPushButton>
+#include <QFontDatabase>
+#include <QFontDialog>
 
 DolphinFontRequester::DolphinFontRequester(QWidget* parent) :
     QWidget(parent),
-    m_modeCombo(nullptr),
-    m_chooseFontButton(nullptr),
+    m_modeCombo(0),
+    m_chooseFontButton(0),
     m_mode(SystemFont),
     m_customFont()
 {

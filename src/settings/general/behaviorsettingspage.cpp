@@ -20,7 +20,7 @@
 
 #include "behaviorsettingspage.h"
 
-#include "views/viewproperties.h"
+#include "dolphin_generalsettings.h"
 
 #include <KLocalizedString>
 
@@ -29,18 +29,20 @@
 #include <QRadioButton>
 #include <QVBoxLayout>
 
+#include <views/viewproperties.h>
+
 BehaviorSettingsPage::BehaviorSettingsPage(const QUrl& url, QWidget* parent) :
     SettingsPageBase(parent),
     m_url(url),
-    m_localViewProps(nullptr),
-    m_globalViewProps(nullptr),
-    m_showToolTips(nullptr),
-    m_showSelectionToggle(nullptr),
-    m_naturalSorting(nullptr),
-    m_caseSensitiveSorting(nullptr),
-    m_caseInsensitiveSorting(nullptr),
-    m_renameInline(nullptr),
-    m_useTabForSplitViewSwitch(nullptr)
+    m_localViewProps(0),
+    m_globalViewProps(0),
+    m_showToolTips(0),
+    m_showSelectionToggle(0),
+    m_naturalSorting(0),
+    m_caseSensitiveSorting(0),
+    m_caseInsensitiveSorting(0),
+    m_renameInline(0),
+    m_useTabForSplitViewSwitch(0)
 {
     QVBoxLayout* topLayout = new QVBoxLayout(this);
 

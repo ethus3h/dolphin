@@ -21,13 +21,13 @@
  ***************************************************************************/
 
 #include "placesitem.h"
-#include "trash/dolphintrash.h"
 
+#include <KBookmarkManager>
 #include "dolphindebug.h"
-#include "placesitemsignalhandler.h"
-
 #include <KDirLister>
 #include <KLocalizedString>
+#include "placesitemsignalhandler.h"
+#include <QDateTime>
 #include <Solid/Block>
 
 PlacesItem::PlacesItem(const KBookmark& bookmark, PlacesItem* parent) :
@@ -37,8 +37,8 @@ PlacesItem::PlacesItem(const KBookmark& bookmark, PlacesItem* parent) :
     m_volume(),
     m_disc(),
     m_mtp(),
-    m_signalHandler(nullptr),
-    m_trashDirLister(nullptr),
+    m_signalHandler(0),
+    m_trashDirLister(0),
     m_bookmark()
 {
     m_signalHandler = new PlacesItemSignalHandler(this);
@@ -61,9 +61,16 @@ void PlacesItem::setUrl(const QUrl &url)
     if (dataValue("url").toUrl() != url) {
         delete m_trashDirLister;
         if (url.scheme() == QLatin1String("trash")) {
-            QObject::connect(&Trash::instance(), &Trash::emptinessChanged, [this](bool isTrashEmpty){
-                setIcon(isTrashEmpty ? QStringLiteral("user-trash") : QStringLiteral("user-trash-full"));
-            });
+            // The trash icon must always be updated dependent on whether
+            // the trash is empty or not. We use a KDirLister that automatically
+            // watches for changes if the number of items has been changed.
+            // The update of the icon is handled in onTrashDirListerCompleted().
+            m_trashDirLister = new KDirLister();
+            m_trashDirLister->setAutoErrorHandlingEnabled(false, 0);
+            m_trashDirLister->setDelayedMimeTypes(true);
+            QObject::connect(m_trashDirLister.data(), static_cast<void(KDirLister::*)()>(&KDirLister::completed),
+                             m_signalHandler.data(), &PlacesItemSignalHandler::onTrashDirListerCompleted);
+            m_trashDirLister->openUrl(url);
         }
 
         setDataValue("url", url);
@@ -95,16 +102,6 @@ bool PlacesItem::isHidden() const
     return dataValue("isHidden").toBool();
 }
 
-bool PlacesItem::isGroupHidden() const
-{
-    return dataValue("isGroupHidden").toBool();
-}
-
-void PlacesItem::setGroupHidden(bool hidden)
-{
-    setDataValue("isGroupHidden", hidden);
-}
-
 void PlacesItem::setSystemItem(bool isSystemItem)
 {
     setDataValue("isSystemItem", isSystemItem);
@@ -122,28 +119,44 @@ Solid::Device PlacesItem::device() const
 
 void PlacesItem::setBookmark(const KBookmark& bookmark)
 {
-    const bool bookmarkDataChanged = !(bookmark == m_bookmark);
-
-    // bookmark object must be updated to keep in sync with source model
-    m_bookmark = bookmark;
-
-    if (!bookmarkDataChanged) {
+    if (bookmark == m_bookmark) {
         return;
     }
+
+    m_bookmark = bookmark;
 
     delete m_access;
     delete m_volume;
     delete m_disc;
     delete m_mtp;
 
+
     const QString udi = bookmark.metaDataItem(QStringLiteral("UDI"));
     if (udi.isEmpty()) {
         setIcon(bookmark.icon());
-        setText(i18ndc("kio5", "KFile System Bookmarks", bookmark.text().toUtf8().constData()));
+        setText(i18nc("KFile System Bookmarks", bookmark.text().toUtf8().constData()));
         setUrl(bookmark.url());
-        setSystemItem(bookmark.metaDataItem(QStringLiteral("isSystemItem")) == QLatin1String("true"));
     } else {
         initializeDevice(udi);
+    }
+
+    const GroupType type = groupType();
+    if (icon().isEmpty()) {
+        switch (type) {
+        case RecentlySavedType: setIcon(QStringLiteral("chronometer")); break;
+        case SearchForType:     setIcon(QStringLiteral("system-search")); break;
+        case PlacesType:
+        default:                setIcon(QStringLiteral("folder"));
+        }
+
+    }
+
+    switch (type) {
+    case PlacesType:        setGroup(i18nc("@item", "Places")); break;
+    case RecentlySavedType: setGroup(i18nc("@item", "Recently Saved")); break;
+    case SearchForType:     setGroup(i18nc("@item", "Search For")); break;
+    case DevicesType:       setGroup(i18nc("@item", "Devices")); break;
+    default:                Q_ASSERT(false); break;
     }
 
     setHidden(bookmark.metaDataItem(QStringLiteral("IsHidden")) == QLatin1String("true"));
@@ -154,15 +167,62 @@ KBookmark PlacesItem::bookmark() const
     return m_bookmark;
 }
 
+PlacesItem::GroupType PlacesItem::groupType() const
+{
+    if (udi().isEmpty()) {
+        const QString protocol = url().scheme();
+        if (protocol == QLatin1String("timeline")) {
+            return RecentlySavedType;
+        }
+
+        if (protocol.contains(QLatin1String("search"))) {
+            return SearchForType;
+        }
+
+        if (protocol == QLatin1String("bluetooth") || protocol == QLatin1String("obexftp") || protocol == QLatin1String("kdeconnect")) {
+            return DevicesType;
+        }
+
+        return PlacesType;
+    }
+
+    return DevicesType;
+}
+
 bool PlacesItem::storageSetupNeeded() const
 {
     return m_access ? !m_access->isAccessible() : false;
 }
 
-bool PlacesItem::isSearchOrTimelineUrl() const
+KBookmark PlacesItem::createBookmark(KBookmarkManager* manager,
+                                     const QString& text,
+                                     const QUrl& url,
+                                     const QString& iconName)
 {
-    const QString urlScheme = url().scheme();
-    return (urlScheme.contains("search") || urlScheme.contains("timeline"));
+    KBookmarkGroup root = manager->root();
+    if (root.isNull()) {
+        return KBookmark();
+    }
+
+    KBookmark bookmark = root.addBookmark(text, url, iconName);
+    bookmark.setFullText(text);
+    bookmark.setMetaDataItem(QStringLiteral("ID"), generateNewId());
+
+    return bookmark;
+}
+
+KBookmark PlacesItem::createDeviceBookmark(KBookmarkManager* manager,
+                                           const QString& udi)
+{
+    KBookmarkGroup root = manager->root();
+    if (root.isNull()) {
+        return KBookmark();
+    }
+
+    KBookmark bookmark = root.createNewSeparator();
+    bookmark.setMetaDataItem(QStringLiteral("UDI"), udi);
+    bookmark.setMetaDataItem(QStringLiteral("isSystemItem"), QStringLiteral("true"));
+    return bookmark;
 }
 
 void PlacesItem::onDataValueChanged(const QByteArray& role,
@@ -212,8 +272,6 @@ void PlacesItem::initializeDevice(const QString& udi)
         setUrl(QUrl::fromLocalFile(m_access->filePath()));
         QObject::connect(m_access.data(), &Solid::StorageAccess::accessibilityChanged,
                          m_signalHandler.data(), &PlacesItemSignalHandler::onAccessibilityChanged);
-        QObject::connect(m_access.data(), &Solid::StorageAccess::teardownRequested,
-                         m_signalHandler.data(), &PlacesItemSignalHandler::onTearDownRequested);
     } else if (m_disc && (m_disc->availableContent() & Solid::OpticalDisc::Audio) != 0) {
         Solid::Block *block = m_device.as<Solid::Block>();
         if (block) {
@@ -233,6 +291,14 @@ void PlacesItem::onAccessibilityChanged()
     setUrl(QUrl::fromLocalFile(m_access->filePath()));
 }
 
+void PlacesItem::onTrashDirListerCompleted()
+{
+    Q_ASSERT(url().scheme() == QLatin1String("trash"));
+
+    const bool isTrashEmpty = m_trashDirLister->items().isEmpty();
+    setIcon(isTrashEmpty ? QStringLiteral("user-trash") : QStringLiteral("user-trash-full"));
+}
+
 void PlacesItem::updateBookmarkForRole(const QByteArray& role)
 {
     Q_ASSERT(!m_bookmark.isNull());
@@ -245,12 +311,12 @@ void PlacesItem::updateBookmarkForRole(const QByteArray& role)
         //
         // NOTE: It is important to use "KFile System Bookmarks" as context
         // (see PlacesItemModel::createSystemBookmarks()).
-        if (text() != i18ndc("kio5", "KFile System Bookmarks", m_bookmark.text().toUtf8().data())) {
+        if (text() != i18nc("KFile System Bookmarks", m_bookmark.text().toUtf8().data())) {
             m_bookmark.setFullText(text());
         }
     } else if (role == "url") {
         m_bookmark.setUrl(url());
-    } else if (role == "udi") {
+    } else if (role == "udi)") {
         m_bookmark.setMetaDataItem(QStringLiteral("UDI"), udi());
     } else if (role == "isSystemItem") {
         m_bookmark.setMetaDataItem(QStringLiteral("isSystemItem"), isSystemItem() ? QStringLiteral("true") : QStringLiteral("false"));
@@ -268,9 +334,4 @@ QString PlacesItem::generateNewId()
     static int count = 0;
     return QString::number(QDateTime::currentDateTimeUtc().toTime_t()) +
             '/' + QString::number(count++) + " (V2)";
-}
-
-PlacesItemSignalHandler *PlacesItem::signalHandler() const
-{
-    return m_signalHandler.data();
 }

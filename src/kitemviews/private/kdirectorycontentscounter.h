@@ -23,8 +23,8 @@
 
 #include "kdirectorycontentscounterworker.h"
 
-#include <QQueue>
 #include <QSet>
+#include <QQueue>
 
 class KDirWatch;
 class KFileItemModel;
@@ -35,8 +35,8 @@ class KDirectoryContentsCounter : public QObject
     Q_OBJECT
 
 public:
-    explicit KDirectoryContentsCounter(KFileItemModel* model, QObject* parent = nullptr);
-    ~KDirectoryContentsCounter() override;
+    explicit KDirectoryContentsCounter(KFileItemModel* model, QObject* parent = 0);
+    ~KDirectoryContentsCounter();
 
     /**
      * Requests the number of items inside the directory \a path. The actual

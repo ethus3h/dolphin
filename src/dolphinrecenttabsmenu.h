@@ -21,7 +21,6 @@
 #define DOLPHIN_RECENT_TABS_MENU_H
 
 #include <KActionMenu>
-
 #include <QUrl>
 
 class QAction;

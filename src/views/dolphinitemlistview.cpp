@@ -19,17 +19,21 @@
 
 #include "dolphinitemlistview.h"
 
-#include "dolphin_compactmodesettings.h"
-#include "dolphin_detailsmodesettings.h"
 #include "dolphin_generalsettings.h"
 #include "dolphin_iconsmodesettings.h"
+#include "dolphin_detailsmodesettings.h"
+#include "dolphin_compactmodesettings.h"
 #include "dolphinfileitemlistwidget.h"
-#include "kitemviews/kfileitemmodel.h"
-#include "kitemviews/kitemlistcontroller.h"
-#include "views/viewmodecontroller.h"
-#include "zoomlevelinfo.h"
 
-#include <KIO/PreviewJob>
+#include <kitemviews/kfileitemlistview.h>
+#include <kitemviews/kfileitemmodel.h>
+#include <kitemviews/kitemlistcontroller.h>
+#include <kitemviews/kitemliststyleoption.h>
+
+
+#include <views/viewmodecontroller.h>
+
+#include "zoomlevelinfo.h"
 
 
 DolphinItemListView::DolphinItemListView(QGraphicsWidget* parent) :
@@ -90,7 +94,11 @@ void DolphinItemListView::readSettings()
     updateGridSize();
 
     const KConfigGroup globalConfig(KSharedConfig::openConfig(), "PreviewSettings");
-    setEnabledPlugins(globalConfig.readEntry("Plugins", KIO::PreviewJob::defaultPlugins()));
+    const QStringList plugins = globalConfig.readEntry("Plugins", QStringList()
+                                                       << QStringLiteral("directorythumbnail")
+                                                       << QStringLiteral("imagethumbnail")
+                                                       << QStringLiteral("jpegthumbnail"));
+    setEnabledPlugins(plugins);
 
     endTransaction();
 }
@@ -178,6 +186,14 @@ void DolphinItemListView::updateGridSize()
     case KFileItemListView::IconsLayout: {
         const int minItemWidth = 48;
         itemWidth = minItemWidth + IconsModeSettings::textWidthIndex() * 64;
+
+        if (previewsShown()) {
+            // Optimize the width for previews with a 3:2 aspect ratio instead
+            // of a 1:1 ratio to avoid wasting too much vertical space when
+            // showing photos.
+            const int minWidth = iconSize * 3 / 2;
+            itemWidth = qMax(itemWidth, minWidth);
+        }
 
         if (itemWidth < iconSize + padding * 2) {
             itemWidth = iconSize + padding * 2;

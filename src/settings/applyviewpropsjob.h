@@ -24,7 +24,6 @@
 #define APPLYVIEWPROPSJOB_H
 
 #include <KIO/Job>
-
 #include <QUrl>
 
 class ViewProperties;
@@ -61,11 +60,11 @@ public:
      *                  sub directories.
      */
     ApplyViewPropsJob(const QUrl& dir, const ViewProperties& viewProps);
-    ~ApplyViewPropsJob() override;
+    virtual ~ApplyViewPropsJob();
     int progress() const;
 
 private slots:
-    void slotResult(KJob* job) override;
+    virtual void slotResult(KJob* job) Q_DECL_OVERRIDE;
     void slotEntries(KIO::Job*, const KIO::UDSEntryList&);
 
 private:

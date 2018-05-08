@@ -23,20 +23,22 @@
 
 #include "kitemlistcontroller.h"
 
-#include "kitemlistselectionmanager.h"
-#include "kitemlistview.h"
-#include "private/kitemlistkeyboardsearchmanager.h"
-#include "private/kitemlistrubberband.h"
-#include "views/draganddrophelper.h"
 
-#include <QAccessible>
+#include "kitemlistview.h"
+#include "kitemlistselectionmanager.h"
+
+#include "private/kitemlistrubberband.h"
+#include "private/kitemlistkeyboardsearchmanager.h"
+
 #include <QApplication>
 #include <QDrag>
+#include <QEvent>
 #include <QGraphicsScene>
 #include <QGraphicsSceneEvent>
 #include <QGraphicsView>
 #include <QMimeData>
 #include <QTimer>
+#include <QAccessible>
 
 KItemListController::KItemListController(KItemModelBase* model, KItemListView* view, QObject* parent) :
     QObject(parent),
@@ -46,13 +48,13 @@ KItemListController::KItemListController(KItemModelBase* model, KItemListView* v
     m_selectionBehavior(NoSelection),
     m_autoActivationBehavior(ActivationAndExpansion),
     m_mouseDoubleClickAction(ActivateItemOnly),
-    m_model(nullptr),
-    m_view(nullptr),
+    m_model(0),
+    m_view(0),
     m_selectionManager(new KItemListSelectionManager(this)),
     m_keyboardManager(new KItemListKeyboardSearchManager(this)),
     m_pressedIndex(-1),
     m_pressedMousePos(),
-    m_autoActivationTimer(nullptr),
+    m_autoActivationTimer(0),
     m_oldSelection(),
     m_keyboardAnchorIndex(-1),
     m_keyboardAnchorPos(0)
@@ -73,10 +75,10 @@ KItemListController::KItemListController(KItemModelBase* model, KItemListView* v
 
 KItemListController::~KItemListController()
 {
-    setView(nullptr);
+    setView(0);
     Q_ASSERT(!m_view);
 
-    setModel(nullptr);
+    setModel(0);
     Q_ASSERT(!m_model);
 }
 
@@ -174,20 +176,6 @@ void KItemListController::setMouseDoubleClickAction(MouseDoubleClickAction actio
 KItemListController::MouseDoubleClickAction KItemListController::mouseDoubleClickAction() const
 {
     return m_mouseDoubleClickAction;
-}
-
-int KItemListController::indexCloseToMousePressedPosition() const
-{
-    QHashIterator<KItemListWidget*, KItemListGroupHeader*> it(m_view->m_visibleGroups);
-    while (it.hasNext()) {
-        it.next();
-        KItemListGroupHeader *groupHeader = it.value();
-        const QPointF mappedToGroup = groupHeader->mapFromItem(nullptr, m_pressedMousePos);
-        if (groupHeader->contains(mappedToGroup)) {
-            return it.key()->index();
-        }
-    }
-    return -1;
 }
 
 void KItemListController::setAutoActivationDelay(int delay)
@@ -433,7 +421,8 @@ bool KItemListController::keyPressEvent(QKeyEvent* event)
                 }
             }
         }
-        Q_FALLTHROUGH();  // fall through to the default case and add the Space to the current search string.
+        // Fall through to the default case and add the Space to the current search string.
+
     default:
         m_keyboardManager->addKeys(event->text());
         // Make sure unconsumed events get propagated up the chain. #302329
@@ -594,10 +583,6 @@ bool KItemListController::mousePressEvent(QGraphicsSceneMouseEvent* event, const
         // -> remember that the user pressed an item which had been selected already and
         //    clear the selection in mouseReleaseEvent(), unless the items are dragged.
         m_clearSelectionIfItemsAreNotDragged = true;
-
-        if (m_selectionManager->selectedItems().count() == 1 && m_view->isAboveText(m_pressedIndex, m_pressedMousePos)) {
-            emit selectedItemTextPressed(m_pressedIndex);
-        }
     }
 
     if (!shiftPressed) {
@@ -845,9 +830,6 @@ bool KItemListController::dragEnterEvent(QGraphicsSceneDragDropEvent* event, con
 {
     Q_UNUSED(event);
     Q_UNUSED(transform);
-
-    DragAndDropHelper::clearUrlListMatchesUrlCache();
-
     return false;
 }
 
@@ -856,7 +838,6 @@ bool KItemListController::dragLeaveEvent(QGraphicsSceneDragDropEvent* event, con
     Q_UNUSED(event);
     Q_UNUSED(transform);
 
-    m_autoActivationTimer->stop();
     m_view->setAutoScroll(false);
     m_view->hideDropIndicator();
 
@@ -874,8 +855,8 @@ bool KItemListController::dragMoveEvent(QGraphicsSceneDragDropEvent* event, cons
         return false;
     }
 
+    event->acceptProposedAction();
 
-    QUrl hoveredDir = m_model->directory();
     KItemListWidget* oldHoveredWidget = hoveredWidget();
 
     const QPointF pos = transform.map(event->pos());
@@ -898,11 +879,6 @@ bool KItemListController::dragMoveEvent(QGraphicsSceneDragDropEvent* event, cons
         }
 
         const int index = newHoveredWidget->index();
-
-        if (m_model->isDir(index)) {
-            hoveredDir = m_model->url(index);
-        }
-
         if (!droppingBetweenItems) {
             if (m_model->supportsDropping(index)) {
                 // Something has been dragged on an item.
@@ -927,8 +903,6 @@ bool KItemListController::dragMoveEvent(QGraphicsSceneDragDropEvent* event, cons
     } else {
         m_view->hideDropIndicator();
     }
-
-    event->setAccepted(!DragAndDropHelper::urlListMatchesUrl(event->mimeData()->urls(), hoveredDir));
 
     return false;
 }
@@ -1229,7 +1203,7 @@ KItemListWidget* KItemListController::hoveredWidget() const
         }
     }
 
-    return nullptr;
+    return 0;
 }
 
 KItemListWidget* KItemListController::widgetForPos(const QPointF& pos) const
@@ -1246,7 +1220,7 @@ KItemListWidget* KItemListController::widgetForPos(const QPointF& pos) const
         }
     }
 
-    return nullptr;
+    return 0;
 }
 
 void KItemListController::updateKeyboardAnchor()

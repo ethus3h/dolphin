@@ -20,23 +20,28 @@
 
 #include "phononwidget.h"
 
-#include <KIconLoader>
-#include <KLocalizedString>
 #include <Phonon/AudioOutput>
+#include <Phonon/Global>
 #include <Phonon/MediaObject>
 #include <Phonon/SeekSlider>
 #include <Phonon/VideoWidget>
 
+#include <QVBoxLayout>
+#include <QHBoxLayout>
 #include <QShowEvent>
 #include <QToolButton>
-#include <QVBoxLayout>
+#include <QDialog>
+#include <QIcon>
+#include <KIconLoader>
+#include <QUrl>
+#include <KLocalizedString>
 
 class EmbeddedVideoPlayer : public Phonon::VideoWidget
 {
     Q_OBJECT
 
     public:
-        EmbeddedVideoPlayer(QWidget *parent = nullptr) :
+        EmbeddedVideoPlayer(QWidget *parent = 0) :
             Phonon::VideoWidget(parent)
         {
         }
@@ -47,7 +52,7 @@ class EmbeddedVideoPlayer : public Phonon::VideoWidget
             updateGeometry();
         }
 
-        QSize sizeHint() const override
+        QSize sizeHint() const Q_DECL_OVERRIDE
         {
             return m_sizeHint.isValid() ? m_sizeHint : Phonon::VideoWidget::sizeHint();
         }
@@ -59,13 +64,13 @@ class EmbeddedVideoPlayer : public Phonon::VideoWidget
 PhononWidget::PhononWidget(QWidget *parent)
     : QWidget(parent),
     m_url(),
-    m_playButton(nullptr),
-    m_stopButton(nullptr),
-    m_topLayout(nullptr),
-    m_media(nullptr),
-    m_seekSlider(nullptr),
-    m_audioOutput(nullptr),
-    m_videoPlayer(nullptr)
+    m_playButton(0),
+    m_stopButton(0),
+    m_topLayout(0),
+    m_media(0),
+    m_seekSlider(0),
+    m_audioOutput(0),
+    m_videoPlayer(0)
 {
 }
 
@@ -167,7 +172,7 @@ void PhononWidget::stateChanged(Phonon::State newstate)
             m_videoPlayer->hide();
         }
         emit hasVideoChanged(false);
-        Q_FALLTHROUGH();
+        // fall through
     default:
         m_stopButton->hide();
         m_playButton->show();

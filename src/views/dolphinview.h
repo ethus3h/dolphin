@@ -21,16 +21,16 @@
 #ifndef DOLPHINVIEW_H
 #define DOLPHINVIEW_H
 
+#include <config-baloo.h>
+
 #include "dolphin_export.h"
 
-#include <KFileItem>
-#include <KIO/Job>
-#include <config-baloo.h>
-#include <kio/fileundomanager.h>
 #include <kparts/part.h>
-
-#include <QMimeData>
+#include <KFileItem>
+#include <kio/fileundomanager.h>
+#include <KIO/Job>
 #include <QUrl>
+#include <QMimeData>
 #include <QWidget>
 
 typedef KIO::FileUndoManager::CommandType CommandType;
@@ -93,7 +93,7 @@ public:
      */
     DolphinView(const QUrl& url, QWidget* parent);
 
-    ~DolphinView() override;
+    virtual ~DolphinView();
 
     /**
      * Returns the current active URL, where all actions are applied.
@@ -370,7 +370,7 @@ public slots:
     void stopLoading();
 
     /** Activates the view if the item list container gets focus. */
-    bool eventFilter(QObject* watched, QEvent* event) override;
+    virtual bool eventFilter(QObject* watched, QEvent* event) Q_DECL_OVERRIDE;
 
 signals:
     /**
@@ -552,10 +552,10 @@ signals:
 
 protected:
     /** Changes the zoom level if Control is pressed during a wheel event. */
-    void wheelEvent(QWheelEvent* event) override;
+    virtual void wheelEvent(QWheelEvent* event) Q_DECL_OVERRIDE;
 
-    void hideEvent(QHideEvent* event) override;
-    bool event(QEvent* event) override;
+    virtual void hideEvent(QHideEvent* event) Q_DECL_OVERRIDE;
+    virtual bool event(QEvent* event) Q_DECL_OVERRIDE;
 
 private slots:
     /**
@@ -577,7 +577,6 @@ private slots:
     void slotModelChanged(KItemModelBase* current, KItemModelBase* previous);
     void slotMouseButtonPressed(int itemIndex, Qt::MouseButtons buttons);
     void slotRenameDialogRenamingFinished(const QList<QUrl>& urls);
-    void slotSelectedItemTextPressed(int index);
 
     /*
      * Is called when new items get pasted or dropped.
@@ -708,8 +707,6 @@ private slots:
      */
     void calculateItemCount(int& fileCount, int& folderCount, KIO::filesize_t& totalFileSize) const;
 
-    void slotTwoClicksRenamingTimerTimeout();
-
 private:
     void loadDirectory(const QUrl& url, bool reload = false);
 
@@ -772,8 +769,6 @@ private:
      */
     void forceUrlsSelection(const QUrl& current, const QList<QUrl>& selected);
 
-    void abortTwoClicksRenaming();
-
 private:
     void updatePalette();
 
@@ -808,9 +803,6 @@ private:
     bool m_markFirstNewlySelectedItemAsCurrent;
 
     VersionControlObserver* m_versionControlObserver;
-
-    QTimer* m_twoClicksRenamingTimer;
-    QUrl m_twoClicksRenamingItemUrl;
 
     // For unit tests
     friend class TestBase;

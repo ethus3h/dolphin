@@ -31,7 +31,7 @@ class MountPointObserverCache : public QObject
     Q_OBJECT
 
     MountPointObserverCache();
-    ~MountPointObserverCache() override;
+    virtual ~MountPointObserverCache();
 
 public:
     static MountPointObserverCache* instance();

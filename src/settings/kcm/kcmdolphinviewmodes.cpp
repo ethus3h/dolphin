@@ -19,17 +19,18 @@
 
 #include "kcmdolphinviewmodes.h"
 
-#include "settings/viewmodes/viewsettingstab.h"
-
 #include <KLocalizedString>
 #include <KPluginFactory>
 #include <KPluginLoader>
+#include <QIcon>
+
+#include <settings/viewmodes/viewsettingstab.h>
 
 #include <QDBusConnection>
 #include <QDBusMessage>
-#include <QIcon>
-#include <QTabWidget>
+#include <QPushButton>
 #include <QVBoxLayout>
+#include <QTabWidget>
 
 K_PLUGIN_FACTORY(KCMDolphinViewModesConfigFactory, registerPlugin<DolphinViewModesConfigModule>(QStringLiteral("dolphinviewmodes"));)
 
@@ -65,7 +66,7 @@ DolphinViewModesConfigModule::DolphinViewModesConfigModule(QWidget* parent, cons
     m_tabs.append(compactTab);
     m_tabs.append(detailsTab);
 
-    topLayout->addWidget(tabWidget, 0, nullptr);
+    topLayout->addWidget(tabWidget, 0, 0);
 }
 
 DolphinViewModesConfigModule::~DolphinViewModesConfigModule()

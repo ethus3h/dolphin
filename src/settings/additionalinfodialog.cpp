@@ -19,19 +19,19 @@
 
 #include "additionalinfodialog.h"
 
-#include "kitemviews/kfileitemmodel.h"
-
-#include <KConfigGroup>
-#include <KLocalizedString>
-#include <KSharedConfig>
-#include <KWindowConfig>
 #include <config-baloo.h>
 
+#include <KSharedConfig>
+#include <KLocalizedString>
+#include "kitemviews/kfileitemmodel.h"
+#include <KConfigGroup>
+#include <KWindowConfig>
+
 #include <QCheckBox>
-#include <QDialogButtonBox>
 #include <QLabel>
-#include <QPushButton>
 #include <QVBoxLayout>
+#include <QDialogButtonBox>
+#include <QPushButton>
 
 #ifdef HAVE_BALOO
     #include <Baloo/IndexerConfig>
@@ -41,7 +41,7 @@ AdditionalInfoDialog::AdditionalInfoDialog(QWidget* parent,
                                            const QList<QByteArray>& visibleRoles) :
     QDialog(parent),
     m_visibleRoles(visibleRoles),
-    m_listWidget(nullptr)
+    m_listWidget(0)
 {
     setWindowTitle(i18nc("@title:window", "Additional Information"));
     setSizePolicy(QSizePolicy::Preferred, QSizePolicy::Minimum);
@@ -69,9 +69,9 @@ AdditionalInfoDialog::AdditionalInfoDialog(QWidget* parent,
         QListWidgetItem* item = new QListWidgetItem(info.translation, m_listWidget);
         item->setCheckState(visibleRoles.contains(info.role) ? Qt::Checked : Qt::Unchecked);
 
-        const bool enable = ((!info.requiresBaloo && !info.requiresIndexer) ||
+        const bool enable = (!info.requiresBaloo && !info.requiresIndexer) ||
                             (info.requiresBaloo) ||
-                            (info.requiresIndexer && indexingEnabled)) && info.role != "text";
+                            (info.requiresIndexer && indexingEnabled);
 
         if (!enable) {
             item->setFlags(item->flags() & ~Qt::ItemIsEnabled);
@@ -85,7 +85,7 @@ AdditionalInfoDialog::AdditionalInfoDialog(QWidget* parent,
     layout->addWidget(buttonBox);
 
     auto okButton = buttonBox->button(QDialogButtonBox::Ok);
-    okButton->setShortcut(Qt::CTRL + Qt::Key_Return);
+    okButton->setShortcut(Qt::CTRL | Qt::Key_Return);
     okButton->setDefault(true);
 
     const KConfigGroup dialogConfig(KSharedConfig::openConfig(QStringLiteral("dolphinrc")), "AdditionalInfoDialog");

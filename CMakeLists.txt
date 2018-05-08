@@ -1,22 +1,24 @@
-cmake_minimum_required(VERSION 3.0)
+cmake_minimum_required(VERSION 2.8.12)
+
+project(Dolphin)
 
 # KDE Application Version, managed by release script
-set (KDE_APPLICATIONS_VERSION_MAJOR "18")
-set (KDE_APPLICATIONS_VERSION_MINOR "07")
-set (KDE_APPLICATIONS_VERSION_MICRO "70")
+set (KDE_APPLICATIONS_VERSION_MAJOR "17")
+set (KDE_APPLICATIONS_VERSION_MINOR "08")
+set (KDE_APPLICATIONS_VERSION_MICRO "3")
 set (KDE_APPLICATIONS_VERSION "${KDE_APPLICATIONS_VERSION_MAJOR}.${KDE_APPLICATIONS_VERSION_MINOR}.${KDE_APPLICATIONS_VERSION_MICRO}")
-project(Dolphin VERSION ${KDE_APPLICATIONS_VERSION})
 
-set(QT_MIN_VERSION "5.8.0")
-set(KF5_MIN_VERSION "5.43.0")
+set(QT_MIN_VERSION "5.5.0")
+set(KF5_MIN_VERSION "5.30.0")
+set(ECM_MIN_VERSION "1.6.0")
 
 # ECM setup
-find_package(ECM ${KF5_MIN_VERSION} CONFIG REQUIRED)
+find_package(ECM ${ECM_MIN_VERSION} CONFIG REQUIRED)
 set(CMAKE_MODULE_PATH ${ECM_MODULE_PATH} ${CMAKE_SOURCE_DIR}/cmake)
 
 include(ECMSetupVersion)
 include(ECMGenerateHeaders)
-include(CMakePackageConfigHelpers)
+include(ECMPackageConfigHelpers)
 include(GenerateExportHeader)
 include(FeatureSummary)
 include(KDEInstallDirs)
@@ -107,7 +109,7 @@ add_subdirectory(doc)
 # CMake files
 set(CMAKECONFIG_INSTALL_DIR "${KDE_INSTALL_CMAKEPACKAGEDIR}/DolphinVcs")
 
-configure_package_config_file(
+ecm_configure_package_config_file(
     "${CMAKE_CURRENT_SOURCE_DIR}/DolphinVcsConfig.cmake.in"
     "${CMAKE_CURRENT_BINARY_DIR}/DolphinVcsConfig.cmake"
     INSTALL_DESTINATION ${CMAKECONFIG_INSTALL_DIR}

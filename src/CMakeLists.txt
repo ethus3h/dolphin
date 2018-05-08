@@ -11,6 +11,7 @@ add_definitions(
 )
 remove_definitions(
     -DQT_NO_CAST_FROM_BYTEARRAY
+    -DQT_NO_URL_CAST_FROM_STRING
     -DQT_NO_SIGNALS_SLOTS_KEYWORDS
     -DQT_NO_CAST_FROM_ASCII
     -DQT_NO_CAST_TO_ASCII
@@ -109,7 +110,6 @@ set(dolphinprivate_LIB_SRCS
     views/viewproperties.cpp
     views/zoomlevelinfo.cpp
     dolphinremoveaction.cpp
-    middleclickactioneventfilter.cpp
     dolphinnewfilemenu.cpp
     dolphindebug.cpp
 )
@@ -136,7 +136,6 @@ generate_export_header(dolphinprivate BASE_NAME dolphin)
 target_link_libraries(
     dolphinprivate PUBLIC
     dolphinvcs
-    Qt5::Concurrent
     Qt5::Gui
     KF5::Crash
     KF5::I18n
@@ -201,11 +200,9 @@ set(dolphinstatic_SRCS
     dolphinviewcontainer.cpp
     dolphincontextmenu.cpp
     dolphintabbar.cpp
-    dolphinplacesmodelsingleton.cpp
     dolphinrecenttabsmenu.cpp
     dolphintabpage.cpp
     dolphintabwidget.cpp
-    trash/dolphintrash.cpp
     filterbar/filterbar.cpp
     main.cpp
     panels/information/filemetadataconfigurationdialog.cpp
@@ -225,7 +222,6 @@ set(dolphinstatic_SRCS
     panels/folders/foldersitemlistwidget.cpp
     panels/folders/treeviewcontextmenu.cpp
     panels/folders/folderspanel.cpp
-    panels/terminal/terminalpanel.cpp
     search/dolphinfacetswidget.cpp
     search/dolphinsearchbox.cpp
     settings/general/behaviorsettingspage.cpp
@@ -267,6 +263,10 @@ kconfig_add_kcfg_files(dolphinstatic_SRCS GENERATE_MOC
     search/dolphin_searchsettings.kcfgc
     settings/dolphin_versioncontrolsettings.kcfgc
 )
+
+if(NOT WIN32)
+   set(dolphinstatic_SRCS ${dolphinstatic_SRCS} panels/terminal/terminalpanel.cpp)
+endif()
 
 qt5_add_resources(dolphinstatic_SRCS dolphin.qrc)
 

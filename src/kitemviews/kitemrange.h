@@ -51,7 +51,7 @@ class KItemRangeList : public QList<KItemRange>
 {
 public:
     KItemRangeList() : QList<KItemRange>() {}
-    explicit KItemRangeList(const QList<KItemRange>& list) : QList<KItemRange>(list) {}
+    KItemRangeList(const QList<KItemRange>& list) : QList<KItemRange>(list) {}
 
     template<class Container>
     static KItemRangeList fromSortedContainer(const Container& container);

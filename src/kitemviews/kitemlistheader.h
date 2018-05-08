@@ -21,7 +21,6 @@
 #define KITEMLISTHEADER_H
 
 #include "dolphin_export.h"
-
 #include <QHash>
 #include <QObject>
 
@@ -39,7 +38,7 @@ class DOLPHIN_EXPORT KItemListHeader : public QObject
     Q_OBJECT
 
 public:
-    ~KItemListHeader() override;
+    virtual ~KItemListHeader();
 
     /**
      * If set to true, KItemListView will automatically adjust the
@@ -88,7 +87,7 @@ signals:
                                    qreal currentWidth);
 
 private:
-    explicit KItemListHeader(KItemListView* listView);
+    KItemListHeader(KItemListView* listView);
 
 private:
     KItemListView* m_view;

@@ -19,6 +19,7 @@
 
 #include "kitemlistheader.h"
 #include "kitemlistview.h"
+
 #include "private/kitemlistheaderwidget.h"
 
 KItemListHeader::~KItemListHeader()

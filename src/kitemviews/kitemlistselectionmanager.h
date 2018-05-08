@@ -24,8 +24,9 @@
 #define KITEMLISTSELECTIONMANAGER_H
 
 #include "dolphin_export.h"
-#include "kitemviews/kitemmodelbase.h"
-#include "kitemviews/kitemset.h"
+
+#include <kitemviews/kitemmodelbase.h>
+#include <kitemviews/kitemset.h>
 
 #include <QObject>
 
@@ -50,8 +51,8 @@ public:
         Toggle
     };
 
-    explicit KItemListSelectionManager(QObject* parent = nullptr);
-    ~KItemListSelectionManager() override;
+    KItemListSelectionManager(QObject* parent = 0);
+    virtual ~KItemListSelectionManager();
 
     void setCurrentItem(int current);
     int currentItem() const;

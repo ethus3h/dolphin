@@ -20,29 +20,34 @@
 #include "kfileitemmodelrolesupdater.h"
 
 #include "kfileitemmodel.h"
-#include "private/kdirectorycontentscounter.h"
-#include "private/kpixmapmodifier.h"
 
 #include <KConfig>
 #include <KConfigGroup>
-#include <KIO/JobUiDelegate>
-#include <KIO/PreviewJob>
+#include <KSharedConfig>
+#include <KFileItem>
 #include <KIconLoader>
 #include <KJobWidgets>
-#include <KOverlayIconPlugin>
+#include <KIO/JobUiDelegate>
+#include <KIO/PreviewJob>
 #include <KPluginLoader>
-#include <KSharedConfig>
+#include <KOverlayIconPlugin>
 
-#ifdef HAVE_BALOO
-#include "private/kbaloorolesprovider.h"
-#include <Baloo/File>
-#include <Baloo/FileMonitor>
-#endif
+#include "private/kpixmapmodifier.h"
+#include "private/kdirectorycontentscounter.h"
 
 #include <QApplication>
 #include <QPainter>
+#include <QPixmap>
 #include <QElapsedTimer>
 #include <QTimer>
+
+#include <algorithm>
+
+#ifdef HAVE_BALOO
+    #include "private/kbaloorolesprovider.h"
+    #include <Baloo/File>
+    #include <Baloo/FileMonitor>
+#endif
 
 
 // #define KFILEITEMMODELROLESUPDATER_DEBUG
@@ -83,18 +88,21 @@ KFileItemModelRolesUpdater::KFileItemModelRolesUpdater(KFileItemModel* model, QO
     m_pendingIndexes(),
     m_pendingPreviewItems(),
     m_previewJob(),
-    m_recentlyChangedItemsTimer(nullptr),
+    m_recentlyChangedItemsTimer(0),
     m_recentlyChangedItems(),
     m_changedItems(),
-    m_directoryContentsCounter(nullptr)
+    m_directoryContentsCounter(0)
   #ifdef HAVE_BALOO
-  , m_balooFileMonitor(nullptr)
+  , m_balooFileMonitor(0)
   #endif
 {
     Q_ASSERT(model);
 
     const KConfigGroup globalConfig(KSharedConfig::openConfig(), "PreviewSettings");
-    m_enabledPlugins = globalConfig.readEntry("Plugins", KIO::PreviewJob::defaultPlugins());
+    m_enabledPlugins = globalConfig.readEntry("Plugins", QStringList()
+                                                         << QStringLiteral("directorythumbnail")
+                                                         << QStringLiteral("imagethumbnail")
+                                                         << QStringLiteral("jpegthumbnail"));
 
     connect(m_model, &KFileItemModel::itemsInserted,
             this,    &KFileItemModelRolesUpdater::slotItemsInserted);
@@ -291,7 +299,7 @@ void KFileItemModelRolesUpdater::setRoles(const QSet<QByteArray>& roles)
                     this, &KFileItemModelRolesUpdater::applyChangedBalooRoles);
         } else if (!hasBalooRole && m_balooFileMonitor) {
             delete m_balooFileMonitor;
-            m_balooFileMonitor = nullptr;
+            m_balooFileMonitor = 0;
         }
 #endif
 
@@ -497,7 +505,7 @@ void KFileItemModelRolesUpdater::slotGotPreview(const KFileItem& item, const QPi
 
     const QString mimeType = item.mimetype();
     const int slashIndex = mimeType.indexOf(QLatin1Char('/'));
-    const bool isFontPreview = mimeType.rightRef(slashIndex).contains(QLatin1String("font"));
+    const bool isFontPreview = mimeType.right(slashIndex).contains(QLatin1String("font"));
     const bool isFolderPreview = item.isDir();
     const bool isWindowsExePreview = mimeType == QLatin1String("application/x-ms-dos-executable") ||
                                      mimeType == QLatin1String("application/x-msdownload");
@@ -589,7 +597,7 @@ void KFileItemModelRolesUpdater::slotPreviewFailed(const KFileItem& item)
 
 void KFileItemModelRolesUpdater::slotPreviewJobFinished()
 {
-    m_previewJob = nullptr;
+    m_previewJob = 0;
 
     if (m_state != PreviewJobRunning) {
         return;
@@ -1133,7 +1141,7 @@ void KFileItemModelRolesUpdater::killPreviewJob()
         disconnect(m_previewJob,  &KIO::PreviewJob::finished,
                    this, &KFileItemModelRolesUpdater::slotPreviewJobFinished);
         m_previewJob->kill();
-        m_previewJob = nullptr;
+        m_previewJob = 0;
         m_pendingPreviewItems.clear();
     }
 }

@@ -20,7 +20,8 @@
 #include "kstandarditemmodel.h"
 
 #include "kstandarditem.h"
-
+#include <QSet>
+#include <QByteArray>
 KStandardItemModel::KStandardItemModel(QObject* parent) :
     KItemModelBase(parent),
     m_items(),
@@ -88,7 +89,7 @@ void KStandardItemModel::changeItem(int index, KStandardItem* item)
 
     m_indexesForItems.remove(oldItem);
     delete oldItem;
-    oldItem = nullptr;
+    oldItem = 0;
 
     m_items[index] = item;
     m_indexesForItems.insert(item, index);
@@ -113,7 +114,7 @@ void KStandardItemModel::removeItem(int index)
         onItemRemoved(index, item);
 
         delete item;
-        item = nullptr;
+        item = 0;
 
         emit itemsRemoved(KItemRangeList() << KItemRange(index, 1));
 
@@ -133,7 +134,7 @@ void KStandardItemModel::clear()
 KStandardItem* KStandardItemModel::item(int index) const
 {
     if (index < 0 || index >= m_items.count()) {
-        return nullptr;
+        return 0;
     }
     return m_items[index];
 }
@@ -177,7 +178,7 @@ bool KStandardItemModel::setData(int index, const QHash<QByteArray, QVariant>& v
 QMimeData* KStandardItemModel::createMimeData(const KItemSet& indexes) const
 {
     Q_UNUSED(indexes);
-    return nullptr;
+    return 0;
 }
 
 int KStandardItemModel::indexForKeyboardSearch(const QString& text, int startFromIndex) const

@@ -18,48 +18,46 @@
  ***************************************************************************/
 
 #include "dolphinviewcontainer.h"
+#include <KProtocolManager>
 
-#include "dolphin_generalsettings.h"
-#include "dolphinplacesmodelsingleton.h"
-#include "dolphindebug.h"
-#include "filterbar/filterbar.h"
+#include <QDropEvent>
+#include <QTimer>
+#include <QMimeData>
+#include <QVBoxLayout>
+
+#include <KFileItemActions>
+#include <KFilePlacesModel>
+#include <KLocalizedString>
+#include <KIO/PreviewJob>
+#include <kio_version.h>
+#include <KMessageWidget>
+#include <KShell>
+#include <QUrl>
+#include <KUrlComboBox>
+#include <KUrlNavigator>
+#include <KRun>
+
+#ifdef KActivities_FOUND
+#endif
+
 #include "global.h"
+#include "dolphin_generalsettings.h"
+#include "filterbar/filterbar.h"
 #include "search/dolphinsearchbox.h"
 #include "statusbar/dolphinstatusbar.h"
-#include "trash/dolphintrash.h"
 #include "views/viewmodecontroller.h"
 #include "views/viewproperties.h"
 
-#include <KFileItemActions>
-#include <KIO/PreviewJob>
-#include <KLocalizedString>
-#include <KMessageWidget>
-#include <KProtocolManager>
-#include <KRun>
-#include <KShell>
-#include <KUrlComboBox>
-#include <KUrlNavigator>
-#include <kio_version.h>
-
-#include <QDropEvent>
-#include <QLoggingCategory>
-#include <QMimeData>
-#include <QTimer>
-#include <QUrl>
-#include <QVBoxLayout>
-
 DolphinViewContainer::DolphinViewContainer(const QUrl& url, QWidget* parent) :
     QWidget(parent),
-    m_topLayout(nullptr),
-    m_navigatorWidget(nullptr),
-    m_urlNavigator(nullptr),
-    m_emptyTrashButton(nullptr),
-    m_searchBox(nullptr),
-    m_messageWidget(nullptr),
-    m_view(nullptr),
-    m_filterBar(nullptr),
-    m_statusBar(nullptr),
-    m_statusBarTimer(nullptr),
+    m_topLayout(0),
+    m_urlNavigator(0),
+    m_searchBox(0),
+    m_messageWidget(0),
+    m_view(0),
+    m_filterBar(0),
+    m_statusBar(0),
+    m_statusBarTimer(0),
     m_statusBarTimestamp(),
     m_autoGrabFocus(true)
 #ifdef KActivities_FOUND
@@ -72,12 +70,7 @@ DolphinViewContainer::DolphinViewContainer(const QUrl& url, QWidget* parent) :
     m_topLayout->setSpacing(0);
     m_topLayout->setMargin(0);
 
-    m_navigatorWidget = new QWidget(this);
-    QHBoxLayout* navigatorLayout = new QHBoxLayout(m_navigatorWidget);
-    navigatorLayout->setSpacing(0);
-    navigatorLayout->setMargin(0);
-
-    m_urlNavigator = new KUrlNavigator(DolphinPlacesModelSingleton::instance().placesModel(), url, this);
+    m_urlNavigator = new KUrlNavigator(new KFilePlacesModel(this), url, this);
     connect(m_urlNavigator, &KUrlNavigator::activated,
             this, &DolphinViewContainer::activate);
     connect(m_urlNavigator->editor(), &KUrlComboBox::completionModeChanged,
@@ -89,13 +82,6 @@ DolphinViewContainer::DolphinViewContainer(const QUrl& url, QWidget* parent) :
     m_urlNavigator->setHomeUrl(Dolphin::homeUrl());
     KUrlComboBox* editor = m_urlNavigator->editor();
     editor->setCompletionMode(KCompletion::CompletionMode(settings->urlCompletionMode()));
-
-    m_emptyTrashButton = new QPushButton(QIcon::fromTheme(QStringLiteral("user-trash")), "&Empty Trash", this);
-    m_emptyTrashButton->setFlat(true);
-    connect(m_emptyTrashButton, &QPushButton::clicked, this, [this]() { Trash::empty(this); });
-    connect(&Trash::instance(), &Trash::emptinessChanged, m_emptyTrashButton, &QPushButton::setDisabled);
-    m_emptyTrashButton->setDisabled(Trash::isEmpty());
-    m_emptyTrashButton->hide();
 
     m_searchBox = new DolphinSearchBox(this);
     m_searchBox->hide();
@@ -148,8 +134,6 @@ DolphinViewContainer::DolphinViewContainer(const QUrl& url, QWidget* parent) :
             this, &DolphinViewContainer::slotUrlNavigatorLocationAboutToBeChanged);
     connect(m_urlNavigator, &KUrlNavigator::urlChanged,
             this, &DolphinViewContainer::slotUrlNavigatorLocationChanged);
-    connect(m_urlNavigator, &KUrlNavigator::urlSelectionRequested,
-            this, &DolphinViewContainer::slotUrlSelectionRequested);
     connect(m_urlNavigator, &KUrlNavigator::returnPressed,
             this, &DolphinViewContainer::slotReturnPressed);
     connect(m_urlNavigator, &KUrlNavigator::urlsDropped, this, [=](const QUrl &destination, QDropEvent *event) {
@@ -159,10 +143,6 @@ DolphinViewContainer::DolphinViewContainer(const QUrl& url, QWidget* parent) :
         // TODO: remove as soon as we can hard-depend of KF5 >= 5.37
         m_view->dropUrls(destination, event, m_view);
 #endif
-    });
-
-    connect(m_view, &DolphinView::directoryLoadingCompleted, this, [this]() {
-        m_emptyTrashButton->setVisible(m_view->url().scheme() == QLatin1String("trash"));
     });
 
     // Initialize status bar
@@ -203,10 +183,7 @@ DolphinViewContainer::DolphinViewContainer(const QUrl& url, QWidget* parent) :
     connect(m_view, &DolphinView::urlChanged,
             m_filterBar, &FilterBar::slotUrlChanged);
 
-    navigatorLayout->addWidget(m_urlNavigator);
-    navigatorLayout->addWidget(m_emptyTrashButton);
-
-    m_topLayout->addWidget(m_navigatorWidget);
+    m_topLayout->addWidget(m_urlNavigator);
     m_topLayout->addWidget(m_searchBox);
     m_topLayout->addWidget(m_messageWidget);
     m_topLayout->addWidget(m_view);
@@ -262,11 +239,6 @@ void DolphinViewContainer::setAutoGrabFocus(bool grab)
 bool DolphinViewContainer::autoGrabFocus() const
 {
     return m_autoGrabFocus;
-}
-
-QString DolphinViewContainer::currentSearchText() const
-{
-     return m_searchBox->text();
 }
 
 const DolphinStatusBar* DolphinViewContainer::statusBar() const
@@ -358,7 +330,7 @@ void DolphinViewContainer::setSearchModeEnabled(bool enabled)
     }
 
     m_searchBox->setVisible(enabled);
-    m_navigatorWidget->setVisible(!enabled);
+    m_urlNavigator->setVisible(!enabled);
 
     if (enabled) {
         const QUrl& locationUrl = m_urlNavigator->locationUrl();
@@ -386,7 +358,7 @@ QString DolphinViewContainer::placesText() const
     QString text;
 
     if (isSearchModeEnabled()) {
-        text = i18n("Search for %1 in %2", m_searchBox->text(), m_searchBox->searchPath().fileName());
+        text = m_searchBox->searchPath().fileName() + QLatin1String(": ") + m_searchBox->text();
     } else {
         text = url().fileName();
         if (text.isEmpty()) {
@@ -626,13 +598,6 @@ void DolphinViewContainer::slotUrlNavigatorLocationChanged(const QUrl& url)
     } else {
         showMessage(i18nc("@info:status", "Invalid protocol"), Error);
     }
-}
-
-void DolphinViewContainer::slotUrlSelectionRequested(const QUrl& url)
-{
-    qCDebug(DolphinDebug) << "slotUrlSelectionRequested: " << url;
-    m_view->markUrlsAsSelected({url});
-    m_view->markUrlAsCurrent(url); // makes the item scroll into view
 }
 
 void DolphinViewContainer::redirect(const QUrl& oldUrl, const QUrl& newUrl)

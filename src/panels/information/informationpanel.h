@@ -20,10 +20,8 @@
 #ifndef INFORMATIONPANEL_H
 #define INFORMATIONPANEL_H
 
-#include "panels/panel.h"
-
+#include <panels/panel.h>
 #include <KFileItem>
-
 class InformationPanelContent;
 namespace KIO
 {
@@ -38,8 +36,8 @@ class InformationPanel : public Panel
     Q_OBJECT
 
 public:
-    explicit InformationPanel(QWidget* parent = nullptr);
-    ~InformationPanel() override;
+    explicit InformationPanel(QWidget* parent = 0);
+    virtual ~InformationPanel();
 
 signals:
     void urlActivated(const QUrl& url);
@@ -61,16 +59,16 @@ public slots:
 
 protected:
     /** @see Panel::urlChanged() */
-    bool urlChanged() override;
+    virtual bool urlChanged() Q_DECL_OVERRIDE;
 
     /** @see QWidget::showEvent() */
-    void showEvent(QShowEvent* event) override;
+    virtual void showEvent(QShowEvent* event) Q_DECL_OVERRIDE;
 
     /** @see QWidget::resizeEvent() */
-    void resizeEvent(QResizeEvent* event) override;
+    virtual void resizeEvent(QResizeEvent* event) Q_DECL_OVERRIDE;
 
     /** @see QWidget::contextMenuEvent() */
-    void contextMenuEvent(QContextMenuEvent* event) override;
+    virtual void contextMenuEvent(QContextMenuEvent* event) Q_DECL_OVERRIDE;
 
 private slots:
     /**

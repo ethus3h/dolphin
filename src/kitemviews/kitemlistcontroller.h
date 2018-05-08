@@ -24,11 +24,11 @@
 #define KITEMLISTCONTROLLER_H
 
 #include "dolphin_export.h"
+
 #include "kitemset.h"
 
 #include <QObject>
 #include <QPointF>
-
 class QTimer;
 class KItemModelBase;
 class KItemListKeyboardSearchManager;
@@ -88,8 +88,8 @@ public:
      * @param view   View of the controller. The ownership is passed to the controller.
      * @param parent Optional parent object.
      */
-    KItemListController(KItemModelBase* model, KItemListView* view, QObject* parent = nullptr);
-    ~KItemListController() override;
+    KItemListController(KItemModelBase* model, KItemListView* view, QObject* parent = 0);
+    virtual ~KItemListController();
 
     void setModel(KItemModelBase* model);
     KItemModelBase* model() const;
@@ -107,8 +107,6 @@ public:
 
     void setMouseDoubleClickAction(MouseDoubleClickAction action);
     MouseDoubleClickAction mouseDoubleClickAction() const;
-
-    int indexCloseToMousePressedPosition() const;
 
     /**
      * Sets the delay in milliseconds when dragging an object above an item
@@ -238,8 +236,6 @@ signals:
 
     void modelChanged(KItemModelBase* current, KItemModelBase* previous);
     void viewChanged(KItemListView* current, KItemListView* previous);
-
-    void selectedItemTextPressed(int index);
 
 private slots:
     void slotViewScrollOffsetChanged(qreal current, qreal previous);

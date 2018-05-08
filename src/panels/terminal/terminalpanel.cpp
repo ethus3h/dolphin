@@ -19,36 +19,30 @@
 
 #include "terminalpanel.h"
 
-#include <KIO/DesktopExecParser>
+#include <signal.h>
+
+#include <KPluginLoader>
+#include <KPluginFactory>
+#include <KService>
+#include <kde_terminal_interface.h>
+#include <KParts/ReadOnlyPart>
+#include <KShell>
 #include <KIO/Job>
 #include <KIO/JobUiDelegate>
 #include <KJobWidgets>
-#include <KLocalizedString>
-#include <KMessageWidget>
-#include <KParts/ReadOnlyPart>
-#include <KPluginFactory>
-#include <KPluginLoader>
-#include <KService>
-#include <KShell>
-#include <kde_terminal_interface.h>
 
-#include <QAction>
-#include <QDesktopServices>
 #include <QDir>
-#include <QLabel>
 #include <QShowEvent>
-#include <QTimer>
 #include <QVBoxLayout>
 
 TerminalPanel::TerminalPanel(QWidget* parent) :
     Panel(parent),
     m_clearTerminal(true),
-    m_mostLocalUrlJob(nullptr),
-    m_layout(nullptr),
-    m_terminal(nullptr),
-    m_terminalWidget(nullptr),
-    m_konsolePartMissingMessage(nullptr),
-    m_konsolePart(nullptr),
+    m_mostLocalUrlJob(0),
+    m_layout(0),
+    m_terminal(0),
+    m_terminalWidget(0),
+    m_konsolePart(0),
     m_konsolePartCurrentDirectory(),
     m_sendCdToTerminalHistory()
 {
@@ -60,38 +54,18 @@ TerminalPanel::~TerminalPanel()
 {
 }
 
-void TerminalPanel::goHome()
-{
-    sendCdToTerminal(QDir::homePath(), HistoryPolicy::SkipHistory);
-}
-
-QString TerminalPanel::currentWorkingDirectory()
-{
-    if (m_terminal) {
-        return m_terminal->currentWorkingDirectory();
-    }
-    return QString();
-}
-
 void TerminalPanel::terminalExited()
 {
-    m_terminal = nullptr;
+    m_terminal = 0;
     emit hideTerminalPanel();
-}
-
-bool TerminalPanel::isHiddenInVisibleWindow()
-{
-    return parentWidget()
-        && parentWidget()->isHidden()
-        && m_terminal
-        && (m_terminal->foregroundProcessId() == -1);
 }
 
 void TerminalPanel::dockVisibilityChanged()
 {
     // Only react when the DockWidget itself (not some parent) is hidden. This way we don't
     // respond when e.g. Dolphin is minimized.
-    if (isHiddenInVisibleWindow()) {
+    if (parentWidget() && parentWidget()->isHidden() &&
+        m_terminal && (m_terminal->foregroundProcessId() == -1)) {
         // Make sure that the following "cd /" command will not affect the view.
         disconnect(m_konsolePart, SIGNAL(currentDirectoryChanged(QString)),
                    this, SLOT(slotKonsolePartCurrentDirectoryChanged(QString)));
@@ -130,39 +104,17 @@ void TerminalPanel::showEvent(QShowEvent* event)
 
     if (!m_terminal) {
         m_clearTerminal = true;
-        KPluginFactory* factory = nullptr;
+        KPluginFactory* factory = 0;
         KService::Ptr service = KService::serviceByDesktopName(QStringLiteral("konsolepart"));
         if (service) {
             factory = KPluginLoader(service->library()).factory();
         }
-        m_konsolePart = factory ? (factory->create<KParts::ReadOnlyPart>(this)) : nullptr;
+        m_konsolePart = factory ? (factory->create<KParts::ReadOnlyPart>(this)) : 0;
         if (m_konsolePart) {
             connect(m_konsolePart, &KParts::ReadOnlyPart::destroyed, this, &TerminalPanel::terminalExited);
             m_terminalWidget = m_konsolePart->widget();
             m_layout->addWidget(m_terminalWidget);
-            if (m_konsolePartMissingMessage) {
-                m_layout->removeWidget(m_konsolePartMissingMessage);
-            }
             m_terminal = qobject_cast<TerminalInterface*>(m_konsolePart);
-        } else if (!m_konsolePartMissingMessage) {
-            const auto konsoleInstallUrl = QUrl("appstream://org.kde.konsole.desktop");
-            const auto konsoleNotInstalledText = i18n("Terminal cannot be shown because Konsole is not installed. "
-                                                      "Please install it and then reopen the panel.");
-            m_konsolePartMissingMessage = new KMessageWidget(konsoleNotInstalledText, this);
-            m_konsolePartMissingMessage->setCloseButtonVisible(false);
-            m_konsolePartMissingMessage->hide();
-            if (KIO::DesktopExecParser::hasSchemeHandler(konsoleInstallUrl)) {
-                auto installKonsoleAction = new QAction(i18n("Install Konsole"), this);
-                connect(installKonsoleAction, &QAction::triggered, [konsoleInstallUrl]() {
-                    QDesktopServices::openUrl(konsoleInstallUrl);
-                });
-                m_konsolePartMissingMessage->addAction(installKonsoleAction);
-            }
-            m_layout->addWidget(m_konsolePartMissingMessage);
-            m_layout->addStretch();
-            QTimer::singleShot(0, m_konsolePartMissingMessage, &KMessageWidget::animatedShow);
-        } else {
-            m_konsolePartMissingMessage->animatedShow();
         }
     }
     if (m_terminal) {
@@ -179,7 +131,7 @@ void TerminalPanel::showEvent(QShowEvent* event)
 void TerminalPanel::changeDir(const QUrl& url)
 {
     delete m_mostLocalUrlJob;
-    m_mostLocalUrlJob = nullptr;
+    m_mostLocalUrlJob = 0;
 
     if (url.isLocalFile()) {
         sendCdToTerminal(url.toLocalFile());
@@ -192,25 +144,23 @@ void TerminalPanel::changeDir(const QUrl& url)
     }
 }
 
-void TerminalPanel::sendCdToTerminal(const QString& dir, HistoryPolicy addToHistory)
+void TerminalPanel::sendCdToTerminal(const QString& dir)
 {
     if (dir == m_konsolePartCurrentDirectory) {
         m_clearTerminal = false;
         return;
     }
 
-#ifndef Q_OS_WIN
     if (!m_clearTerminal) {
         // The TerminalV2 interface does not provide a way to delete the
         // current line before sending a new input. This is mandatory,
         // otherwise sending a 'cd x' to a existing 'rm -rf *' might
-        // result in data loss. As workaround SIGINT is sent.
+        // result in data loss. As workaround SIGINT is send.
         const int processId = m_terminal->terminalProcessId();
         if (processId > 0) {
             kill(processId, SIGINT);
         }
     }
-#endif
 
     m_terminal->sendInput(" cd " + KShell::quoteArg(dir) + '\n');
 
@@ -218,8 +168,7 @@ void TerminalPanel::sendCdToTerminal(const QString& dir, HistoryPolicy addToHist
     // the directory change, because this directory change is not caused by a "cd" command that the
     // user entered in the panel. Therefore, we have to remember 'dir'. Note that it could also be
     // a symbolic link -> remember the 'canonical' path.
-    if (addToHistory == HistoryPolicy::AddToHistory)
-        m_sendCdToTerminalHistory.enqueue(QDir(dir).canonicalPath());
+    m_sendCdToTerminalHistory.enqueue(QDir(dir).canonicalPath());
 
     if (m_clearTerminal) {
         m_terminal->sendInput(QStringLiteral(" clear\n"));
@@ -235,7 +184,7 @@ void TerminalPanel::slotMostLocalUrlResult(KJob* job)
         sendCdToTerminal(url.toLocalFile());
     }
 
-    m_mostLocalUrlJob = nullptr;
+    m_mostLocalUrlJob = 0;
 }
 
 void TerminalPanel::slotKonsolePartCurrentDirectoryChanged(const QString& dir)

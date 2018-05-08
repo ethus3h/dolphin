@@ -24,12 +24,12 @@
 #define KITEMMODELBASE_H
 
 #include "dolphin_export.h"
-#include "kitemviews/kitemrange.h"
-#include "kitemviews/kitemset.h"
+
+#include <kitemviews/kitemrange.h>
+#include <kitemviews/kitemset.h>
 
 #include <QHash>
 #include <QObject>
-#include <QUrl>
 #include <QVariant>
 
 class QMimeData;
@@ -54,9 +54,9 @@ class DOLPHIN_EXPORT KItemModelBase : public QObject
     Q_OBJECT
 
 public:
-    explicit KItemModelBase(QObject* parent = nullptr);
-    explicit KItemModelBase(const QByteArray& sortRole, QObject* parent = nullptr);
-    ~KItemModelBase() override;
+    KItemModelBase(QObject* parent = 0);
+    explicit KItemModelBase(const QByteArray& sortRole, QObject* parent = 0);
+    virtual ~KItemModelBase();
 
     /** @return The number of items. */
     virtual int count() const = 0;
@@ -182,20 +182,6 @@ public:
      */
     QString blacklistItemDropEventMimeType() const;
 
-    /**
-     * @return URL of the item at the specified index
-     */
-    virtual QUrl url(int index) const;
-
-    /**
-     * @return True, if item at specified index is a directory
-     */
-    virtual bool isDir(int index) const;
-
-    /**
-     * @return Parent directory of the items that are shown
-     */
-    virtual QUrl directory() const;
 signals:
     /**
      * Is emitted if one or more items have been inserted. Each item-range consists

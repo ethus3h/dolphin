@@ -22,23 +22,27 @@
 #include "kfileitemmodel.h"
 
 #include "dolphin_generalsettings.h"
-#include "dolphindebug.h"
-#include "private/kfileitemmodeldirlister.h"
-#include "private/kfileitemmodelsortalgorithm.h"
 
 #include <KLocalizedString>
 #include <KUrlMimeData>
 
-#include <QElapsedTimer>
+#include "dolphindebug.h"
+
+#include "private/kfileitemmodelsortalgorithm.h"
+#include "private/kfileitemmodeldirlister.h"
+
 #include <QMimeData>
 #include <QTimer>
 #include <QWidget>
+
+#include <algorithm>
+#include <vector>
 
 // #define KFILEITEMMODEL_DEBUG
 
 KFileItemModel::KFileItemModel(QObject* parent) :
     KItemModelBase("text", parent),
-    m_dirLister(nullptr),
+    m_dirLister(0),
     m_sortDirsFirst(true),
     m_sortRole(NameRole),
     m_sortingProgressPercent(-1),
@@ -48,8 +52,8 @@ KFileItemModel::KFileItemModel(QObject* parent) :
     m_filter(),
     m_filteredItems(),
     m_requestRole(),
-    m_maximumUpdateIntervalTimer(nullptr),
-    m_resortAllItemsTimer(nullptr),
+    m_maximumUpdateIntervalTimer(0),
+    m_resortAllItemsTimer(0),
     m_pendingItemsToInsert(),
     m_groups(),
     m_expandedDirs(),
@@ -246,7 +250,8 @@ QMimeData* KFileItemModel::createMimeData(const KItemSet& indexes) const
     // Copyright (C) 2006 David Faure <faure@kde.org>
     QList<QUrl> urls;
     QList<QUrl> mostLocalUrls;
-    const ItemData* lastAddedItem = nullptr;
+    bool canUseMostLocalUrls = true;
+    const ItemData* lastAddedItem = 0;
 
     for (int index : indexes) {
         const ItemData* itemData = m_itemData.at(index);
@@ -268,6 +273,9 @@ QMimeData* KFileItemModel::createMimeData(const KItemSet& indexes) const
 
             bool isLocal;
             mostLocalUrls << item.mostLocalUrl(isLocal);
+            if (!isLocal) {
+                canUseMostLocalUrls = false;
+            }
         }
     }
 
@@ -621,24 +629,16 @@ void KFileItemModel::restoreExpandedDirectories(const QSet<QUrl> &urls)
 
 void KFileItemModel::expandParentDirectories(const QUrl &url)
 {
+    const int pos = m_dirLister->url().path().length();
 
     // Assure that each sub-path of the URL that should be
     // expanded is added to m_urlsToExpand. KDirLister
     // does not care whether the parent-URL has already been
     // expanded.
     QUrl urlToExpand = m_dirLister->url();
-    const int pos = urlToExpand.path().length();
-
-    // first subdir can be empty, if m_dirLister->url().path() does not end with '/'
-    // this happens if baseUrl is not root but a home directory, see FoldersPanel,
-    // so using QString::SkipEmptyParts
-    const QStringList subDirs = url.path().mid(pos).split(QDir::separator(), QString::SkipEmptyParts);
+    const QStringList subDirs = url.path().mid(pos).split(QDir::separator());
     for (int i = 0; i < subDirs.count() - 1; ++i) {
-        QString path = urlToExpand.path();
-        if (!path.endsWith(QLatin1Char('/'))) {
-            path.append(QLatin1Char('/'));
-        }
-        urlToExpand.setPath(path + subDirs.at(i));
+        urlToExpand.setPath(urlToExpand.path() + '/' + subDirs.at(i));
         m_urlsToExpand.insert(urlToExpand);
     }
 
@@ -1846,10 +1846,16 @@ int KFileItemModel::sortRoleCompare(const ItemData* a, const ItemData* b, const 
         break;
     }
 
-    case RatingRole:
-    case WidthRole:
-    case HeightRole: {
-        result = a->values.value(roleForType(m_sortRole)).toInt() - b->values.value(roleForType(m_sortRole)).toInt();
+    case RatingRole: {
+        result = a->values.value("rating").toInt() - b->values.value("rating").toInt();
+        break;
+    }
+
+    case ImageSizeRole: {
+        // Alway use a natural comparing to interpret the numbers of a string like
+        // "1600 x 1200" for having a correct sorting.
+        result = collator.compare(a->values.value("imageSize").toString(),
+                                  b->values.value("imageSize").toString());
         break;
     }
 
@@ -2285,30 +2291,25 @@ const KFileItemModel::RoleInfoMap* KFileItemModel::rolesInfoMap(int& count)
 {
     static const RoleInfoMap rolesInfoMap[] = {
     //  | role         | roleType       | role translation                                | group translation           | requires Baloo   | requires indexer
-        { nullptr,             NoRole,          nullptr, nullptr,                                             nullptr, nullptr,                                     false, false },
-        { "text",        NameRole,        I18N_NOOP2_NOSTRIP("@label", "Name"),             nullptr, nullptr,                                     false, false },
-        { "size",        SizeRole,        I18N_NOOP2_NOSTRIP("@label", "Size"),             nullptr, nullptr,                                     false, false },
-        { "modificationtime",        ModificationTimeRole,        I18N_NOOP2_NOSTRIP("@label", "Modified"),             nullptr, nullptr,                                     false, false },
-        { "creationtime",        CreationTimeRole,        I18N_NOOP2_NOSTRIP("@label", "Created"),             nullptr, nullptr,                                     false, false },
-        { "accesstime",        AccessTimeRole,        I18N_NOOP2_NOSTRIP("@label", "Accessed"),             nullptr, nullptr,                                     false, false },
-        { "type",        TypeRole,        I18N_NOOP2_NOSTRIP("@label", "Type"),             nullptr, nullptr,                                     false, false },
-        { "rating",      RatingRole,      I18N_NOOP2_NOSTRIP("@label", "Rating"),           nullptr, nullptr,                                     true,  false },
-        { "tags",        TagsRole,        I18N_NOOP2_NOSTRIP("@label", "Tags"),             nullptr, nullptr,                                     true,  false },
-        { "comment",     CommentRole,     I18N_NOOP2_NOSTRIP("@label", "Comment"),          nullptr, nullptr,                                     true,  false },
+        { 0,             NoRole,          0, 0,                                             0, 0,                                     false, false },
+        { "text",        NameRole,        I18N_NOOP2_NOSTRIP("@label", "Name"),             0, 0,                                     false, false },
+        { "size",        SizeRole,        I18N_NOOP2_NOSTRIP("@label", "Size"),             0, 0,                                     false, false },
+        { "modificationtime",        ModificationTimeRole,        I18N_NOOP2_NOSTRIP("@label", "Modified"),             0, 0,                                     false, false },
+        { "creationtime",        CreationTimeRole,        I18N_NOOP2_NOSTRIP("@label", "Created"),             0, 0,                                     false, false },
+        { "accesstime",        AccessTimeRole,        I18N_NOOP2_NOSTRIP("@label", "Accessed"),             0, 0,                                     false, false },
+        { "type",        TypeRole,        I18N_NOOP2_NOSTRIP("@label", "Type"),             0, 0,                                     false, false },
+        { "rating",      RatingRole,      I18N_NOOP2_NOSTRIP("@label", "Rating"),           0, 0,                                     true,  false },
+        { "tags",        TagsRole,        I18N_NOOP2_NOSTRIP("@label", "Tags"),             0, 0,                                     true,  false },
+        { "comment",     CommentRole,     I18N_NOOP2_NOSTRIP("@label", "Comment"),          0, 0,                                     true,  false },
         { "title",       TitleRole,       I18N_NOOP2_NOSTRIP("@label", "Title"),            I18N_NOOP2_NOSTRIP("@label", "Document"), true,  true  },
         { "wordCount",   WordCountRole,   I18N_NOOP2_NOSTRIP("@label", "Word Count"),       I18N_NOOP2_NOSTRIP("@label", "Document"), true,  true  },
         { "lineCount",   LineCountRole,   I18N_NOOP2_NOSTRIP("@label", "Line Count"),       I18N_NOOP2_NOSTRIP("@label", "Document"), true,  true  },
-        { "imageDateTime",   ImageDateTimeRole,   I18N_NOOP2_NOSTRIP("@label", "Date Photographed"),       I18N_NOOP2_NOSTRIP("@label", "Image"),    true,  true  },
-        { "width",       WidthRole,       I18N_NOOP2_NOSTRIP("@label", "Width"),            I18N_NOOP2_NOSTRIP("@label", "Image"),    true,  true  },
-        { "height",      HeightRole,      I18N_NOOP2_NOSTRIP("@label", "Height"),           I18N_NOOP2_NOSTRIP("@label", "Image"),    true,  true  },
+        { "imageSize",   ImageSizeRole,   I18N_NOOP2_NOSTRIP("@label", "Image Size"),       I18N_NOOP2_NOSTRIP("@label", "Image"),    true,  true  },
         { "orientation", OrientationRole, I18N_NOOP2_NOSTRIP("@label", "Orientation"),      I18N_NOOP2_NOSTRIP("@label", "Image"),    true,  true  },
         { "artist",      ArtistRole,      I18N_NOOP2_NOSTRIP("@label", "Artist"),           I18N_NOOP2_NOSTRIP("@label", "Audio"),    true,  true  },
-        { "genre",       GenreRole,       I18N_NOOP2_NOSTRIP("@label", "Genre"),            I18N_NOOP2_NOSTRIP("@label", "Audio"),    true,  true  },
         { "album",       AlbumRole,       I18N_NOOP2_NOSTRIP("@label", "Album"),            I18N_NOOP2_NOSTRIP("@label", "Audio"),    true,  true  },
         { "duration",    DurationRole,    I18N_NOOP2_NOSTRIP("@label", "Duration"),         I18N_NOOP2_NOSTRIP("@label", "Audio"),    true,  true  },
-        { "bitrate",     BitrateRole,     I18N_NOOP2_NOSTRIP("@label", "Bitrate"),          I18N_NOOP2_NOSTRIP("@label", "Audio"),    true,  true  },
         { "track",       TrackRole,       I18N_NOOP2_NOSTRIP("@label", "Track"),            I18N_NOOP2_NOSTRIP("@label", "Audio"),    true,  true  },
-        { "releaseYear", ReleaseYearRole, I18N_NOOP2_NOSTRIP("@label", "Release Year"),     I18N_NOOP2_NOSTRIP("@label", "Audio"),    true,  true  },
         { "path",        PathRole,        I18N_NOOP2_NOSTRIP("@label", "Path"),             I18N_NOOP2_NOSTRIP("@label", "Other"),    false, false },
         { "deletiontime",DeletionTimeRole,I18N_NOOP2_NOSTRIP("@label", "Deletion Time"),    I18N_NOOP2_NOSTRIP("@label", "Other"),    false, false },
         { "destination", DestinationRole, I18N_NOOP2_NOSTRIP("@label", "Link Destination"), I18N_NOOP2_NOSTRIP("@label", "Other"),    false, false },
@@ -2365,7 +2366,7 @@ bool KFileItemModel::isConsistent() const
         return false;
     }
 
-    for (int i = 0, iMax = count(); i < iMax; ++i) {
+    for (int i = 0; i < count(); ++i) {
         // Check if m_items and m_itemData are consistent.
         const KFileItem item = fileItem(i);
         if (item.isNull()) {

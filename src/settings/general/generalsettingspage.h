@@ -20,9 +20,8 @@
 #ifndef GENERALSETTINGSPAGE_H
 #define GENERALSETTINGSPAGE_H
 
-#include "settings/settingspagebase.h"
-
 #include <QWidget>
+#include <settings/settingspagebase.h>
 
 class QUrl;
 class SettingsPageBase;
@@ -42,13 +41,13 @@ class GeneralSettingsPage : public SettingsPageBase
 
 public:
     GeneralSettingsPage(const QUrl& url, QWidget* parent);
-    ~GeneralSettingsPage() override;
+    virtual ~GeneralSettingsPage();
 
     /** @see SettingsPageBase::applySettings() */
-    void applySettings() override;
+    virtual void applySettings() Q_DECL_OVERRIDE;
 
     /** @see SettingsPageBase::restoreDefaults() */
-    void restoreDefaults() override;
+    virtual void restoreDefaults() Q_DECL_OVERRIDE;
 
 private:
     QList<SettingsPageBase*> m_pages;

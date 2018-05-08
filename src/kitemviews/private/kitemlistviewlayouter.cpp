@@ -17,10 +17,12 @@
  *   51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA            *
  ***************************************************************************/
 
-#include "dolphindebug.h"
-#include "kitemlistsizehintresolver.h"
 #include "kitemlistviewlayouter.h"
-#include "kitemviews/kitemmodelbase.h"
+
+#include <kitemviews/kitemmodelbase.h>
+#include "kitemlistsizehintresolver.h"
+
+#include "dolphindebug.h"
 
 // #define KITEMLISTVIEWLAYOUTER_DEBUG
 
@@ -33,7 +35,7 @@ KItemListViewLayouter::KItemListViewLayouter(KItemListSizeHintResolver* sizeHint
     m_itemSize(128, 128),
     m_itemMargin(),
     m_headerHeight(0),
-    m_model(nullptr),
+    m_model(0),
     m_sizeHintResolver(sizeHintResolver),
     m_scrollOffset(0),
     m_maximumScrollOffset(0),

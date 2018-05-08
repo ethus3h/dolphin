@@ -20,11 +20,11 @@
 #ifndef INFORMATIONPANELCONTENT_H
 #define INFORMATIONPANELCONTENT_H
 
+#include "config-baloo.h"
 #include <KFileItem>
-#include <config-baloo.h>
+#include <QUrl>
 
 #include <QPointer>
-#include <QUrl>
 #include <QWidget>
 
 class KFileItemList;
@@ -57,8 +57,8 @@ class InformationPanelContent : public QWidget
     Q_OBJECT
 
 public:
-    explicit InformationPanelContent(QWidget* parent = nullptr);
-    ~InformationPanelContent() override;
+    explicit InformationPanelContent(QWidget* parent = 0);
+    virtual ~InformationPanelContent();
 
     /**
      * Shows the meta information for the item \p item.
@@ -85,7 +85,7 @@ signals:
 
 protected:
     /** @see QObject::eventFilter() */
-    bool eventFilter(QObject* obj, QEvent* event) override;
+    virtual bool eventFilter(QObject* obj, QEvent* event) Q_DECL_OVERRIDE;
 
 private slots:
     /**
@@ -115,6 +115,14 @@ private slots:
     void refreshMetaData();
 
 private:
+    /**
+     * Checks whether the an URL is repesented by a place. If yes,
+     * then the place icon and name are shown instead of a preview.
+     * @return True, if the URL represents exactly a place.
+     * @param url The url to check.
+     */
+    bool applyPlace(const QUrl& url);
+
     /**
      * Sets the text for the label \a m_nameLabel and assures that the
      * text is split in a way that it can be wrapped within the

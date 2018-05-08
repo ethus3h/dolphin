@@ -40,18 +40,6 @@ public:
     DolphinTabPage* currentTabPage() const;
 
     /**
-     * @return the next tab page. If the current active tab is the last tab,
-     * it returns the first tab. If there is only one tab, returns nullptr
-     */
-    DolphinTabPage* nextTabPage() const;
-
-    /**
-     * @return the previous tab page. If the current active tab is the first tab,
-     * it returns the last tab. If there is only one tab, returns nullptr
-     */
-    DolphinTabPage* prevTabPage() const;
-
-    /**
      * @return Tab page at the given \a index (can be 0 if the index is out-of-range)
      */
     DolphinTabPage* tabPageAt(const int index) const;
@@ -186,8 +174,8 @@ private slots:
     void currentTabChanged(int index);
 
 protected:
-    void tabInserted(int index) override;
-    void tabRemoved(int index) override;
+    virtual void tabInserted(int index) Q_DECL_OVERRIDE;
+    virtual void tabRemoved(int index) Q_DECL_OVERRIDE;
 
 private:
     /**
@@ -199,7 +187,7 @@ private:
     /** Caches the (negated) places panel visibility */
     bool m_placesSelectorVisible;
 
-    int m_lastViewedTab;
+    int m_previousTab;
 };
 
 #endif

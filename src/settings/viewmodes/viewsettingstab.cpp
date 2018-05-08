@@ -19,31 +19,33 @@
 
 #include "viewsettingstab.h"
 
+#include "dolphinfontrequester.h"
 #include "dolphin_compactmodesettings.h"
 #include "dolphin_detailsmodesettings.h"
 #include "dolphin_iconsmodesettings.h"
-#include "dolphinfontrequester.h"
-#include "views/zoomlevelinfo.h"
 
 #include <KComboBox>
 #include <KLocalizedString>
 
-#include <QApplication>
 #include <QCheckBox>
 #include <QGroupBox>
-#include <QHelpEvent>
 #include <QLabel>
+#include <QSlider>
 #include <QVBoxLayout>
+#include <QHelpEvent>
+#include <QApplication>
+
+#include <views/zoomlevelinfo.h>
 
 ViewSettingsTab::ViewSettingsTab(Mode mode, QWidget* parent) :
     QWidget(parent),
     m_mode(mode),
-    m_defaultSizeSlider(nullptr),
-    m_previewSizeSlider(nullptr),
-    m_fontRequester(nullptr),
-    m_widthBox(nullptr),
-    m_maxLinesBox(nullptr),
-    m_expandableFolders(nullptr)
+    m_defaultSizeSlider(0),
+    m_previewSizeSlider(0),
+    m_fontRequester(0),
+    m_widthBox(0),
+    m_maxLinesBox(0),
+    m_expandableFolders(0)
 {
     QVBoxLayout* topLayout = new QVBoxLayout(this);
 
@@ -131,9 +133,7 @@ ViewSettingsTab::ViewSettingsTab(Mode mode, QWidget* parent) :
 
     topLayout->addWidget(iconSizeGroup);
     topLayout->addWidget(textGroup);
-    if (m_expandableFolders) {
-        topLayout->addWidget(m_expandableFolders);
-    }
+    topLayout->addWidget(m_expandableFolders);
     topLayout->addStretch(1);
 
     loadSettings();
@@ -200,7 +200,7 @@ void ViewSettingsTab::applySettings()
 
 void ViewSettingsTab::restoreDefaultSettings()
 {
-    KConfigSkeleton* settings = nullptr;
+    KConfigSkeleton* settings = 0;
     switch (m_mode) {
     case IconsMode:   settings = IconsModeSettings::self(); break;
     case CompactMode: settings = CompactModeSettings::self(); break;
@@ -230,7 +230,8 @@ void ViewSettingsTab::loadSettings()
         break;
     }
 
-    const ViewModeSettings settings(viewMode());
+    ViewModeSettings settings(viewMode());
+    settings.readConfig();
 
     const QSize iconSize(settings.iconSize(), settings.iconSize());
     m_defaultSizeSlider->setValue(ZoomLevelInfo::zoomLevelForIconSize(iconSize));

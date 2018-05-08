@@ -21,7 +21,8 @@
 #define KITEMSET_H
 
 #include "dolphin_export.h"
-#include "kitemviews/kitemrange.h"
+
+#include <kitemviews/kitemrange.h>
 
 /**
  * @brief Stores a set of integer numbers in a space-efficient way.
@@ -162,7 +163,7 @@ public:
         {
         }
 
-        explicit const_iterator(const iterator& other) :
+        const_iterator(const iterator& other) :
             m_rangeIt(other.m_rangeIt),
             m_offset(other.m_offset)
         {

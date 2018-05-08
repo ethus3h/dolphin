@@ -18,49 +18,50 @@
 */
 
 #include "dolphinpart.h"
-
-#include "dolphindebug.h"
-#include "dolphinnewfilemenu.h"
-#include "dolphinpart_ext.h"
 #include "dolphinremoveaction.h"
-#include "kitemviews/kfileitemmodel.h"
-#include "kitemviews/private/kfileitemmodeldirlister.h"
-#include "views/dolphinnewfilemenuobserver.h"
-#include "views/dolphinremoteencoding.h"
-#include "views/dolphinview.h"
-#include "views/dolphinviewactionhandler.h"
+
+#include <KFileItemListProperties>
 
 #include <KAboutData>
 #include <KActionCollection>
-#include <KAuthorized>
-#include <KConfigGroup>
-#include <KFileItemListProperties>
+#include "dolphindebug.h"
 #include <KIconLoader>
-#include <KJobWidgets>
 #include <KLocalizedString>
 #include <KMessageBox>
-#include <KMimeTypeEditor>
 #include <KPluginFactory>
 #include <KRun>
-#include <KSharedConfig>
 #include <KToolInvocation>
+#include <KAuthorized>
+#include <QMenu>
+#include <KSharedConfig>
+#include <KConfigGroup>
+#include <KMimeTypeEditor>
+#include <KJobWidgets>
 
+#include "dolphinpart_ext.h"
+#include "dolphinnewfilemenu.h"
+#include "views/dolphinview.h"
+#include "views/dolphinviewactionhandler.h"
+#include "views/dolphinnewfilemenuobserver.h"
+#include "views/dolphinremoteencoding.h"
+#include "kitemviews/kfileitemmodel.h"
+#include "kitemviews/private/kfileitemmodeldirlister.h"
+
+#include <QStandardPaths>
 #include <QActionGroup>
+#include <QTextDocument>
 #include <QApplication>
 #include <QClipboard>
 #include <QDir>
-#include <QInputDialog>
 #include <QKeyEvent>
-#include <QMenu>
-#include <QStandardPaths>
-#include <QTextDocument>
+#include <QInputDialog>
 
 K_PLUGIN_FACTORY(DolphinPartFactory, registerPlugin<DolphinPart>();)
 
 DolphinPart::DolphinPart(QWidget* parentWidget, QObject* parent, const QVariantList& args)
     : KParts::ReadOnlyPart(parent)
-      ,m_openTerminalAction(nullptr)
-      ,m_removeAction(nullptr)
+      ,m_openTerminalAction(0)
+      ,m_removeAction(0)
 {
     Q_UNUSED(args)
     setComponentData(*createAboutData(), false);
@@ -173,14 +174,14 @@ void DolphinPart::createActions()
 
     QAction* selectItemsMatching = actionCollection()->addAction(QStringLiteral("select_items_matching"));
     selectItemsMatching->setText(i18nc("@action:inmenu Edit", "Select Items Matching..."));
-    actionCollection()->setDefaultShortcut(selectItemsMatching, Qt::CTRL + Qt::Key_S);
+    actionCollection()->setDefaultShortcut(selectItemsMatching, Qt::CTRL | Qt::Key_S);
     connect(selectItemsMatching, &QAction::triggered, this, &DolphinPart::slotSelectItemsMatchingPattern);
 
     QAction* unselectItemsMatching = actionCollection()->addAction(QStringLiteral("unselect_items_matching"));
     unselectItemsMatching->setText(i18nc("@action:inmenu Edit", "Unselect Items Matching..."));
     connect(unselectItemsMatching, &QAction::triggered, this, &DolphinPart::slotUnselectItemsMatchingPattern);
 
-    KStandardAction::selectAll(m_view, &DolphinView::selectAll, actionCollection());
+    actionCollection()->addAction(KStandardAction::SelectAll, QStringLiteral("select_all"), m_view, SLOT(selectAll()));
 
     QAction* unselectAll = actionCollection()->addAction(QStringLiteral("unselect_all"));
     unselectAll->setText(i18nc("@action:inmenu Edit", "Unselect All"));
@@ -188,7 +189,7 @@ void DolphinPart::createActions()
 
     QAction* invertSelection = actionCollection()->addAction(QStringLiteral("invert_selection"));
     invertSelection->setText(i18nc("@action:inmenu Edit", "Invert Selection"));
-    actionCollection()->setDefaultShortcut(invertSelection, Qt::CTRL + Qt::SHIFT + Qt::Key_A);
+    actionCollection()->setDefaultShortcut(invertSelection, Qt::CTRL | Qt::SHIFT | Qt::Key_A);
     connect(invertSelection, &QAction::triggered, m_view, &DolphinView::invertSelection);
 
     // View menu: all done by DolphinViewActionHandler
@@ -216,10 +217,12 @@ void DolphinPart::createActions()
                    goActionGroup);
 
     // Tools menu
-    m_findFileAction = KStandardAction::find(this, &DolphinPart::slotFindFile, actionCollection());
+    m_findFileAction = actionCollection()->addAction(QStringLiteral("find_file"));
     m_findFileAction->setText(i18nc("@action:inmenu Tools", "Find File..."));
+    actionCollection()->setDefaultShortcut(m_findFileAction, Qt::CTRL | Qt::Key_F);
+    m_findFileAction->setIcon(QIcon::fromTheme(QStringLiteral("edit-find")));
+    connect(m_findFileAction, &QAction::triggered, this, &DolphinPart::slotFindFile);
 
-#ifndef Q_OS_WIN
     if (KAuthorized::authorize(QStringLiteral("shell_access"))) {
         m_openTerminalAction = actionCollection()->addAction(QStringLiteral("open_terminal"));
         m_openTerminalAction->setIcon(QIcon::fromTheme(QStringLiteral("utilities-terminal")));
@@ -227,7 +230,6 @@ void DolphinPart::createActions()
         connect(m_openTerminalAction, &QAction::triggered, this, &DolphinPart::slotOpenTerminal);
         actionCollection()->setDefaultShortcut(m_openTerminalAction, Qt::Key_F4);
     }
-#endif
 }
 
 void DolphinPart::createGoAction(const char* name, const char* iconName,
@@ -251,8 +253,8 @@ void DolphinPart::slotSelectionChanged(const KFileItemList& selection)
 {
     const bool hasSelection = !selection.isEmpty();
 
-    QAction* renameAction  = actionCollection()->action(KStandardAction::name(KStandardAction::RenameFile));
-    QAction* moveToTrashAction = actionCollection()->action(KStandardAction::name(KStandardAction::MoveToTrash));
+    QAction* renameAction  = actionCollection()->action(QStringLiteral("rename"));
+    QAction* moveToTrashAction = actionCollection()->action(QStringLiteral("move_to_trash"));
     QAction* deleteAction = actionCollection()->action(KStandardAction::name(KStandardAction::DeleteFile));
     QAction* editMimeTypeAction = actionCollection()->action(QStringLiteral("editMimeType"));
     QAction* propertiesAction = actionCollection()->action(QStringLiteral("properties"));
@@ -314,7 +316,7 @@ bool DolphinPart::openUrl(const QUrl &url)
     QString prettyUrl = visibleUrl.toDisplayString(QUrl::PreferLocalFile);
     emit setWindowCaption(prettyUrl);
     emit m_extension->setLocationBarUrl(prettyUrl);
-    emit started(nullptr); // get the wheel to spin
+    emit started(0); // get the wheel to spin
     m_view->setNameFilter(m_nameFilter);
     m_view->setUrl(url);
     updatePasteAction();
@@ -429,8 +431,8 @@ void DolphinPart::slotOpenContextMenu(const QPoint& pos,
 
             if (showDeleteAction && showMoveToTrashAction) {
                 delete m_removeAction;
-                m_removeAction = nullptr;
-                editActions.append(actionCollection()->action(KStandardAction::name(KStandardAction::MoveToTrash)));
+                m_removeAction = 0;
+                editActions.append(actionCollection()->action(QStringLiteral("move_to_trash")));
                 editActions.append(actionCollection()->action(KStandardAction::name(KStandardAction::DeleteFile)));
             } else if (showDeleteAction && !showMoveToTrashAction) {
                 editActions.append(actionCollection()->action(KStandardAction::name(KStandardAction::DeleteFile)));
@@ -445,7 +447,7 @@ void DolphinPart::slotOpenContextMenu(const QPoint& pos,
         }
 
         if (supportsMoving) {
-            editActions.append(actionCollection()->action(KStandardAction::name(KStandardAction::RenameFile)));
+            editActions.append(actionCollection()->action(QStringLiteral("rename")));
         }
 
         // Normally KonqPopupMenu only shows the "Create new" submenu in the current view
@@ -595,7 +597,6 @@ void DolphinPart::setFilesToSelect(const QList<QUrl>& files)
 
 bool DolphinPart::eventFilter(QObject* obj, QEvent* event)
 {
-    using ShiftState = DolphinRemoveAction::ShiftState;
     const int type = event->type();
 
     if ((type == QEvent::KeyPress || type == QEvent::KeyRelease) && m_removeAction) {
@@ -603,7 +604,7 @@ bool DolphinPart::eventFilter(QObject* obj, QEvent* event)
         if (menu && menu->parent() == m_view) {
             QKeyEvent* ev = static_cast<QKeyEvent*>(event);
             if (ev->key() == Qt::Key_Shift) {
-                m_removeAction->update(type == QEvent::KeyPress ? ShiftState::Pressed : ShiftState::Released);
+                m_removeAction->update();
             }
         }
     }

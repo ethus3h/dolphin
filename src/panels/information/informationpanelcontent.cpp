@@ -19,17 +19,17 @@
 
 #include "informationpanelcontent.h"
 
+#include <KFileItem>
 #include <KIO/JobUiDelegate>
 #include <KIO/PreviewJob>
+#include <KJobWidgets>
 #include <KIconEffect>
 #include <KIconLoader>
-#include <KJobWidgets>
+#include <QIcon>
 #include <KLocalizedString>
+#include <QMenu>
 #include <KSeparator>
 #include <KStringHandler>
-
-#include <QIcon>
-#include <QMenu>
 #include <QTextDocument>
 
 #ifndef HAVE_BALOO
@@ -43,12 +43,18 @@
 
 #include <Phonon/BackendCapabilities>
 #include <Phonon/MediaObject>
+#include <Phonon/SeekSlider>
 
+#include <QEvent>
 #include <QLabel>
+#include <QPixmap>
+#include <QResizeEvent>
 #include <QScrollArea>
 #include <QTextLayout>
+#include <QTextLine>
 #include <QTimer>
 #include <QVBoxLayout>
+#include <QFontDatabase>
 #include <QStyle>
 
 #include "dolphin_informationpanelsettings.h"
@@ -59,14 +65,14 @@
 InformationPanelContent::InformationPanelContent(QWidget* parent) :
     QWidget(parent),
     m_item(),
-    m_previewJob(nullptr),
-    m_outdatedPreviewTimer(nullptr),
-    m_preview(nullptr),
-    m_phononWidget(nullptr),
-    m_nameLabel(nullptr),
-    m_metaDataWidget(nullptr),
-    m_metaDataArea(nullptr),
-    m_placesItemModel(nullptr)
+    m_previewJob(0),
+    m_outdatedPreviewTimer(0),
+    m_preview(0),
+    m_phononWidget(0),
+    m_nameLabel(0),
+    m_metaDataWidget(0),
+    m_metaDataArea(0),
+    m_placesItemModel(0)
 {
     parent->installEventFilter(this);
 
@@ -101,7 +107,7 @@ InformationPanelContent::InformationPanelContent(QWidget* parent) :
     m_nameLabel->setFont(font);
     m_nameLabel->setTextFormat(Qt::PlainText);
     m_nameLabel->setAlignment(Qt::AlignHCenter);
-    m_nameLabel->setSizePolicy(QSizePolicy::Ignored, QSizePolicy::Fixed);
+    m_nameLabel->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Fixed);
 
     const bool previewsShown = InformationPanelSettings::previewsShown();
     m_preview->setVisible(previewsShown);
@@ -117,8 +123,7 @@ InformationPanelContent::InformationPanelContent(QWidget* parent) :
 #endif
     m_metaDataWidget->setFont(QFontDatabase::systemFont(QFontDatabase::SmallestReadableFont));
     m_metaDataWidget->setSizePolicy(QSizePolicy::Preferred, QSizePolicy::Minimum);
-    m_metaDataWidget->setDateFormat(static_cast<Baloo::DateFormats>(InformationPanelSettings::dateFormat()));
- 
+
     // Encapsulate the MetaDataWidget inside a container that has a dummy widget
     // at the bottom. This prevents that the meta data widget gets vertically stretched
     // in the case where the height of m_metaDataArea > m_metaDataWidget.
@@ -161,40 +166,43 @@ void InformationPanelContent::showItem(const KFileItem& item)
 
     const QUrl itemUrl = item.url();
     const bool isSearchUrl = itemUrl.scheme().contains(QStringLiteral("search")) && item.localPath().isEmpty();
-    setNameLabelText(item.text());
-    if (isSearchUrl) {
-        // in the case of a search-URL the URL is not readable for humans
-        // (at least not useful to show in the Information Panel)
-        m_preview->setPixmap(
-            QIcon::fromTheme(QStringLiteral("nepomuk")).pixmap(KIconLoader::SizeEnormous, KIconLoader::SizeEnormous)
-        );
-    } else {
-        // try to get a preview pixmap from the item...
+    if (!applyPlace(itemUrl)) {
+        setNameLabelText(item.text());
+        if (isSearchUrl) {
+            // in the case of a search-URL the URL is not readable for humans
+            // (at least not useful to show in the Information Panel)
+            KIconLoader iconLoader;
+            QPixmap icon = iconLoader.loadIcon(QStringLiteral("nepomuk"),
+                                               KIconLoader::NoGroup,
+                                               KIconLoader::SizeEnormous);
+            m_preview->setPixmap(icon);
+        } else {
+            // try to get a preview pixmap from the item...
 
-        // Mark the currently shown preview as outdated. This is done
-        // with a small delay to prevent a flickering when the next preview
-        // can be shown within a short timeframe. This timer is not started
-        // for directories, as directory previews might fail and return the
-        // same icon.
-        if (!item.isDir()) {
-            m_outdatedPreviewTimer->start();
+            // Mark the currently shown preview as outdated. This is done
+            // with a small delay to prevent a flickering when the next preview
+            // can be shown within a short timeframe. This timer is not started
+            // for directories, as directory previews might fail and return the
+            // same icon.
+            if (!item.isDir()) {
+                m_outdatedPreviewTimer->start();
+            }
+
+            m_previewJob = new KIO::PreviewJob(KFileItemList() << item, QSize(m_preview->width(), m_preview->height()));
+            m_previewJob->setScaleType(KIO::PreviewJob::Unscaled);
+            m_previewJob->setIgnoreMaximumSize(item.isLocalFile());
+            if (m_previewJob->uiDelegate()) {
+                KJobWidgets::setWindow(m_previewJob, this);
+            }
+
+            connect(m_previewJob.data(), &KIO::PreviewJob::gotPreview,
+                    this, &InformationPanelContent::showPreview);
+            connect(m_previewJob.data(), &KIO::PreviewJob::failed,
+                    this, &InformationPanelContent::showIcon);
         }
-
-        m_previewJob = new KIO::PreviewJob(KFileItemList() << item, QSize(m_preview->width(), m_preview->height()));
-        m_previewJob->setScaleType(KIO::PreviewJob::Unscaled);
-        m_previewJob->setIgnoreMaximumSize(item.isLocalFile());
-        if (m_previewJob->uiDelegate()) {
-            KJobWidgets::setWindow(m_previewJob, this);
-        }
-
-        connect(m_previewJob.data(), &KIO::PreviewJob::gotPreview,
-                this, &InformationPanelContent::showPreview);
-        connect(m_previewJob.data(), &KIO::PreviewJob::failed,
-                this, &InformationPanelContent::showIcon);
     }
 
     if (m_metaDataWidget) {
-        m_metaDataWidget->setDateFormat(static_cast<Baloo::DateFormats>(InformationPanelSettings::dateFormat()));
         m_metaDataWidget->show();
         m_metaDataWidget->setItems(KFileItemList() << item);
     }
@@ -227,9 +235,11 @@ void InformationPanelContent::showItems(const KFileItemList& items)
         m_previewJob->kill();
     }
 
-    m_preview->setPixmap(
-        QIcon::fromTheme(QStringLiteral("dialog-information")).pixmap(KIconLoader::SizeEnormous, KIconLoader::SizeEnormous)
-    );
+    KIconLoader iconLoader;
+    QPixmap icon = iconLoader.loadIcon(QStringLiteral("dialog-information"),
+                                       KIconLoader::NoGroup,
+                                       KIconLoader::SizeEnormous);
+    m_preview->setPixmap(icon);
     setNameLabelText(i18ncp("@label", "%1 item selected", "%1 items selected", items.count()));
 
     if (m_metaDataWidget) {
@@ -283,10 +293,6 @@ void InformationPanelContent::configureSettings(const QList<QAction*>& customCon
     QAction* configureAction = popup.addAction(i18nc("@action:inmenu", "Configure..."));
     configureAction->setIcon(QIcon::fromTheme(QStringLiteral("configure")));
 
-    QAction* dateformatAction = popup.addAction(i18nc("@action:inmenu", "Condensed Date"));
-    dateformatAction->setIcon(QIcon::fromTheme(QStringLiteral("change-date-symbolic")));
-    dateformatAction->setCheckable(true);
-    dateformatAction->setChecked(InformationPanelSettings::dateFormat() == static_cast<int>(Baloo::DateFormats::ShortFormat));
     popup.addSeparator();
     foreach (QAction* action, customContextMenuActions) {
         popup.addAction(action);
@@ -303,11 +309,6 @@ void InformationPanelContent::configureSettings(const QList<QAction*>& customCon
     if (action == previewAction) {
         m_preview->setVisible(isChecked);
         InformationPanelSettings::setPreviewsShown(isChecked);
-    } else if (action == dateformatAction) {
-        int dateFormat = static_cast<int>(isChecked ? Baloo::DateFormats::ShortFormat : Baloo::DateFormats::LongFormat);
-         
-        InformationPanelSettings::setDateFormat(dateFormat);
-        refreshMetaData();
     } else if (action == configureAction) {
         FileMetaDataConfigurationDialog* dialog = new FileMetaDataConfigurationDialog(this);
         dialog->setDescription(i18nc("@label::textbox",
@@ -322,9 +323,12 @@ void InformationPanelContent::configureSettings(const QList<QAction*>& customCon
 void InformationPanelContent::showIcon(const KFileItem& item)
 {
     m_outdatedPreviewTimer->stop();
-    QPixmap pixmap = QIcon::fromTheme(item.iconName()).pixmap(KIconLoader::SizeEnormous, KIconLoader::SizeEnormous);
-    KIconLoader::global()->drawOverlays(item.overlays(), pixmap, KIconLoader::Desktop);
-    m_preview->setPixmap(pixmap);
+    if (!applyPlace(item.targetUrl())) {
+        const QPixmap icon = KIconLoader::global()->loadIcon(item.iconName(), KIconLoader::Desktop,
+                                                             KIconLoader::SizeEnormous, KIconLoader::DefaultState,
+                                                             item.overlays());
+        m_preview->setPixmap(icon);
+    }
 }
 
 void InformationPanelContent::showPreview(const KFileItem& item,
@@ -357,6 +361,21 @@ void InformationPanelContent::refreshMetaData()
     if (!m_item.isNull()) {
         showItem(m_item);
     }
+}
+
+bool InformationPanelContent::applyPlace(const QUrl& url)
+{
+    const int count = m_placesItemModel->count();
+    for (int i = 0; i < count; ++i) {
+        const PlacesItem* item = m_placesItemModel->placesItem(i);
+        if (item->url().matches(url, QUrl::StripTrailingSlash)) {
+            setNameLabelText(item->text());
+            m_preview->setPixmap(QIcon::fromTheme(item->icon()).pixmap(128, 128));
+            return true;
+        }
+    }
+
+    return false;
 }
 
 void InformationPanelContent::setNameLabelText(const QString& text)

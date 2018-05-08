@@ -19,7 +19,7 @@
 #ifndef CONFIRMATIONSSETTINGSPAGE_H
 #define CONFIRMATIONSSETTINGSPAGE_H
 
-#include "settings/settingspagebase.h"
+#include <settings/settingspagebase.h>
 
 class QCheckBox;
 
@@ -31,21 +31,20 @@ class ConfirmationsSettingsPage : public SettingsPageBase
     Q_OBJECT
 
 public:
-    explicit ConfirmationsSettingsPage(QWidget* parent);
-    ~ConfirmationsSettingsPage() override;
+    ConfirmationsSettingsPage(QWidget* parent);
+    virtual ~ConfirmationsSettingsPage();
 
     /** @see SettingsPageBase::applySettings() */
-    void applySettings() override;
+    virtual void applySettings() Q_DECL_OVERRIDE;
 
     /** @see SettingsPageBase::restoreDefaults() */
-    void restoreDefaults() override;
+    virtual void restoreDefaults() Q_DECL_OVERRIDE;
 
 private:
     void loadSettings();
 
 private:
     QCheckBox* m_confirmMoveToTrash;
-    QCheckBox* m_confirmEmptyTrash;
     QCheckBox* m_confirmDelete;
     QCheckBox* m_confirmClosingMultipleTabs;
     QCheckBox* m_confirmScriptExecution;

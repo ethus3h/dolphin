@@ -20,17 +20,17 @@
 #ifndef DOLPHINVIEWCONTAINER_H
 #define DOLPHINVIEWCONTAINER_H
 
-#include "config-dolphin.h"
-#include "views/dolphinview.h"
-
-#include <KCompletion>
 #include <KFileItem>
+#include <KCompletion>
 #include <KIO/Job>
+
 #include <KUrlNavigator>
 
 #include <QElapsedTimer>
-#include <QPushButton>
 #include <QWidget>
+
+#include <views/dolphinview.h>
+#include <config-dolphin.h>
 
 #ifdef KF5Activities_FOUND
 namespace KActivities {
@@ -70,7 +70,7 @@ public:
     };
 
     DolphinViewContainer(const QUrl& url, QWidget* parent);
-    ~DolphinViewContainer() override;
+    virtual ~DolphinViewContainer();
 
     /**
      * Returns the current active URL, where all actions are applied.
@@ -92,8 +92,6 @@ public:
      */
     void setAutoGrabFocus(bool grab);
     bool autoGrabFocus() const;
-
-    QString currentSearchText() const;
 
     const DolphinStatusBar* statusBar() const;
     DolphinStatusBar* statusBar();
@@ -259,11 +257,6 @@ private slots:
     void slotUrlNavigatorLocationChanged(const QUrl& url);
 
     /**
-     * @see KUrlNavigator::urlSelectionRequested
-     */
-    void slotUrlSelectionRequested(const QUrl& url);
-
-    /**
      * Is invoked when a redirection is done and changes the
      * URL of the URL navigator to \a newUrl without triggering
      * a reloading of the directory.
@@ -320,9 +313,7 @@ private:
 
 private:
     QVBoxLayout* m_topLayout;
-    QWidget* m_navigatorWidget;
     KUrlNavigator* m_urlNavigator;
-    QPushButton* m_emptyTrashButton;
     DolphinSearchBox* m_searchBox;
     KMessageWidget* m_messageWidget;
 

@@ -18,12 +18,14 @@
  ***************************************************************************/
 
 #include "kstandarditem.h"
+#include <QSet>
+#include <QByteArray>
 #include "kstandarditemmodel.h"
 
 KStandardItem::KStandardItem(KStandardItem* parent) :
     m_parent(parent),
     m_children(),
-    m_model(nullptr),
+    m_model(0),
     m_data()
 {
 }
@@ -31,7 +33,7 @@ KStandardItem::KStandardItem(KStandardItem* parent) :
 KStandardItem::KStandardItem(const QString& text, KStandardItem* parent) :
     m_parent(parent),
     m_children(),
-    m_model(nullptr),
+    m_model(0),
     m_data()
 {
     setText(text);
@@ -40,7 +42,7 @@ KStandardItem::KStandardItem(const QString& text, KStandardItem* parent) :
 KStandardItem::KStandardItem(const QString& icon, const QString& text, KStandardItem* parent) :
     m_parent(parent),
     m_children(),
-    m_model(nullptr),
+    m_model(0),
     m_data()
 {
     setIcon(icon);

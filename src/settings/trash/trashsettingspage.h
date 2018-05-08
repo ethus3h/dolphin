@@ -20,7 +20,6 @@
 #define TRASHSETTINGSPAGE_H
 
 #include "settings/settingspagebase.h"
-
 class KCModuleProxy;
 
 /**
@@ -31,14 +30,14 @@ class TrashSettingsPage : public SettingsPageBase
     Q_OBJECT
 
 public:
-    explicit TrashSettingsPage(QWidget* parent);
-    ~TrashSettingsPage() override;
+    TrashSettingsPage(QWidget* parent);
+    virtual ~TrashSettingsPage();
 
     /** @see SettingsPageBase::applySettings() */
-    void applySettings() override;
+    virtual void applySettings() Q_DECL_OVERRIDE;
 
     /** @see SettingsPageBase::restoreDefaults() */
-    void restoreDefaults() override;
+    virtual void restoreDefaults() Q_DECL_OVERRIDE;
 
 private:
     void loadSettings();

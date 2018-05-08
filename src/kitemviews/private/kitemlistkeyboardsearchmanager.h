@@ -25,9 +25,9 @@
 
 #include "dolphin_export.h"
 
-#include <QElapsedTimer>
 #include <QObject>
 #include <QString>
+#include <QElapsedTimer>
 
 /**
  * @brief Controls the keyboard searching ability for a KItemListController.
@@ -41,8 +41,8 @@ class DOLPHIN_EXPORT KItemListKeyboardSearchManager : public QObject
 
 public:
 
-    explicit KItemListKeyboardSearchManager(QObject* parent = nullptr);
-    ~KItemListKeyboardSearchManager() override;
+    KItemListKeyboardSearchManager(QObject* parent = 0);
+    virtual ~KItemListKeyboardSearchManager();
 
     /**
      * Add \a keys to the text buffer used for searching.

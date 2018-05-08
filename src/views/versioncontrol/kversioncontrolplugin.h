@@ -22,9 +22,8 @@
 
 #include <dolphinvcs_export.h>
 
-#include <QAction>
 #include <QObject>
-
+#include <QAction>
 class KFileItemList;
 class KFileItem;
 /**
@@ -145,8 +144,8 @@ public:
         MissingVersion
     };
 
-    KVersionControlPlugin(QObject* parent = nullptr);
-    ~KVersionControlPlugin() override;
+    KVersionControlPlugin(QObject* parent = 0);
+    virtual ~KVersionControlPlugin();
 
     /**
      * Returns the name of the file which stores

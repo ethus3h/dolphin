@@ -30,8 +30,8 @@ class DummyModel : public KItemModelBase
 public:
     DummyModel();
     void setCount(int count);
-    int count() const override;
-    QHash<QByteArray, QVariant> data(int index) const override;
+    int count() const Q_DECL_OVERRIDE;
+    QHash<QByteArray, QVariant> data(int index) const Q_DECL_OVERRIDE;
 
 private:
     int m_count;
@@ -99,10 +99,10 @@ void KItemListSelectionManagerTest::init()
 void KItemListSelectionManagerTest::cleanup()
 {
     delete m_selectionManager;
-    m_selectionManager = nullptr;
+    m_selectionManager = 0;
 
     delete m_model;
-    m_model = nullptr;
+    m_model = 0;
 }
 
 void KItemListSelectionManagerTest::testConstructor()
@@ -115,7 +115,7 @@ void KItemListSelectionManagerTest::testConstructor()
 
 void KItemListSelectionManagerTest::testCurrentItemAnchorItem()
 {
-    QSignalSpy spyCurrent(m_selectionManager, &KItemListSelectionManager::currentChanged);
+    QSignalSpy spyCurrent(m_selectionManager, SIGNAL(currentChanged(int,int)));
 
     // Set current item and check that the selection manager emits the currentChanged(int,int) signal correctly.
     m_selectionManager->setCurrentItem(4);
@@ -445,7 +445,7 @@ void KItemListSelectionManagerTest::testChangeSelection()
     QFETCH(QList<QVariant>, data);
     QFETCH(KItemSet, finalSelection);
 
-    QSignalSpy spySelectionChanged(m_selectionManager, &KItemListSelectionManager::selectionChanged);
+    QSignalSpy spySelectionChanged(m_selectionManager, SIGNAL(selectionChanged(KItemSet,KItemSet)));
 
     // Initial selection should be empty
     QVERIFY(!m_selectionManager->hasSelection());

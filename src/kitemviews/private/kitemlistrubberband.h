@@ -21,7 +21,6 @@
 #define KITEMLISTRUBBERBAND_H
 
 #include "dolphin_export.h"
-
 #include <QObject>
 #include <QPointF>
 
@@ -33,8 +32,8 @@ class DOLPHIN_EXPORT KItemListRubberBand : public QObject
     Q_OBJECT
 
 public:
-    explicit KItemListRubberBand(QObject* parent = nullptr);
-    ~KItemListRubberBand() override;
+    explicit KItemListRubberBand(QObject* parent = 0);
+    virtual ~KItemListRubberBand();
 
     void setStartPosition(const QPointF& pos);
     QPointF startPosition() const;

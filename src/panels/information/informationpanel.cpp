@@ -20,12 +20,10 @@
 #include "informationpanel.h"
 
 #include "informationpanelcontent.h"
-
 #include <KIO/Job>
 #include <KIO/JobUiDelegate>
 #include <KJobWidgets>
 #include <KDirNotify>
-
 #include <QApplication>
 #include <QShowEvent>
 #include <QVBoxLayout>
@@ -34,16 +32,16 @@
 InformationPanel::InformationPanel(QWidget* parent) :
     Panel(parent),
     m_initialized(false),
-    m_infoTimer(nullptr),
-    m_urlChangedTimer(nullptr),
-    m_resetUrlTimer(nullptr),
+    m_infoTimer(0),
+    m_urlChangedTimer(0),
+    m_resetUrlTimer(0),
     m_shownUrl(),
     m_urlCandidate(),
     m_invalidUrlCandidate(),
     m_fileItem(),
     m_selection(),
-    m_folderStatJob(nullptr),
-    m_content(nullptr)
+    m_folderStatJob(0),
+    m_content(0)
 {
 }
 
@@ -200,7 +198,7 @@ void InformationPanel::showItemInfo()
 
 void InformationPanel::slotFolderStatFinished(KJob* job)
 {
-    m_folderStatJob = nullptr;
+    m_folderStatJob = 0;
     const KIO::UDSEntry entry = static_cast<KIO::StatJob*>(job)->statResult();
     m_content->showItem(KFileItem(entry, m_shownUrl));
 }
@@ -298,7 +296,7 @@ void InformationPanel::slotLeftDirectory(const QString& directory)
 void InformationPanel::cancelRequest()
 {
     delete m_folderStatJob;
-    m_folderStatJob = nullptr;
+    m_folderStatJob = 0;
 
     m_infoTimer->stop();
     m_resetUrlTimer->stop();

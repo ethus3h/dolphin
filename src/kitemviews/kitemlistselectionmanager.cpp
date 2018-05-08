@@ -23,13 +23,15 @@
 
 #include "kitemlistselectionmanager.h"
 
+#include "kitemmodelbase.h"
+
 KItemListSelectionManager::KItemListSelectionManager(QObject* parent) :
     QObject(parent),
     m_currentItem(-1),
     m_anchorItem(-1),
     m_selectedItems(),
     m_isAnchoredSelectionActive(false),
-    m_model(nullptr)
+    m_model(0)
 {
 }
 
@@ -235,9 +237,6 @@ void KItemListSelectionManager::itemsInserted(const KItemRangeList& itemRanges)
         // Calling setCurrentItem would trigger the selectionChanged signal, but we want to
         // emit it only once in this function -> change the current item manually and emit currentChanged
         m_currentItem += inc;
-        if (m_currentItem >= m_model->count()) {
-            m_currentItem = -1;
-        }
         emit currentChanged(m_currentItem, previousCurrent);
     }
 

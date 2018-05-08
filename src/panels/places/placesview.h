@@ -20,7 +20,7 @@
 #ifndef PLACESVIEW_H
 #define PLACESVIEW_H
 
-#include "kitemviews/kstandarditemlistview.h"
+#include <kitemviews/kstandarditemlistview.h>
 
 /**
  * @brief View class for the Places Panel.
@@ -32,7 +32,7 @@ class PlacesView : public KStandardItemListView
     Q_OBJECT
 
 public:
-    explicit PlacesView(QGraphicsWidget* parent = nullptr);
+    explicit PlacesView(QGraphicsWidget* parent = 0);
 
     void setIconSize(int size);
     int iconSize() const;

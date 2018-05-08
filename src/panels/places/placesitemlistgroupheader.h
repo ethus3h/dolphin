@@ -20,20 +20,20 @@
 #ifndef PLACESITEMLISTGROUPHEADER_H
 #define PLACESITEMLISTGROUPHEADER_H
 
-#include "kitemviews/kstandarditemlistgroupheader.h"
+#include <kitemviews/kstandarditemlistgroupheader.h>
 
 class PlacesItemListGroupHeader : public KStandardItemListGroupHeader
 {
     Q_OBJECT
 
 public:
-    explicit PlacesItemListGroupHeader(QGraphicsWidget* parent = nullptr);
-    ~PlacesItemListGroupHeader() override;
+    PlacesItemListGroupHeader(QGraphicsWidget* parent = 0);
+    virtual ~PlacesItemListGroupHeader();
 
 protected:
-    void paintSeparator(QPainter* painter, const QColor& color) override;
+    virtual void paintSeparator(QPainter* painter, const QColor& color) Q_DECL_OVERRIDE;
 
-    QPalette::ColorRole normalTextColorRole() const override;
+    virtual QPalette::ColorRole normalTextColorRole() const Q_DECL_OVERRIDE;
 };
 #endif
 

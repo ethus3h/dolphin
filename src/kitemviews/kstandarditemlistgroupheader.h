@@ -21,7 +21,8 @@
 #define KSTANDARDITEMLISTGROUPHEADER_H
 
 #include "dolphin_export.h"
-#include "kitemviews/kitemlistgroupheader.h"
+
+#include <kitemviews/kitemlistgroupheader.h>
 
 #include <QPixmap>
 #include <QStaticText>
@@ -31,17 +32,17 @@ class DOLPHIN_EXPORT KStandardItemListGroupHeader : public KItemListGroupHeader
     Q_OBJECT
 
 public:
-    explicit KStandardItemListGroupHeader(QGraphicsWidget* parent = nullptr);
-    ~KStandardItemListGroupHeader() override;
+    KStandardItemListGroupHeader(QGraphicsWidget* parent = 0);
+    virtual ~KStandardItemListGroupHeader();
 
-    void paint(QPainter* painter, const QStyleOptionGraphicsItem* option, QWidget* widget = nullptr) override;
+    virtual void paint(QPainter* painter, const QStyleOptionGraphicsItem* option, QWidget* widget = 0) Q_DECL_OVERRIDE;
 
 protected:
-    void paintRole(QPainter* painter, const QRectF& roleBounds, const QColor& color) override;
-    void paintSeparator(QPainter* painter, const QColor& color) override;
-    void roleChanged(const QByteArray &current, const QByteArray &previous) override;
-    void dataChanged(const QVariant& current, const QVariant& previous) override;
-    void resizeEvent(QGraphicsSceneResizeEvent* event) override;
+    virtual void paintRole(QPainter* painter, const QRectF& roleBounds, const QColor& color) Q_DECL_OVERRIDE;
+    virtual void paintSeparator(QPainter* painter, const QColor& color) Q_DECL_OVERRIDE;
+    virtual void roleChanged(const QByteArray &current, const QByteArray &previous) Q_DECL_OVERRIDE;
+    virtual void dataChanged(const QVariant& current, const QVariant& previous) Q_DECL_OVERRIDE;
+    virtual void resizeEvent(QGraphicsSceneResizeEvent* event) Q_DECL_OVERRIDE;
 
 private:
     void updateCache();

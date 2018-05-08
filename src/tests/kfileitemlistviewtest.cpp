@@ -52,26 +52,26 @@ void KFileItemListViewTest::init()
     m_model->m_dirLister->setAutoUpdate(false);
 
     m_listView = new KFileItemListView();
-    m_listView->onModelChanged(m_model, nullptr);
+    m_listView->onModelChanged(m_model, 0);
 
     m_graphicsView = new QGraphicsView();
     m_graphicsView->show();
-    QVERIFY(QTest::qWaitForWindowExposed(m_graphicsView));
+    QTest::qWaitForWindowExposed(m_graphicsView);
 }
 
 void KFileItemListViewTest::cleanup()
 {
     delete m_graphicsView;
-    m_graphicsView = nullptr;
+    m_graphicsView = 0;
 
     delete m_listView;
-    m_listView = nullptr;
+    m_listView = 0;
 
     delete m_model;
-    m_model = nullptr;
+    m_model = 0;
 
     delete m_testDir;
-    m_testDir = nullptr;
+    m_testDir = 0;
 }
 
 /**
@@ -87,9 +87,9 @@ void KFileItemListViewTest::cleanup()
  */
 void KFileItemListViewTest::testGroupedItemChanges()
 {
-    QSignalSpy itemsInsertedSpy(m_model, &KFileItemModel::itemsInserted);
+    QSignalSpy itemsInsertedSpy(m_model, SIGNAL(itemsInserted(KItemRangeList)));
     QVERIFY(itemsInsertedSpy.isValid());
-    QSignalSpy itemsRemovedSpy(m_model, &KFileItemModel::itemsRemoved);
+    QSignalSpy itemsRemovedSpy(m_model, SIGNAL(itemsRemoved(KItemRangeList)));
     QVERIFY(itemsRemovedSpy.isValid());
 
     m_model->setGroupedSorting(true);

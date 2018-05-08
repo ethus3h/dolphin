@@ -19,8 +19,8 @@
 
 #include "dolphintabpage.h"
 
-#include "dolphin_generalsettings.h"
 #include "dolphinviewcontainer.h"
+#include "dolphin_generalsettings.h"
 
 #include <QSplitter>
 #include <QVBoxLayout>
@@ -94,7 +94,6 @@ void DolphinTabPage::setSplitViewEnabled(bool enabled, const QUrl &secondaryUrl)
                 // If the primary view is active, we have to swap the pointers
                 // because the secondary view will be the new primary view.
                 qSwap(m_primaryViewContainer, m_secondaryViewContainer);
-                m_primaryViewActive = false;
             }
             m_primaryViewContainer->setActive(true);
             view->close();
@@ -312,9 +311,6 @@ void DolphinTabPage::slotViewActivated()
             m_primaryViewActive = !m_primaryViewActive;
         } else {
             m_primaryViewActive = true;
-            if (m_secondaryViewContainer) {
-                m_secondaryViewContainer->setActive(false);
-            }
         }
     }
 

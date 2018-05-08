@@ -20,9 +20,9 @@
 #ifndef DOLPHINNEWFILEMENUOBSERVER_H
 #define DOLPHINNEWFILEMENUOBSERVER_H
 
-#include "dolphin_export.h"
-
 #include <QObject>
+
+#include "dolphin_export.h"
 
 class DolphinNewFileMenu;
 
@@ -48,7 +48,7 @@ signals:
 
 private:
     DolphinNewFileMenuObserver();
-    ~DolphinNewFileMenuObserver() override;
+    virtual ~DolphinNewFileMenuObserver();
 
     friend class DolphinNewFileMenuObserverSingleton;
 };

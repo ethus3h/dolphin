@@ -20,9 +20,10 @@
 #ifndef DOLPHINITEMLISTVIEW_H
 #define DOLPHINITEMLISTVIEW_H
 
+#include <kitemviews/kfileitemlistview.h>
+#include <settings/viewmodes/viewmodesettings.h>
+
 #include "dolphin_export.h"
-#include "kitemviews/kfileitemlistview.h"
-#include "settings/viewmodes/viewmodesettings.h"
 
 class KFileItemListView;
 
@@ -38,8 +39,8 @@ class DOLPHIN_EXPORT DolphinItemListView : public KFileItemListView
     Q_OBJECT
 
 public:
-    explicit DolphinItemListView(QGraphicsWidget* parent = nullptr);
-    ~DolphinItemListView() override;
+    explicit DolphinItemListView(QGraphicsWidget* parent = 0);
+    virtual ~DolphinItemListView();
 
     void setZoomLevel(int level);
     int zoomLevel() const;
@@ -48,14 +49,14 @@ public:
     void writeSettings();
 
 protected:
-    KItemListWidgetCreatorBase* defaultWidgetCreator() const override;
-    bool itemLayoutSupportsItemExpanding(ItemLayout layout) const override;
-    void onItemLayoutChanged(ItemLayout current, ItemLayout previous) override;
-    void onPreviewsShownChanged(bool shown) override;
-    void onVisibleRolesChanged(const QList<QByteArray>& current,
-                                       const QList<QByteArray>& previous) override;
+    virtual KItemListWidgetCreatorBase* defaultWidgetCreator() const Q_DECL_OVERRIDE;
+    virtual bool itemLayoutSupportsItemExpanding(ItemLayout layout) const Q_DECL_OVERRIDE;
+    virtual void onItemLayoutChanged(ItemLayout current, ItemLayout previous) Q_DECL_OVERRIDE;
+    virtual void onPreviewsShownChanged(bool shown) Q_DECL_OVERRIDE;
+    virtual void onVisibleRolesChanged(const QList<QByteArray>& current,
+                                       const QList<QByteArray>& previous) Q_DECL_OVERRIDE;
 
-    void updateFont() override;
+    virtual void updateFont() Q_DECL_OVERRIDE;
 
 private:
     void updateGridSize();

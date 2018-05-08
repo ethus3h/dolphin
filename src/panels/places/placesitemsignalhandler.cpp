@@ -20,6 +20,7 @@
 #include "placesitemsignalhandler.h"
 
 #include "placesitem.h"
+#include <Solid/StorageAccess>
 
 PlacesItemSignalHandler::PlacesItemSignalHandler(PlacesItem* item,
                                                  QObject* parent) :
@@ -39,15 +40,10 @@ void PlacesItemSignalHandler::onAccessibilityChanged()
     }
 }
 
-void PlacesItemSignalHandler::onTearDownRequested(const QString& udi)
+void PlacesItemSignalHandler::onTrashDirListerCompleted()
 {
-    Q_UNUSED(udi)
     if (m_item) {
-        Solid::StorageAccess *tmp = m_item->device().as<Solid::StorageAccess>();
-        if (tmp) {
-            QString mountPath = tmp->filePath();
-            emit tearDownExternallyRequested(mountPath);
-        }
+        m_item->onTrashDirListerCompleted();
     }
 }
 

@@ -22,9 +22,8 @@
 #ifndef DOLPHINFILEMETADATAWIDGET_H
 #define DOLPHINFILEMETADATAWIDGET_H
 
-#include <config-baloo.h>
-
 #include <QWidget>
+#include "config-baloo.h"
 
 class KFileItemList;
 class QLabel;
@@ -46,8 +45,8 @@ class DolphinFileMetaDataWidget : public QWidget
     Q_OBJECT
 
 public:
-    explicit DolphinFileMetaDataWidget(QWidget* parent = nullptr);
-    ~DolphinFileMetaDataWidget() override;
+    DolphinFileMetaDataWidget(QWidget* parent = 0);
+    virtual ~DolphinFileMetaDataWidget();
 
     void setPreview(const QPixmap& pixmap);
     QPixmap preview() const;

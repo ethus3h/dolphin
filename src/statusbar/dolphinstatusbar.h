@@ -30,7 +30,6 @@ class QProgressBar;
 class QToolButton;
 class QSlider;
 class QTimer;
-class KSqueezedTextLabel;
 
 /**
  * @brief Represents the statusbar of a Dolphin view.
@@ -43,8 +42,8 @@ class DolphinStatusBar : public QWidget
     Q_OBJECT
 
 public:
-    explicit DolphinStatusBar(QWidget* parent);
-    ~DolphinStatusBar() override;
+    DolphinStatusBar(QWidget* parent);
+    virtual ~DolphinStatusBar();
 
     QString text() const;
 
@@ -102,7 +101,8 @@ signals:
     void zoomLevelChanged(int zoomLevel);
 
 protected:
-    void contextMenuEvent(QContextMenuEvent* event) override;
+    virtual void contextMenuEvent(QContextMenuEvent* event) Q_DECL_OVERRIDE;
+    virtual bool eventFilter(QObject* obj, QEvent* event) Q_DECL_OVERRIDE;
 
 private slots:
     void showZoomSliderToolTip(int zoomLevel);
@@ -140,7 +140,7 @@ private:
 private:
     QString m_text;
     QString m_defaultText;
-    KSqueezedTextLabel* m_label;
+    QLabel* m_label;
     StatusBarSpaceInfo* m_spaceInfo;
 
     QSlider* m_zoomSlider;

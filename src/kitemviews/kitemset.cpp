@@ -19,6 +19,9 @@
 
 #include "kitemset.h"
 
+#include <QVector>
+
+#include <algorithm>
 
 KItemSet::iterator KItemSet::insert(int i)
 {

@@ -47,8 +47,8 @@ class PlacesItemSignalHandler: public QObject
     Q_OBJECT
 
 public:
-    explicit PlacesItemSignalHandler(PlacesItem* item, QObject* parent = nullptr);
-    ~PlacesItemSignalHandler() override;
+    explicit PlacesItemSignalHandler(PlacesItem* item, QObject* parent = 0);
+    virtual ~PlacesItemSignalHandler();
 
 public slots:
     /**
@@ -56,10 +56,10 @@ public slots:
      */
     void onAccessibilityChanged();
 
-    void onTearDownRequested(const QString& udi);
-
-signals:
-    void tearDownExternallyRequested(const QString& udi);
+    /**
+     * Calls PlacesItem::onTrashDirListerCompleted()
+     */
+    void onTrashDirListerCompleted();
 
 private:
     PlacesItem* m_item;

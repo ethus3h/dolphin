@@ -20,12 +20,11 @@
 #include "kitemlistselectiontoggle.h"
 
 #include <KIconLoader>
-
 #include <QPainter>
 
 
 KItemListSelectionToggle::KItemListSelectionToggle(QGraphicsItem* parent) :
-    QGraphicsWidget(parent, nullptr),
+    QGraphicsWidget(parent, 0),
     m_checked(false),
     m_hovered(false)
 {

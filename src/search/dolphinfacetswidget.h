@@ -47,8 +47,8 @@ class DolphinFacetsWidget : public QWidget
     Q_OBJECT
 
 public:
-    explicit DolphinFacetsWidget(QWidget* parent = nullptr);
-    ~DolphinFacetsWidget() override;
+    explicit DolphinFacetsWidget(QWidget* parent = 0);
+    virtual ~DolphinFacetsWidget();
 
     QString ratingTerm() const;
     QString facetType() const;
@@ -75,7 +75,6 @@ private:
 
 private:
     QRadioButton* m_anyType;
-    QRadioButton* m_folders;
     QRadioButton* m_documents;
     QRadioButton* m_images;
     QRadioButton* m_audio;

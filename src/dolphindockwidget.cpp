@@ -35,16 +35,16 @@ class DolphinDockTitleBar : public QWidget
     Q_OBJECT
 
 public:
-    explicit DolphinDockTitleBar(QWidget* parent = nullptr) : QWidget(parent) {}
-    ~DolphinDockTitleBar() override {}
+    DolphinDockTitleBar(QWidget* parent = 0) : QWidget(parent) {}
+    virtual ~DolphinDockTitleBar() {}
 
-    QSize minimumSizeHint() const override
+    QSize minimumSizeHint() const Q_DECL_OVERRIDE
     {
         const int border = style()->pixelMetric(QStyle::PM_DockWidgetTitleBarButtonMargin);
         return QSize(border, border);
     }
 
-    QSize sizeHint() const override
+    QSize sizeHint() const Q_DECL_OVERRIDE
     {
         return minimumSizeHint();
     }
@@ -53,7 +53,7 @@ public:
 DolphinDockWidget::DolphinDockWidget(const QString& title, QWidget* parent, Qt::WindowFlags flags) :
     QDockWidget(title, parent, flags),
     m_locked(false),
-    m_dockTitleBar(nullptr)
+    m_dockTitleBar(0)
 {
     setFeatures(DefaultDockWidgetFeatures);
 }
@@ -61,7 +61,7 @@ DolphinDockWidget::DolphinDockWidget(const QString& title, QWidget* parent, Qt::
 DolphinDockWidget::DolphinDockWidget(QWidget* parent, Qt::WindowFlags flags) :
     QDockWidget(parent, flags),
     m_locked(false),
-    m_dockTitleBar(nullptr)
+    m_dockTitleBar(0)
 {
     setFeatures(DefaultDockWidgetFeatures);
 }
@@ -82,7 +82,7 @@ void DolphinDockWidget::setLocked(bool lock)
             setTitleBarWidget(m_dockTitleBar);
             setFeatures(QDockWidget::NoDockWidgetFeatures);
         } else {
-            setTitleBarWidget(nullptr);
+            setTitleBarWidget(0);
             setFeatures(DefaultDockWidgetFeatures);
         }
     }

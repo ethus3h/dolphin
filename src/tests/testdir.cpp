@@ -19,6 +19,8 @@
 
 #include "testdir.h"
 
+#include <QDir>
+
 #ifdef Q_OS_UNIX
 #include <utime.h>
 #else

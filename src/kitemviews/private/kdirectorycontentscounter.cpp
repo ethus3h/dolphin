@@ -19,19 +19,20 @@
  ***************************************************************************/
 
 #include "kdirectorycontentscounter.h"
-#include "kitemviews/kfileitemmodel.h"
+
+#include "kdirectorycontentscounterworker.h"
+#include <kitemviews/kfileitemmodel.h>
 
 #include <KDirWatch>
-
 #include <QThread>
 
 KDirectoryContentsCounter::KDirectoryContentsCounter(KFileItemModel* model, QObject* parent) :
     QObject(parent),
     m_model(model),
     m_queue(),
-    m_worker(nullptr),
+    m_worker(0),
     m_workerIsBusy(false),
-    m_dirWatcher(nullptr),
+    m_dirWatcher(0),
     m_watchedDirs()
 {
     connect(m_model, &KFileItemModel::itemsRemoved,
@@ -69,7 +70,7 @@ KDirectoryContentsCounter::~KDirectoryContentsCounter()
         m_workerThread->quit();
         m_workerThread->wait();
         delete m_workerThread;
-        m_workerThread = nullptr;
+        m_workerThread = 0;
 
         // The worker thread has finished running now, so it's safe to delete
         // m_worker. deleteLater() would not work at all because the event loop
@@ -179,5 +180,5 @@ void KDirectoryContentsCounter::startWorker(const QString& path)
     }
 }
 
-QThread* KDirectoryContentsCounter::m_workerThread = nullptr;
+QThread* KDirectoryContentsCounter::m_workerThread = 0;
 int KDirectoryContentsCounter::m_workersCount = 0;

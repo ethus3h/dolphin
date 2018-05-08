@@ -23,9 +23,8 @@
 
 #include "dolphin_export.h"
 
-#include <QList>
-#include <QUrl>
 
+class QUrl;
 class QDropEvent;
 class QWidget;
 namespace KIO { class DropJob; }
@@ -43,27 +42,11 @@ public:
      *                  is true.
      * @param event     Drop event.
      * @param window    Widget where the drop happened, will be used as parent of the drop menu.
-     * @return          KIO::DropJob pointer or null in case the destUrl is contained
-     *                  in the mimeData url list.
+     * @return          KIO::DropJob pointer
      */
     static KIO::DropJob* dropUrls(const QUrl& destUrl,
                                   QDropEvent* event,
                                   QWidget *window);
-
-    /**
-     * @return True if destUrl is contained in the urls parameter.
-     */
-    static bool urlListMatchesUrl(const QList<QUrl>& urls, const QUrl& destUrl);
-
-    /**
-     * clear the internal cache.
-     */
-    static void clearUrlListMatchesUrlCache();
-private:
-    /**
-     * Stores the results of the expensive checks made in urlListMatchesUrl.
-     */
-    static QHash<QUrl, bool> m_urlListMatchesUrlCache;
 };
 
 #endif

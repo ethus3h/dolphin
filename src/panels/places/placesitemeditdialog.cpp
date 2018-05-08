@@ -23,20 +23,20 @@
 
 #include "placesitemeditdialog.h"
 
-#include "dolphindebug.h"
-
 #include <KAboutData>
+#include "dolphindebug.h"
 #include <KFile>
 #include <KIconButton>
 #include <KLocalizedString>
+#include <QMimeDatabase>
 #include <KUrlRequester>
-
 #include <QCheckBox>
-#include <QDialogButtonBox>
 #include <QEvent>
 #include <QFormLayout>
+#include <QVBoxLayout>
+#include <QDialogButtonBox>
+#include <QPushButton>
 #include <QLineEdit>
-#include <QMimeDatabase>
 
 PlacesItemEditDialog::PlacesItemEditDialog(QWidget* parent) :
     QDialog(parent),
@@ -44,10 +44,10 @@ PlacesItemEditDialog::PlacesItemEditDialog(QWidget* parent) :
     m_text(),
     m_url(),
     m_allowGlobal(false),
-    m_urlEdit(nullptr),
-    m_textEdit(nullptr),
-    m_iconButton(nullptr),
-    m_appLocal(nullptr),
+    m_urlEdit(0),
+    m_textEdit(0),
+    m_iconButton(0),
+    m_appLocal(0),
     m_buttonBox(nullptr)
 {
 }

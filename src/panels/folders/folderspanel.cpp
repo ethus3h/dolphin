@@ -21,17 +21,18 @@
 
 #include "dolphin_folderspanelsettings.h"
 #include "dolphin_generalsettings.h"
-#include "foldersitemlistwidget.h"
-#include "global.h"
-#include "kitemviews/kfileitemlistview.h"
-#include "kitemviews/kfileitemmodel.h"
-#include "kitemviews/kitemlistcontainer.h"
-#include "kitemviews/kitemlistcontroller.h"
-#include "kitemviews/kitemlistselectionmanager.h"
 #include "treeviewcontextmenu.h"
-#include "views/draganddrophelper.h"
-#include "views/renamedialog.h"
+#include "foldersitemlistwidget.h"
 
+#include <views/renamedialog.h>
+#include <kitemviews/kitemlistselectionmanager.h>
+#include <kitemviews/kfileitemlistview.h>
+#include <kitemviews/kfileitemlistwidget.h>
+#include <kitemviews/kitemlistcontainer.h>
+#include <kitemviews/kitemlistcontroller.h>
+#include <kitemviews/kfileitemmodel.h>
+
+#include <KFileItem>
 #include <KJobWidgets>
 #include <KJobUiDelegate>
 #include <KIO/CopyJob>
@@ -40,16 +41,21 @@
 
 #include <QApplication>
 #include <QBoxLayout>
+#include <QDropEvent>
 #include <QGraphicsSceneDragDropEvent>
 #include <QGraphicsView>
 #include <QPropertyAnimation>
 #include <QTimer>
 
+#include <views/draganddrophelper.h>
+
+#include "dolphindebug.h"
+
 FoldersPanel::FoldersPanel(QWidget* parent) :
     Panel(parent),
     m_updateCurrentItem(false),
-    m_controller(nullptr),
-    m_model(nullptr)
+    m_controller(0),
+    m_model(0)
 {
     setLayoutDirection(Qt::LeftToRight);
 }
@@ -60,7 +66,7 @@ FoldersPanel::~FoldersPanel()
 
     if (m_controller) {
         KItemListView* view = m_controller->view();
-        m_controller->setView(nullptr);
+        m_controller->setView(0);
         delete view;
     }
 }
@@ -74,17 +80,6 @@ void FoldersPanel::setShowHiddenFiles(bool show)
 bool FoldersPanel::showHiddenFiles() const
 {
     return FoldersPanelSettings::hiddenFilesShown();
-}
-
-void FoldersPanel::setLimitFoldersPanelToHome(bool enable)
-{
-    FoldersPanelSettings::setLimitFoldersPanelToHome(enable);
-    reloadTree();
-}
-
-bool FoldersPanel::limitFoldersPanelToHome() const
-{
-    return FoldersPanelSettings::limitFoldersPanelToHome();
 }
 
 void FoldersPanel::setAutoScrolling(bool enable)
@@ -126,14 +121,6 @@ bool FoldersPanel::urlChanged()
 
     return true;
 }
-
-void FoldersPanel::reloadTree()
-{
-    if (m_controller) {
-        loadTree(url(), AllowJumpHome);
-    }
-}
-
 
 void FoldersPanel::showEvent(QShowEvent* event)
 {
@@ -309,50 +296,33 @@ void FoldersPanel::startFadeInAnimation()
     anim->setDuration(200);
 }
 
-void FoldersPanel::loadTree(const QUrl& url, FoldersPanel::NavigationBehaviour navigationBehaviour)
+void FoldersPanel::loadTree(const QUrl& url)
 {
     Q_ASSERT(m_controller);
 
     m_updateCurrentItem = false;
-    bool jumpHome = false;
 
     QUrl baseUrl;
-    if (!url.isLocalFile()) {
-        // Clear the path for non-local URLs and use it as base
-        baseUrl = url;
-        baseUrl.setPath(QStringLiteral("/"));
-    } else if (Dolphin::homeUrl().isParentOf(url) || (Dolphin::homeUrl() == url)) {
-        if (FoldersPanelSettings::limitFoldersPanelToHome() ) {
-            baseUrl = Dolphin::homeUrl();
-        } else {
-            // Use the root directory as base for local URLs (#150941)
-            baseUrl = QUrl::fromLocalFile(QDir::rootPath());
-        }
-    } else if (FoldersPanelSettings::limitFoldersPanelToHome() && navigationBehaviour == AllowJumpHome) {
-        baseUrl = Dolphin::homeUrl();
-        jumpHome = true;
-    } else {
+    if (url.isLocalFile()) {
         // Use the root directory as base for local URLs (#150941)
         baseUrl = QUrl::fromLocalFile(QDir::rootPath());
+    } else {
+        // Clear the path for non-local URLs and use it as base
+        baseUrl = url;
+        baseUrl.setPath(QString('/'));
     }
 
-    if (m_model->directory() != baseUrl && !jumpHome) {
+    if (m_model->directory() != baseUrl) {
         m_updateCurrentItem = true;
         m_model->refreshDirectory(baseUrl);
     }
 
     const int index = m_model->index(url);
-    if (jumpHome) {
-      emit folderActivated(baseUrl);
-    } else if (index >= 0) {
+    if (index >= 0) {
         updateCurrentItem(index);
-    } else if (url == baseUrl) {
-        // clear the selection when visiting the base url
-        updateCurrentItem(-1);
     } else {
         m_updateCurrentItem = true;
         m_model->expandParentDirectories(url);
-
         // slotLoadingCompleted() will be invoked after the model has
         // expanded the url
     }

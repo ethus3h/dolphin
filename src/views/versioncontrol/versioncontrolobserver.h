@@ -26,10 +26,10 @@
 
 #include <KFileItem>
 
+#include <QUrl>
 #include <QList>
 #include <QObject>
 #include <QString>
-#include <QUrl>
 
 class KFileItemList;
 class KFileItemModel;
@@ -50,8 +50,8 @@ class DOLPHIN_EXPORT VersionControlObserver : public QObject
     Q_OBJECT
 
 public:
-    explicit VersionControlObserver(QObject* parent = nullptr);
-    ~VersionControlObserver() override;
+    explicit VersionControlObserver(QObject* parent = 0);
+    virtual ~VersionControlObserver();
 
     void setModel(KFileItemModel* model);
     KFileItemModel* model() const;

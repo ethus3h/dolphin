@@ -17,15 +17,15 @@
  * 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
  */
 
-#include "global.h"
-
-#include "dolphin_generalsettings.h"
-#include "dolphindebug.h"
+#include <QApplication>
+#include <QIcon>
 
 #include <KRun>
 
-#include <QApplication>
-#include <QIcon>
+#include "global.h"
+#include "dolphindebug.h"
+
+#include "dolphin_generalsettings.h"
 
 QList<QUrl> Dolphin::validateUris(const QStringList& uriList)
 {

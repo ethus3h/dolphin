@@ -20,9 +20,8 @@
 #ifndef VIEWSETTINGSTAB_H
 #define VIEWSETTINGSTAB_H
 
-#include "settings/viewmodes/viewmodesettings.h"
-
 #include <QWidget>
+#include <settings/viewmodes/viewmodesettings.h>
 
 class DolphinFontRequester;
 class KComboBox;
@@ -44,8 +43,8 @@ public:
         DetailsMode
     };
 
-    explicit ViewSettingsTab(Mode mode, QWidget* parent = nullptr);
-    ~ViewSettingsTab() override;
+    explicit ViewSettingsTab(Mode mode, QWidget* parent = 0);
+    virtual ~ViewSettingsTab();
 
     void applySettings();
     void restoreDefaultSettings();

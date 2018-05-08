@@ -20,11 +20,11 @@
 #ifndef DOLPHINREMOTEENCODING_H
 #define DOLPHINREMOTEENCODING_H
 
+#include <QStringList>
+#include <QAction>
+#include <QUrl>
 #include "dolphin_export.h"
 
-#include <QAction>
-#include <QStringList>
-#include <QUrl>
 
 class KActionMenu;
 class DolphinViewActionHandler;
@@ -40,7 +40,7 @@ class DOLPHIN_EXPORT DolphinRemoteEncoding: public QObject
   Q_OBJECT
 public:
   DolphinRemoteEncoding(QObject* parent, DolphinViewActionHandler* actionHandler);
-  ~DolphinRemoteEncoding() override;
+  ~DolphinRemoteEncoding();
 
 public Q_SLOTS:
   void slotAboutToOpenUrl();

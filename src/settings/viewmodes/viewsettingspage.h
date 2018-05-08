@@ -20,7 +20,7 @@
 #ifndef VIEWSETTINGSPAGE_H
 #define VIEWSETTINGSPAGE_H
 
-#include "settings/settingspagebase.h"
+#include <settings/settingspagebase.h>
 
 class ViewSettingsTab;
 class QWidget;
@@ -36,14 +36,14 @@ class ViewSettingsPage : public SettingsPageBase
     Q_OBJECT
 
 public:
-    explicit ViewSettingsPage(QWidget* parent);
-    ~ViewSettingsPage() override;
+    ViewSettingsPage(QWidget* parent);
+    virtual ~ViewSettingsPage();
 
     /** @see SettingsPageBase::applySettings() */
-    void applySettings() override;
+    virtual void applySettings() Q_DECL_OVERRIDE;
 
     /** @see SettingsPageBase::restoreDefaults() */
-    void restoreDefaults() override;
+    virtual void restoreDefaults() Q_DECL_OVERRIDE;
 
 private:
     QList<ViewSettingsTab*> m_tabs;

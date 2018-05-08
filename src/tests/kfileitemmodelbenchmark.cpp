@@ -21,10 +21,13 @@
 #include <QTest>
 #include <QSignalSpy>
 
+#include <algorithm>
 #include <random>
 
 #include "kitemviews/kfileitemmodel.h"
 #include "kitemviews/private/kfileitemmodelsortalgorithm.h"
+
+#include "testdir.h"
 
 void myMessageOutput(QtMsgType type, const QMessageLogContext& context, const QString& msg)
 {
@@ -164,8 +167,8 @@ void KFileItemModelBenchmark::insertAndRemoveManyItems()
     model.m_naturalSorting = false;
     model.setRoles({"text"});
 
-    QSignalSpy spyItemsInserted(&model, &KFileItemModel::itemsInserted);
-    QSignalSpy spyItemsRemoved(&model, &KFileItemModel::itemsRemoved);
+    QSignalSpy spyItemsInserted(&model, SIGNAL(itemsInserted(KItemRangeList)));
+    QSignalSpy spyItemsRemoved(&model, SIGNAL(itemsRemoved(KItemRangeList)));
 
     QBENCHMARK {
         model.slotClear();

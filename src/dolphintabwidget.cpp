@@ -23,18 +23,17 @@
 #include "dolphintabpage.h"
 #include "dolphinviewcontainer.h"
 
-#include <KConfigGroup>
-#include <KRun>
-#include <KShell>
-#include <kio/global.h>
-
 #include <QApplication>
 #include <QDropEvent>
+#include <KConfigGroup>
+#include <KShell>
+#include <kio/global.h>
+#include <KRun>
 
 DolphinTabWidget::DolphinTabWidget(QWidget* parent) :
     QTabWidget(parent),
     m_placesSelectorVisible(true),
-    m_lastViewedTab(0)
+    m_previousTab(0)
 {
     connect(this, &DolphinTabWidget::tabCloseRequested,
             this, static_cast<void (DolphinTabWidget::*)(int)>(&DolphinTabWidget::closeTab));
@@ -59,18 +58,6 @@ DolphinTabWidget::DolphinTabWidget(QWidget* parent) :
 DolphinTabPage* DolphinTabWidget::currentTabPage() const
 {
     return tabPageAt(currentIndex());
-}
-
-DolphinTabPage* DolphinTabWidget::nextTabPage() const
-{
-    const int index = currentIndex() + 1;
-    return tabPageAt(index < count() ? index : 0);
-}
-
-DolphinTabPage* DolphinTabWidget::prevTabPage() const
-{
-    const int index = currentIndex() - 1;
-    return tabPageAt(index >= 0 ? index : (count() - 1));
 }
 
 DolphinTabPage* DolphinTabWidget::tabPageAt(const int index) const
@@ -317,8 +304,8 @@ void DolphinTabWidget::tabUrlChanged(const QUrl& url)
 
 void DolphinTabWidget::currentTabChanged(int index)
 {
-    // last-viewed tab deactivation
-    if (DolphinTabPage* tabPage = tabPageAt(m_lastViewedTab)) {
+    // previous tab deactivation
+    if (DolphinTabPage* tabPage = tabPageAt(m_previousTab)) {
         tabPage->setActive(false);
     }
     DolphinTabPage* tabPage = tabPageAt(index);
@@ -326,7 +313,7 @@ void DolphinTabWidget::currentTabChanged(int index)
     emit activeViewChanged(viewContainer);
     emit currentUrlChanged(viewContainer->url());
     tabPage->setActive(true);
-    m_lastViewedTab = index;
+    m_previousTab = index;
 }
 
 void DolphinTabWidget::tabInserted(int index)

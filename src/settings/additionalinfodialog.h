@@ -24,6 +24,7 @@
 #include <QList>
 #include <QListWidget>
 
+
 /**
  * @brief Dialog for changing the additional information shown in the view.
  */
@@ -33,11 +34,11 @@ class AdditionalInfoDialog : public QDialog
 
 public:
     AdditionalInfoDialog(QWidget* parent, const QList<QByteArray>& visibleRoles);
-    ~AdditionalInfoDialog() override;
+    virtual ~AdditionalInfoDialog();
     QList<QByteArray> visibleRoles() const;
 
 public slots:
-    void accept() override;
+    void accept() Q_DECL_OVERRIDE;
 
 private:
     QList<QByteArray> m_visibleRoles;

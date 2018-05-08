@@ -20,11 +20,10 @@
 #ifndef VIEWMODECONTROLLER_H
 #define VIEWMODECONTROLLER_H
 
-#include "dolphin_export.h"
-#include "views/dolphinview.h"
-
-#include <QObject>
 #include <QUrl>
+#include <QObject>
+#include "dolphin_export.h"
+#include <views/dolphinview.h>
 
 /**
  * @brief Allows the DolphinView to control the view implementations for the
@@ -39,8 +38,8 @@ class DOLPHIN_EXPORT ViewModeController : public QObject
     Q_OBJECT
 
 public:
-    explicit ViewModeController(QObject* parent = nullptr);
-    ~ViewModeController() override;
+    explicit ViewModeController(QObject* parent = 0);
+    virtual ~ViewModeController();
 
     /**
      * @return URL that is shown by the view mode implementation.

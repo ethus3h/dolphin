@@ -1,6 +1,5 @@
 /***************************************************************************
- *   Copyright (C) 2013 by Dawit Alemayehu <adawit@kde.org>                *
- *   Copyright (C) 2017 by Elvis Angelaccio <elvis.angelaccio@kde.org>     *
+ *   Copyright (C) 2013 by Dawit Alemayehu <adawit@kde.org                 *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
  *   it under the terms of the GNU General Public License as published by  *
@@ -23,36 +22,27 @@
 
 #include "dolphin_export.h"
 
-#include <KActionCollection>
-
 #include <QAction>
 #include <QPointer>
+
+#include <KActionCollection>
 
 /**
  * A QAction that manages the delete based on the current state of
  * the Shift key or the parameter passed to update.
  *
- * This class expects the presence of both the KStandardAction::MoveToTrash and
+ * This class expects the presence of both the "move_to_trash" and
  * KStandardAction::DeleteFile actions in @ref collection.
  */
 class DOLPHIN_EXPORT DolphinRemoveAction : public QAction
 {
   Q_OBJECT
 public:
-
-    enum class ShiftState {
-        Unknown,
-        Pressed,
-        Released
-    };
-
     DolphinRemoveAction(QObject* parent, KActionCollection* collection);
-
     /**
-     * Updates this action key based on @p shiftState.
-     * Default value is QueryShiftState, meaning it will query QGuiApplication::modifiers().
+     * Updates this action key based on the state of the Shift key.
      */
-    void update(ShiftState shiftState = ShiftState::Unknown);
+    void update();
 
 private Q_SLOTS:
     void slotRemoveActionTriggered();

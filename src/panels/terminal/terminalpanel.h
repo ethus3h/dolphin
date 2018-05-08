@@ -20,12 +20,11 @@
 #ifndef TERMINALPANEL_H
 #define TERMINALPANEL_H
 
-#include "panels/panel.h"
+#include <panels/panel.h>
 
 #include <QQueue>
 
 class TerminalInterface;
-class KMessageWidget;
 class QVBoxLayout;
 class QWidget;
 
@@ -46,16 +45,8 @@ class TerminalPanel : public Panel
     Q_OBJECT
 
 public:
-    explicit TerminalPanel(QWidget* parent = nullptr);
-    ~TerminalPanel() override;
-
-    /**
-     * @brief This function is used to set the terminal panels's cwd to
-     *        home when an unmounting request is received.
-     */
-    void goHome();
-    QString currentWorkingDirectory();
-    bool isHiddenInVisibleWindow();
+    TerminalPanel(QWidget* parent = 0);
+    virtual ~TerminalPanel();
 
 public slots:
     void terminalExited();
@@ -70,22 +61,17 @@ signals:
     void changeUrl(const QUrl& url);
 
 protected:
-    bool urlChanged() override;
+    virtual bool urlChanged() Q_DECL_OVERRIDE;
 
-    void showEvent(QShowEvent* event) override;
+    virtual void showEvent(QShowEvent* event) Q_DECL_OVERRIDE;
 
 private slots:
     void slotMostLocalUrlResult(KJob* job);
     void slotKonsolePartCurrentDirectoryChanged(const QString& dir);
 
 private:
-    enum class HistoryPolicy {
-        AddToHistory,
-        SkipHistory
-    };
-
     void changeDir(const QUrl& url);
-    void sendCdToTerminal(const QString& path, HistoryPolicy addToHistory = HistoryPolicy::AddToHistory);
+    void sendCdToTerminal(const QString& path);
 
 private:
     bool m_clearTerminal;
@@ -94,7 +80,6 @@ private:
     QVBoxLayout* m_layout;
     TerminalInterface* m_terminal;
     QWidget* m_terminalWidget;
-    KMessageWidget* m_konsolePartMissingMessage;
     KParts::ReadOnlyPart* m_konsolePart;
     QString m_konsolePartCurrentDirectory;
     QQueue<QString> m_sendCdToTerminalHistory;

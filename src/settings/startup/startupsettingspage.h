@@ -19,8 +19,7 @@
 #ifndef STARTUPSETTINGSPAGE_H
 #define STARTUPSETTINGSPAGE_H
 
-#include "settings/settingspagebase.h"
-
+#include <settings/settingspagebase.h>
 #include <QUrl>
 
 class QLineEdit;
@@ -38,13 +37,13 @@ class StartupSettingsPage : public SettingsPageBase
 
 public:
     StartupSettingsPage(const QUrl& url, QWidget* parent);
-    ~StartupSettingsPage() override;
+    virtual ~StartupSettingsPage();
 
     /** @see SettingsPageBase::applySettings() */
-    void applySettings() override;
+    virtual void applySettings() Q_DECL_OVERRIDE;
 
     /** @see SettingsPageBase::restoreDefaults() */
-    void restoreDefaults() override;
+    virtual void restoreDefaults() Q_DECL_OVERRIDE;
 
 private slots:
     void slotSettingsChanged();

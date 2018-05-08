@@ -58,7 +58,7 @@ public:
     int styleHint(StyleHint hint,
                   const QStyleOption* option = nullptr,
                   const QWidget* widget = nullptr,
-                  QStyleHintReturn* returnData = nullptr) const override
+                  QStyleHintReturn* returnData = nullptr) const Q_DECL_OVERRIDE
     {
         switch (hint) {
         case QStyle::SH_ItemView_ActivateItemOnSingleClick:
@@ -139,20 +139,20 @@ void KItemListControllerTest::initTestCase()
 
     m_testDir->createFiles(files);
     m_model->loadDirectory(m_testDir->url());
-    QSignalSpy spyDirectoryLoadingCompleted(m_model, &KFileItemModel::directoryLoadingCompleted);
+    QSignalSpy spyDirectoryLoadingCompleted(m_model, SIGNAL(directoryLoadingCompleted()));
     QVERIFY(spyDirectoryLoadingCompleted.wait());
 
     m_container->show();
-    QVERIFY(QTest::qWaitForWindowExposed(m_container));
+    QTest::qWaitForWindowExposed(m_container);
 }
 
 void KItemListControllerTest::cleanupTestCase()
 {
     delete m_container;
-    m_container = nullptr;
+    m_container = 0;
 
     delete m_testDir;
-    m_testDir = nullptr;
+    m_testDir = 0;
 }
 
 /** Before each test, the current item, selection, and item size are reset to the defaults. */
@@ -507,8 +507,8 @@ void KItemListControllerTest::testKeyboardNavigation()
     adjustGeometryForColumnCount(columnCount);
     QCOMPARE(m_view->m_layouter->m_columnCount, columnCount);
 
-    QSignalSpy spySingleItemActivated(m_controller, &KItemListController::itemActivated);
-    QSignalSpy spyMultipleItemsActivated(m_controller, &KItemListController::itemsActivated);
+    QSignalSpy spySingleItemActivated(m_controller, SIGNAL(itemActivated(int)));
+    QSignalSpy spyMultipleItemsActivated(m_controller, SIGNAL(itemsActivated(KItemSet)));
 
     while (!testList.isEmpty()) {
         const QPair<KeyPress, ViewState> test = testList.takeFirst();
@@ -584,7 +584,7 @@ void KItemListControllerTest::testMouseClickActivation()
     mouseReleaseEvent.setButton(Qt::LeftButton);
     mouseReleaseEvent.setButtons(Qt::NoButton);
 
-    QSignalSpy spyItemActivated(m_controller, &KItemListController::itemActivated);
+    QSignalSpy spyItemActivated(m_controller, SIGNAL(itemActivated(int)));
 
     // Default setting: single click activation.
     m_testStyle->setActivateItemOnSingleClick(true);

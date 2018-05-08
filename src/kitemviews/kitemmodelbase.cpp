@@ -126,7 +126,7 @@ int KItemModelBase::expandedParentsCount(int index) const
 QMimeData* KItemModelBase::createMimeData(const KItemSet& indexes) const
 {
     Q_UNUSED(indexes);
-    return nullptr;
+    return 0;
 }
 
 int KItemModelBase::indexForKeyboardSearch(const QString& text, int startFromIndex) const
@@ -164,17 +164,3 @@ void KItemModelBase::onSortOrderChanged(Qt::SortOrder current, Qt::SortOrder pre
     Q_UNUSED(previous);
 }
 
-QUrl KItemModelBase::url(int index) const
-{
-    return data(index).value("url").toUrl();
-}
-
-bool KItemModelBase::isDir(int index) const
-{
-    return data(index).value("isDir").toBool();
-}
-
-QUrl KItemModelBase::directory() const
-{
-    return QUrl();
-}

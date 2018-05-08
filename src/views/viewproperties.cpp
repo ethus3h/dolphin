@@ -22,9 +22,15 @@
 
 #include "dolphin_directoryviewpropertysettings.h"
 #include "dolphin_generalsettings.h"
+
+#include <QUrl>
 #include "dolphindebug.h"
 
 #include <QCryptographicHash>
+#include <QDate>
+#include <QFile>
+#include <QFileInfo>
+#include <QStandardPaths>
 
 namespace {
     const int AdditionalInfoViewPropertiesVersion = 1;
@@ -44,7 +50,7 @@ namespace {
 ViewProperties::ViewProperties(const QUrl& url) :
     m_changedProps(false),
     m_autoSave(true),
-    m_node(nullptr)
+    m_node(0)
 {
     GeneralSettings* settings = GeneralSettings::self();
     const bool useGlobalViewProps = settings->globalViewProps() || url.isEmpty();
@@ -134,7 +140,7 @@ ViewProperties::~ViewProperties()
     }
 
     delete m_node;
-    m_node = nullptr;
+    m_node = 0;
 }
 
 void ViewProperties::setViewMode(DolphinView::Mode mode)

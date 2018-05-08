@@ -19,7 +19,7 @@
 #ifndef NAVIGATIONSETTINGSPAGE_H
 #define NAVIGATIONSETTINGSPAGE_H
 
-#include "settings/settingspagebase.h"
+#include <settings/settingspagebase.h>
 
 class QCheckBox;
 
@@ -31,14 +31,14 @@ class NavigationSettingsPage : public SettingsPageBase
     Q_OBJECT
 
 public:
-    explicit NavigationSettingsPage(QWidget* parent);
-    ~NavigationSettingsPage() override;
+    NavigationSettingsPage(QWidget* parent);
+    virtual ~NavigationSettingsPage();
 
     /** @see SettingsPageBase::applySettings() */
-    void applySettings() override;
+    virtual void applySettings() Q_DECL_OVERRIDE;
 
     /** @see SettingsPageBase::restoreDefaults() */
-    void restoreDefaults() override;
+    virtual void restoreDefaults() Q_DECL_OVERRIDE;
 
 private:
     void loadSettings();

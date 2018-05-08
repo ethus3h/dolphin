@@ -23,14 +23,15 @@
 #define DOLPHIN_MAINWINDOW_H
 
 #include <config-baloo.h>
+
 #include <kio/fileundomanager.h>
 #include <ksortablelist.h>
 #include <kxmlguiwindow.h>
-
 #include <QIcon>
+#include <QUrl>
+
 #include <QList>
 #include <QPointer>
-#include <QUrl>
 
 typedef KIO::FileUndoManager::CommandType CommandType;
 
@@ -45,8 +46,6 @@ class KJob;
 class KNewFileMenu;
 class QToolButton;
 class QIcon;
-class PlacesPanel;
-class TerminalPanel;
 
 /**
  * @short Main window for Dolphin.
@@ -57,10 +56,11 @@ class DolphinMainWindow: public KXmlGuiWindow
 {
     Q_OBJECT
     Q_CLASSINFO("D-Bus Interface", "org.kde.dolphin.MainWindow")
+    Q_PROPERTY(int id READ getId SCRIPTABLE true)
 
 public:
     DolphinMainWindow();
-    ~DolphinMainWindow() override;
+    virtual ~DolphinMainWindow();
 
     /**
      * Returns the currently active view.
@@ -90,8 +90,6 @@ public:
      */
     KNewFileMenu* newFileMenu() const;
 
-    void setTabsToHomeIfMountPathOpen(const QString& mountPath);
-
 public slots:
     /**
      * Pastes the clipboard data into the currently selected folder
@@ -99,6 +97,11 @@ public slots:
      * no pasting is done at all.
      */
     void pasteIntoFolder();
+
+    /**
+     * Returns the main window ID used through DBus.
+     */
+    int getId() const;
 
     /**
      * Implementation of the MainWindowAdaptor/QDBusAbstractAdaptor interface.
@@ -143,16 +146,16 @@ signals:
 
 protected:
     /** @see QWidget::showEvent() */
-    void showEvent(QShowEvent* event) override;
+    virtual void showEvent(QShowEvent* event) Q_DECL_OVERRIDE;
 
     /** @see QMainWindow::closeEvent() */
-    void closeEvent(QCloseEvent* event) override;
+    virtual void closeEvent(QCloseEvent* event) Q_DECL_OVERRIDE;
 
     /** @see KMainWindow::saveProperties() */
-    void saveProperties(KConfigGroup& group) override;
+    virtual void saveProperties(KConfigGroup& group) Q_DECL_OVERRIDE;
 
     /** @see KMainWindow::readProperties() */
-    void readProperties(const KConfigGroup& group) override;
+    virtual void readProperties(const KConfigGroup& group) Q_DECL_OVERRIDE;
 
 private slots:
     /**
@@ -252,12 +255,6 @@ private slots:
      */
     void togglePanelLockState();
 
-    /**
-     * Is invoked if the Terminal panel got visible/invisible and takes care
-     * that the active view has the focus if the Terminal panel is invisible.
-     */
-    void slotTerminalPanelVisibilityChanged();
-
     /** Goes back one step of the URL history. */
     void goBack();
 
@@ -270,17 +267,28 @@ private slots:
     /** Changes the location to the home URL. */
     void goHome();
 
-    /** Open the previous URL in the URL history in a new tab. */
-    void goBackInNewTab();
+    /**
+     * Open the previous URL in the URL history in a new tab
+     * if the middle mouse button is clicked.
+     */
+    void goBack(Qt::MouseButtons buttons);
 
-    /** Open the next URL in the URL history in a new tab. */
-    void goForwardInNewTab();
+    /**
+     * Open the next URL in the URL history in a new tab
+     * if the middle mouse button is clicked.
+     */
+    void goForward(Qt::MouseButtons buttons);
 
-    /** Open the URL one hierarchy above the current URL in a new tab. */
-    void goUpInNewTab();
+    /**
+     * Open the URL one hierarchy above the current URL in a new tab
+     * if the middle mouse button is clicked.
+     */
+    void goUp(Qt::MouseButtons buttons);
 
-    /** * Open the home URL in a new tab. */
-    void goHomeInNewTab();
+    /**
+     * Open the home URL in a new tab
+     */
+    void goHome(Qt::MouseButtons buttons);
 
     /** Opens Kompare for 2 selected files. */
     void compareFiles();
@@ -338,11 +346,6 @@ private slots:
      * Opens the selected folder in a new window.
      */
     void openInNewWindow();
-
-    /**
-     * Show the target of the selected symlink
-     */
-    void showTarget();
 
     /**
      * Indicates in the statusbar that the execution of the command \a command
@@ -418,32 +421,9 @@ private slots:
     void setUrlAsCaption(const QUrl& url);
 
     /**
-     * This slot is called when the user requested to unmount a removable media
-     * from the places menu
-     */
-    void slotStorageTearDownFromPlacesRequested(const QString& mountPath);
-
-    /**
-     * This slot is called when the user requested to unmount a removable media
-     * _not_ from the dolphin's places menu (from the notification area for e.g.)
-     * This slot is basically connected to each removable device's
-     * Solid::StorageAccess::teardownRequested(const QString & udi)
-     * signal through the places panel.
-     */
-    void slotStorageTearDownExternallyRequested(const QString& mountPath);
-
-    /**
      * Is called when the view has finished loading the directory.
      */
     void slotDirectoryLoadingCompleted();
-
-    /**
-     * Is called when the user middle clicks a toolbar button.
-     *
-     * Here middle clicking Back/Forward/Up/Home will open the resulting
-     * folder in a new tab.
-     */
-    void slotToolBarActionMiddleClicked(QAction *action);
 
 private:
     void setupActions();
@@ -501,13 +481,14 @@ private:
     {
     public:
         UndoUiInterface();
-        ~UndoUiInterface() override;
-        void jobError(KIO::Job* job) override;
+        virtual ~UndoUiInterface();
+        virtual void jobError(KIO::Job* job) Q_DECL_OVERRIDE;
     };
 
     KNewFileMenu* m_newFileMenu;
     DolphinTabWidget* m_tabWidget;
     DolphinViewContainer* m_activeViewContainer;
+    int m_id;
 
     DolphinViewActionHandler* m_actionHandler;
     DolphinRemoteEncoding* m_remoteEncoding;
@@ -518,10 +499,6 @@ private:
     QTimer* m_updateToolBarTimer;
 
     KIO::Job* m_lastHandleUrlStatJob;
-
-    TerminalPanel* m_terminalPanel;
-    PlacesPanel* m_placesPanel;
-    bool m_tearDownFromPlacesRequested;
 };
 
 inline DolphinViewContainer* DolphinMainWindow::activeViewContainer() const
@@ -532,6 +509,11 @@ inline DolphinViewContainer* DolphinMainWindow::activeViewContainer() const
 inline KNewFileMenu* DolphinMainWindow::newFileMenu() const
 {
     return m_newFileMenu;
+}
+
+inline int DolphinMainWindow::getId() const
+{
+    return m_id;
 }
 
 #endif // DOLPHIN_MAINWINDOW_H

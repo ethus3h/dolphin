@@ -18,7 +18,8 @@
  ***************************************************************************/
 
 #include "kitemlistheaderwidget.h"
-#include "kitemviews/kitemmodelbase.h"
+
+#include <kitemviews/kitemmodelbase.h>
 
 #include <QApplication>
 #include <QGraphicsSceneHoverEvent>
@@ -29,7 +30,7 @@
 KItemListHeaderWidget::KItemListHeaderWidget(QGraphicsWidget* parent) :
     QGraphicsWidget(parent),
     m_automaticColumnResizing(true),
-    m_model(nullptr),
+    m_model(0),
     m_offset(0),
     m_columns(),
     m_columnWidths(),

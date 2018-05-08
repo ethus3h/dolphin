@@ -20,11 +20,13 @@
 #ifndef DOLPHINCONTEXTMENU_H
 #define DOLPHINCONTEXTMENU_H
 
-#include <KFileCopyToMenu>
 #include <KFileItem>
-
-#include <QMenu>
 #include <QUrl>
+#include <KFileCopyToMenu>
+#include <QMenu>
+
+
+
 
 class QAction;
 class DolphinMainWindow;
@@ -72,7 +74,7 @@ public:
                        const KFileItem& fileInfo,
                        const QUrl& baseUrl);
 
-    ~DolphinContextMenu() override;
+    virtual ~DolphinContextMenu();
 
     void setCustomActions(const QList<QAction*>& actions);
 
@@ -87,8 +89,8 @@ public:
     Command open();
 
 protected:
-    void keyPressEvent(QKeyEvent *ev) override;
-    void keyReleaseEvent(QKeyEvent *ev) override;
+    virtual void keyPressEvent(QKeyEvent *ev) Q_DECL_OVERRIDE;
+    virtual void keyReleaseEvent(QKeyEvent *ev) Q_DECL_OVERRIDE;
 
 private:
     void openTrashContextMenu();
@@ -116,9 +118,10 @@ private:
     KFileItem baseFileItem();
 
     /**
-     * Adds "Open With" actions
+     * Adds actions that have been installed as service-menu.
+     * (see http://techbase.kde.org/index.php?title=Development/Tutorials/Creating_Konqueror_Service_Menus)
      */
-    void addOpenWithActions(KFileItemActions& fileItemActions);
+    void addServiceActions(KFileItemActions& fileItemActions);
 
     /**
      * Adds actions that are provided by a KVersionControlPlugin.

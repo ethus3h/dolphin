@@ -19,31 +19,35 @@
 
 #include "startupsettingspage.h"
 
-#include "dolphin_generalsettings.h"
+#include "global.h"
 #include "dolphinmainwindow.h"
 #include "dolphinviewcontainer.h"
-#include "global.h"
+
+#include "dolphin_generalsettings.h"
 
 #include <KLocalizedString>
+#include <QLineEdit>
 #include <KMessageBox>
 
+#include <QVBoxLayout>
 #include <QCheckBox>
-#include <QFileDialog>
 #include <QGroupBox>
 #include <QLabel>
-#include <QLineEdit>
 #include <QPushButton>
-#include <QVBoxLayout>
+#include <QHBoxLayout>
+#include <QFileDialog>
+
+#include "views/dolphinview.h"
 
 StartupSettingsPage::StartupSettingsPage(const QUrl& url, QWidget* parent) :
     SettingsPageBase(parent),
     m_url(url),
-    m_homeUrl(nullptr),
-    m_splitView(nullptr),
-    m_editableUrl(nullptr),
-    m_showFullPath(nullptr),
-    m_filterBar(nullptr),
-    m_showFullPathInTitlebar(nullptr)
+    m_homeUrl(0),
+    m_splitView(0),
+    m_editableUrl(0),
+    m_showFullPath(0),
+    m_filterBar(0),
+    m_showFullPathInTitlebar(0)
 {
     QVBoxLayout* topLayout = new QVBoxLayout(this);
     QWidget* vBox = new QWidget(this);

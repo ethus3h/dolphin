@@ -20,29 +20,14 @@
 
 #include "draganddrophelper.h"
 
-#include <KIO/DropJob>
-#include <KJobWidgets>
-
-#include <QDBusConnection>
+#include <QUrl>
 #include <QDBusMessage>
+#include <QDBusConnection>
+#include <QDropEvent>
 #include <QMimeData>
 
-QHash<QUrl, bool> DragAndDropHelper::m_urlListMatchesUrlCache;
-
-bool DragAndDropHelper::urlListMatchesUrl(const QList<QUrl>& urls, const QUrl& destUrl)
-{
-    auto iteratorResult = m_urlListMatchesUrlCache.constFind(destUrl);
-    if (iteratorResult != m_urlListMatchesUrlCache.constEnd()) {
-        return *iteratorResult;
-    }
-
-    const bool destUrlMatches =
-        std::find_if(urls.constBegin(), urls.constEnd(), [destUrl](const QUrl& url) {
-            return url.matches(destUrl, QUrl::StripTrailingSlash);
-        }) != urls.constEnd();
-
-    return *m_urlListMatchesUrlCache.insert(destUrl, destUrlMatches);
-}
+#include <KIO/DropJob>
+#include <KJobWidgets>
 
 KIO::DropJob* DragAndDropHelper::dropUrls(const QUrl& destUrl, QDropEvent* event, QWidget* window)
 {
@@ -57,21 +42,12 @@ KIO::DropJob* DragAndDropHelper::dropUrls(const QUrl& destUrl, QDropEvent* event
         message.setArguments({destUrl.toDisplayString(QUrl::PreferLocalFile)});
         QDBusConnection::sessionBus().call(message);
     } else {
-        if (urlListMatchesUrl(event->mimeData()->urls(), destUrl)) {
-            return nullptr;
-        }
-
         // Drop into a directory or a desktop-file
         KIO::DropJob *job = KIO::drop(event, destUrl);
         KJobWidgets::setWindow(job, window);
         return job;
     }
 
-    return nullptr;
-}
-
-void DragAndDropHelper::clearUrlListMatchesUrlCache()
-{
-    DragAndDropHelper::m_urlListMatchesUrlCache.clear();
+    return 0;
 }
 

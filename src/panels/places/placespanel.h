@@ -21,10 +21,9 @@
 #ifndef PLACESPANEL_H
 #define PLACESPANEL_H
 
-#include "panels/panel.h"
-
-#include <QMimeData>
 #include <QUrl>
+#include <QMimeData>
+#include <panels/panel.h>
 
 class KItemListController;
 class PlacesItem;
@@ -32,7 +31,6 @@ class PlacesItemModel;
 class PlacesView;
 class QGraphicsSceneDragDropEvent;
 class KJob;
-class QMenu;
 /**
  * @brief Combines bookmarks and mounted devices as list.
  */
@@ -41,23 +39,20 @@ class PlacesPanel : public Panel
     Q_OBJECT
 
 public:
-    explicit PlacesPanel(QWidget* parent);
-    ~PlacesPanel() override;
-    void proceedWithTearDown();
+    PlacesPanel(QWidget* parent);
+    virtual ~PlacesPanel();
 
 signals:
     void placeActivated(const QUrl& url);
     void placeMiddleClicked(const QUrl& url);
     void errorMessage(const QString& error);
-    void storageTearDownRequested(const QString& mountPath);
-    void storageTearDownExternallyRequested(const QString& mountPath);
 
 protected:
-    bool urlChanged() override;
-    void showEvent(QShowEvent* event) override;
+    virtual bool urlChanged() Q_DECL_OVERRIDE;
+    virtual void showEvent(QShowEvent* event) Q_DECL_OVERRIDE;
 
 public slots:
-    void readSettings() override;
+    virtual void readSettings() Q_DECL_OVERRIDE;
 
 private slots:
     void slotItemActivated(int index);
@@ -68,9 +63,11 @@ private slots:
     void slotItemDropEventStorageSetupDone(int index, bool success);
     void slotAboveItemDropEvent(int index, QGraphicsSceneDragDropEvent* event);
     void slotUrlsDropped(const QUrl& dest, QDropEvent* event, QWidget* parent);
+    void slotTrashUpdated(KJob* job);
     void slotStorageSetupDone(int index, bool success);
 
 private:
+    void emptyTrash();
     void addEntry();
     void editEntry(int index);
 
@@ -81,8 +78,6 @@ private:
     void selectClosestItem();
 
     void triggerItem(int index, Qt::MouseButton button);
-
-    QAction* buildGroupContextMenu(QMenu* menu, int index);
 
 private:
     KItemListController* m_controller;

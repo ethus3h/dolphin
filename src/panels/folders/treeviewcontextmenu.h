@@ -20,9 +20,8 @@
 #ifndef TREEVIEWCONTEXTMENU_H
 #define TREEVIEWCONTEXTMENU_H
 
-#include <KFileItem>
-
 #include <QObject>
+#include <KFileItem>
 
 class QMimeData;
 class FoldersPanel;
@@ -46,7 +45,7 @@ public:
     TreeViewContextMenu(FoldersPanel* parent,
                         const KFileItem& fileInfo);
 
-    ~TreeViewContextMenu() override;
+    virtual ~TreeViewContextMenu();
 
     /** Opens the context menu modal. */
     void open();
@@ -78,12 +77,6 @@ private slots:
      * folders panel to \a show.
      */
     void setShowHiddenFiles(bool show);
-
-    /**
-     * Sets the 'Limit folders panel to home' setting for the
-     * folders panel to \a enable.
-     */
-    void setLimitFoldersPanelToHome(bool enable);
 
     /**
      * Sets the 'Automatic Scrolling' setting for the

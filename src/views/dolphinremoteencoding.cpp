@@ -24,21 +24,20 @@
  */
 
 #include "dolphinremoteencoding.h"
-
 #include "dolphinviewactionhandler.h"
-#include "dolphindebug.h"
 
-#include <KActionCollection>
+#include "dolphindebug.h"
 #include <KActionMenu>
-#include <KCharsets>
-#include <KConfig>
-#include <KConfigGroup>
-#include <KIO/Scheduler>
+#include <KActionCollection>
+#include <QIcon>
 #include <KLocalizedString>
+#include <KConfig>
+#include <KCharsets>
+#include <QMenu>
 #include <KProtocolInfo>
 #include <KProtocolManager>
-
-#include <QMenu>
+#include <KIO/Scheduler>
+#include <KConfigGroup>
 
 #define DATA_KEY        QStringLiteral("Charset")
 

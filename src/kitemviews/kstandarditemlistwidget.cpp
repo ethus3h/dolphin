@@ -21,21 +21,26 @@
 
 #include "kfileitemlistview.h"
 #include "kfileitemmodel.h"
-#include "private/kfileitemclipboard.h"
-#include "private/kitemlistroleeditor.h"
-#include "private/kpixmapmodifier.h"
 
+#include <QIcon>
 #include <KIconEffect>
 #include <KIconLoader>
 #include <KRatingPainter>
 #include <KStringHandler>
 
+#include "private/kfileitemclipboard.h"
+#include "private/kitemlistroleeditor.h"
+#include "private/kpixmapmodifier.h"
+
 #include <QGraphicsScene>
 #include <QGraphicsSceneResizeEvent>
 #include <QGraphicsView>
-#include <QGuiApplication>
-#include <QPixmapCache>
+#include <QPainter>
 #include <QStyleOption>
+#include <QTextLayout>
+#include <QTextLine>
+#include <QPixmapCache>
+#include <QGuiApplication>
 
 // #define KSTANDARDITEMLISTWIDGET_DEBUG
 
@@ -51,15 +56,15 @@ KStandardItemListWidgetInformant::~KStandardItemListWidgetInformant()
 void KStandardItemListWidgetInformant::calculateItemSizeHints(QVector<qreal>& logicalHeightHints, qreal& logicalWidthHint, const KItemListView* view) const
 {
     switch (static_cast<const KStandardItemListView*>(view)->itemLayout()) {
-    case KStandardItemListView::IconsLayout:
+    case KStandardItemListWidget::IconsLayout:
         calculateIconsLayoutItemSizeHints(logicalHeightHints, logicalWidthHint, view);
         break;
 
-    case KStandardItemListView::CompactLayout:
+    case KStandardItemListWidget::CompactLayout:
         calculateCompactLayoutItemSizeHints(logicalHeightHints, logicalWidthHint, view);
         break;
 
-    case KStandardItemListView::DetailsLayout:
+    case KStandardItemListWidget::DetailsLayout:
         calculateDetailsLayoutItemSizeHints(logicalHeightHints, logicalWidthHint, view);
         break;
 
@@ -268,8 +273,8 @@ KStandardItemListWidget::KStandardItemListWidget(KItemListWidgetInformant* infor
     m_additionalInfoTextColor(),
     m_overlay(),
     m_rating(),
-    m_roleEditor(nullptr),
-    m_oldRoleEditor(nullptr)
+    m_roleEditor(0),
+    m_oldRoleEditor(0)
 {
 }
 
@@ -765,7 +770,7 @@ void KStandardItemListWidget::editedRoleChanged(const QByteArray& current, const
             }
             m_oldRoleEditor = m_roleEditor;
             m_roleEditor->hide();
-            m_roleEditor = nullptr;
+            m_roleEditor = 0;
         }
         return;
     }
@@ -853,13 +858,6 @@ bool KStandardItemListWidget::event(QEvent *event)
     }
 
     return KItemListWidget::event(event);
-}
-
-void KStandardItemListWidget::finishRoleEditing()
-{
-    if (!editedRole().isEmpty() && m_roleEditor) {
-        slotRoleEditingFinished(editedRole(), KIO::encodeFileName(m_roleEditor->toPlainText()));
-    }
 }
 
 void KStandardItemListWidget::slotCutItemsChanged()
@@ -993,7 +991,7 @@ void KStandardItemListWidget::updatePixmapCache()
 
     if (!m_overlay.isNull()) {
         QPainter painter(&m_pixmap);
-        painter.drawPixmap(0, (m_pixmap.height() - m_overlay.height()) / m_pixmap.devicePixelRatio(), m_overlay);
+        painter.drawPixmap(0, m_pixmap.height() - m_overlay.height(), m_overlay);
     }
 
     int scaledIconSize = 0;
@@ -1015,21 +1013,15 @@ void KStandardItemListWidget::updatePixmapCache()
 
     if (iconOnTop) {
         // Center horizontally and align on bottom within the icon-area
-        m_pixmapPos.setX((widgetSize.width() - m_scaledPixmapSize.width()) / 2.0);
+        m_pixmapPos.setX((widgetSize.width() - m_scaledPixmapSize.width()) / 2);
         m_pixmapPos.setY(padding + scaledIconSize - m_scaledPixmapSize.height());
     } else {
         // Center horizontally and vertically within the icon-area
         const TextInfo* textInfo = m_textInfo.value("text");
-        m_pixmapPos.setX(textInfo->pos.x() - 2.0 * padding
-                      - (scaledIconSize + m_scaledPixmapSize.width()) / 2.0);
-
-        // Derive icon's vertical center from the center of the text frame, including
-        // any necessary adjustment if the font's midline is offset from the frame center
-        const qreal midlineShift = m_customizedFontMetrics.height() / 2.0
-                    - m_customizedFontMetrics.descent()
-                    - m_customizedFontMetrics.capHeight() / 2.0;
-        m_pixmapPos.setY(m_textRect.center().y() + midlineShift - m_scaledPixmapSize.height() / 2.0);
-
+        m_pixmapPos.setX(textInfo->pos.x() - 2 * padding
+                         - (scaledIconSize + m_scaledPixmapSize.width()) / 2);
+        m_pixmapPos.setY(padding
+                         + (scaledIconSize - m_scaledPixmapSize.height()) / 2);
     }
 
     m_iconRect = QRectF(m_pixmapPos, QSizeF(m_scaledPixmapSize));
@@ -1098,13 +1090,11 @@ void KStandardItemListWidget::updateTextsCache()
         if (ratingSize.width() > availableWidth) {
             ratingSize.rwidth() = availableWidth;
         }
-        const qreal dpr = qApp->devicePixelRatio();
-        m_rating = QPixmap(ratingSize.toSize() * dpr);
-        m_rating.setDevicePixelRatio(dpr);
+        m_rating = QPixmap(ratingSize.toSize());
         m_rating.fill(Qt::transparent);
 
         QPainter painter(&m_rating);
-        const QRect rect(QPoint(0, 0), ratingSize.toSize());
+        const QRect rect(0, 0, m_rating.width(), m_rating.height());
         const int rating = data().value("rating").toInt();
         KRatingPainter::paintRating(&painter, rect, Qt::AlignJustify | Qt::AlignVCenter, rating);
     } else if (!m_rating.isNull()) {
@@ -1455,7 +1445,7 @@ void KStandardItemListWidget::closeRoleEditor()
     }
     m_oldRoleEditor = m_roleEditor;
     m_roleEditor->hide();
-    m_roleEditor = nullptr;
+    m_roleEditor = 0;
 }
 
 QPixmap KStandardItemListWidget::pixmapForIcon(const QString& name, const QStringList& overlays, int size, QIcon::Mode mode)

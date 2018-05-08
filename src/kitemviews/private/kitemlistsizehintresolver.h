@@ -21,8 +21,8 @@
 #define KITEMLISTSIZEHINTRESOLVER_H
 
 #include "dolphin_export.h"
-#include "kitemviews/kitemmodelbase.h"
 
+#include <kitemviews/kitemmodelbase.h>
 #include <QSizeF>
 #include <QVector>
 
@@ -34,10 +34,9 @@ class KItemListView;
 class DOLPHIN_EXPORT KItemListSizeHintResolver
 {
 public:
-    explicit KItemListSizeHintResolver(const KItemListView* itemListView);
+    KItemListSizeHintResolver(const KItemListView* itemListView);
     virtual ~KItemListSizeHintResolver();
     QSizeF maxSizeHint();
-    QSizeF minSizeHint();
     QSizeF sizeHint(int index);
 
     void itemsInserted(const KItemRangeList& itemRanges);
@@ -53,7 +52,6 @@ private:
     mutable QVector<qreal> m_logicalHeightHintCache;
     mutable qreal m_logicalWidthHint;
     mutable qreal m_logicalHeightHint;
-    mutable qreal m_minHeightHint;
     bool m_needsResolving;
 };
 

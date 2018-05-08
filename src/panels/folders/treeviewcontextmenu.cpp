@@ -20,26 +20,27 @@
 
 #include "treeviewcontextmenu.h"
 
-#include "folderspanel.h"
-#include "global.h"
-
-#include <KConfigGroup>
-#include <KFileItemListProperties>
+#include <KFileItem>
 #include <KIO/CopyJob>
 #include <KIO/DeleteJob>
-#include <KIO/FileUndoManager>
 #include <KIO/JobUiDelegate>
-#include <KIO/Paste>
-#include <KIO/PasteJob>
+#include <QMenu>
+#include <QIcon>
 #include <KJobWidgets>
-#include <KLocalizedString>
-#include <KPropertiesDialog>
 #include <KSharedConfig>
+#include <KConfigGroup>
 #include <KUrlMimeData>
+#include <KFileItemListProperties>
+#include <KLocalizedString>
+#include <KIO/PasteJob>
+#include <KIO/Paste>
+#include <KIO/FileUndoManager>
+#include <KPropertiesDialog>
+
+#include "folderspanel.h"
 
 #include <QApplication>
 #include <QClipboard>
-#include <QMenu>
 #include <QMimeData>
 #include <QPointer>
 
@@ -122,16 +123,6 @@ void TreeViewContextMenu::open()
     showHiddenFilesAction->setChecked(m_parent->showHiddenFiles());
     popup->addAction(showHiddenFilesAction);
     connect(showHiddenFilesAction, &QAction::toggled, this, &TreeViewContextMenu::setShowHiddenFiles);
-
-    // insert 'Limit to Home Directory'
-    const QUrl url = m_fileItem.url();
-    const bool enableLimitToHomeDirectory = url.isLocalFile();
-    QAction* limitFoldersPanelToHomeAction = new QAction(i18nc("@action:inmenu", "Limit to Home Directory"), this);
-    limitFoldersPanelToHomeAction->setCheckable(true);
-    limitFoldersPanelToHomeAction->setEnabled(enableLimitToHomeDirectory);
-    limitFoldersPanelToHomeAction->setChecked(m_parent->limitFoldersPanelToHome());
-    popup->addAction(limitFoldersPanelToHomeAction);
-    connect(limitFoldersPanelToHomeAction, &QAction::toggled, this, &TreeViewContextMenu::setLimitFoldersPanelToHome);
 
     // insert 'Automatic Scrolling'
     QAction* autoScrollingAction = new QAction(i18nc("@action:inmenu", "Automatic Scrolling"), this);
@@ -236,11 +227,6 @@ void TreeViewContextMenu::showProperties()
 void TreeViewContextMenu::setShowHiddenFiles(bool show)
 {
     m_parent->setShowHiddenFiles(show);
-}
-
-void TreeViewContextMenu::setLimitFoldersPanelToHome(bool enable)
-{
-    m_parent->setLimitFoldersPanelToHome(enable);
 }
 
 void TreeViewContextMenu::setAutoScrolling(bool enable)

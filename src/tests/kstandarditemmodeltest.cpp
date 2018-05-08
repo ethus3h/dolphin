@@ -51,7 +51,7 @@ void KStandardItemModelTest::init()
 void KStandardItemModelTest::cleanup()
 {
     delete m_model;
-    m_model = nullptr;
+    m_model = 0;
 }
 
 void KStandardItemModelTest::testNewItems()

@@ -24,58 +24,51 @@
 #include "placespanel.h"
 
 #include "dolphin_generalsettings.h"
-#include "global.h"
-#include "kitemviews/kitemlistcontainer.h"
-#include "kitemviews/kitemlistcontroller.h"
-#include "kitemviews/kitemlistselectionmanager.h"
-#include "kitemviews/kstandarditem.h"
+
+#include <KFileItem>
+#include "dolphindebug.h"
+#include <KDirNotify>
+#include <QIcon>
+#include <KIO/Job>
+#include <KIO/DropJob>
+#include <KIO/EmptyTrashJob>
+#include <KIO/JobUiDelegate>
+#include <KJobWidgets>
+#include <KLocalizedString>
+#include <KIconLoader>
+#include <kitemviews/kitemlistcontainer.h>
+#include <kitemviews/kitemlistcontroller.h>
+#include <kitemviews/kitemlistselectionmanager.h>
+#include <kitemviews/kstandarditem.h>
+#include <QMenu>
+#include <KMessageBox>
+#include <KNotification>
 #include "placesitem.h"
 #include "placesitemeditdialog.h"
 #include "placesitemlistgroupheader.h"
 #include "placesitemlistwidget.h"
 #include "placesitemmodel.h"
 #include "placesview.h"
-#include "trash/dolphintrash.h"
-#include "views/draganddrophelper.h"
-
-#include <KDirNotify>
-#include <KFileItem>
-#include <KFilePlacesModel>
-#include <KIO/DropJob>
-#include <KIO/EmptyTrashJob>
-#include <KIO/Job>
-#include <KIO/JobUiDelegate>
-#include <KIconLoader>
-#include <KJobWidgets>
-#include <KLocalizedString>
-#include <KMessageBox>
-#include <KNotification>
-
+#include <views/draganddrophelper.h>
 #include <QGraphicsSceneDragDropEvent>
-#include <QIcon>
-#include <QMenu>
 #include <QVBoxLayout>
+#include <QShowEvent>
+#include <QMimeData>
 
 PlacesPanel::PlacesPanel(QWidget* parent) :
     Panel(parent),
-    m_controller(nullptr),
-    m_model(nullptr),
-    m_view(nullptr),
+    m_controller(0),
+    m_model(0),
     m_storageSetupFailedUrl(),
     m_triggerStorageSetupButton(),
     m_itemDropEventIndex(-1),
-    m_itemDropEventMimeData(nullptr),
-    m_itemDropEvent(nullptr)
+    m_itemDropEventMimeData(0),
+    m_itemDropEvent(0)
 {
 }
 
 PlacesPanel::~PlacesPanel()
 {
-}
-
-void PlacesPanel::proceedWithTearDown()
-{
-    m_model->proceedWithTearDown();
 }
 
 bool PlacesPanel::urlChanged()
@@ -116,10 +109,6 @@ void PlacesPanel::showEvent(QShowEvent* event)
         m_model->setGroupedSorting(true);
         connect(m_model, &PlacesItemModel::errorMessage,
                 this, &PlacesPanel::errorMessage);
-        connect(m_model, &PlacesItemModel::storageTearDownRequested,
-                this, &PlacesPanel::storageTearDownRequested);
-        connect(m_model, &PlacesItemModel::storageTearDownExternallyRequested,
-                this, &PlacesPanel::storageTearDownExternallyRequested);
 
         m_view = new PlacesView();
         m_view->setWidgetCreator(new KItemListWidgetCreator<PlacesItemListWidget>());
@@ -170,10 +159,12 @@ void PlacesPanel::slotItemContextMenuRequested(int index, const QPointF& pos)
 
     QMenu menu(this);
 
-    QAction* emptyTrashAction = nullptr;
-    QAction* editAction = nullptr;
-    QAction* teardownAction = nullptr;
-    QAction* ejectAction = nullptr;
+    QAction* emptyTrashAction = 0;
+    QAction* editAction = 0;
+    QAction* teardownAction = 0;
+    QAction* ejectAction = 0;
+
+    const QString label = item->text();
 
     const bool isDevice = !item->udi().isEmpty();
     const bool isTrash = (item->url().scheme() == QLatin1String("trash"));
@@ -201,7 +192,6 @@ void PlacesPanel::slotItemContextMenuRequested(int index, const QPointF& pos)
         }
     }
 
-    QAction* openInNewWindowAction = menu.addAction(QIcon::fromTheme("window-new"), i18nc("@item:inmenu", "Open in New Window"));
     QAction* openInNewTabAction = menu.addAction(QIcon::fromTheme("tab-new"), i18nc("@item:inmenu", "Open in New Tab"));
     if (!isDevice && !isTrash) {
         menu.addSeparator();
@@ -211,7 +201,7 @@ void PlacesPanel::slotItemContextMenuRequested(int index, const QPointF& pos)
         editAction = menu.addAction(QIcon::fromTheme("document-properties"), i18nc("@item:inmenu", "Edit..."));
     }
 
-    QAction* removeAction = nullptr;
+    QAction* removeAction = 0;
     if (!isDevice && !item->isSystemItem()) {
         removeAction = menu.addAction(QIcon::fromTheme(QStringLiteral("edit-delete")), i18nc("@item:inmenu", "Remove"));
     }
@@ -220,12 +210,10 @@ void PlacesPanel::slotItemContextMenuRequested(int index, const QPointF& pos)
     hideAction->setCheckable(true);
     hideAction->setChecked(item->isHidden());
 
-    buildGroupContextMenu(&menu, index);
-
     QAction* action = menu.exec(pos.toPoint());
     if (action) {
         if (action == emptyTrashAction) {
-            Trash::empty(this);
+            emptyTrash();
         } else {
             // The index might have changed if devices were added/removed while
             // the context menu was open.
@@ -239,17 +227,17 @@ void PlacesPanel::slotItemContextMenuRequested(int index, const QPointF& pos)
             if (action == editAction) {
                 editEntry(index);
             } else if (action == removeAction) {
-                m_model->deleteItem(index);
+                m_model->removeItem(index);
+                m_model->saveBookmarks();
             } else if (action == hideAction) {
                 item->setHidden(hideAction->isChecked());
-            } else if (action == openInNewWindowAction) {
-                Dolphin::openNewWindow({KFilePlacesModel::convertedUrl(m_model->data(index).value("url").toUrl())}, this);
+                m_model->saveBookmarks();
             } else if (action == openInNewTabAction) {
                 // TriggerItem does set up the storage first and then it will
                 // emit the slotItemMiddleClicked signal, because of Qt::MiddleButton.
                 triggerItem(index, Qt::MiddleButton);
             } else if (action == teardownAction) {
-                m_model->requestTearDown(index);
+                m_model->requestTeardown(index);
             } else if (action == ejectAction) {
                 m_model->requestEject(index);
             }
@@ -265,14 +253,12 @@ void PlacesPanel::slotViewContextMenuRequested(const QPointF& pos)
 
     QAction* addAction = menu.addAction(QIcon::fromTheme(QStringLiteral("document-new")), i18nc("@item:inmenu", "Add Entry..."));
 
-    QAction* showAllAction = nullptr;
+    QAction* showAllAction = 0;
     if (m_model->hiddenCount() > 0) {
         showAllAction = menu.addAction(i18nc("@item:inmenu", "Show All Entries"));
         showAllAction->setCheckable(true);
         showAllAction->setChecked(m_model->hiddenItemsShown());
     }
-
-    buildGroupContextMenu(&menu, m_controller->indexCloseToMousePressedPosition());
 
     QMenu* iconSizeSubMenu = new QMenu(i18nc("@item:inmenu", "Icon Size"), &menu);
 
@@ -291,7 +277,7 @@ void PlacesPanel::slotViewContextMenuRequested(const QPointF& pos)
         {KIconLoader::SizeLarge,        I18N_NOOP2_NOSTRIP("Huge icon size", "Huge (%1x%2)")}
     };
 
-    QHash<QAction*, int> iconSizeActionMap;
+    QMap<QAction*, int> iconSizeActionMap;
     QActionGroup* iconSizeGroup = new QActionGroup(iconSizeSubMenu);
 
     for (int i = 0; i < iconSizeCount; ++i) {
@@ -327,24 +313,6 @@ void PlacesPanel::slotViewContextMenuRequested(const QPointF& pos)
     selectClosestItem();
 }
 
-QAction *PlacesPanel::buildGroupContextMenu(QMenu *menu, int index)
-{
-    if (index == -1) {
-        return nullptr;
-    }
-
-    KFilePlacesModel::GroupType groupType = m_model->groupType(index);
-    QAction *hideGroupAction = menu->addAction(i18nc("@item:inmenu", "Hide Section '%1'", m_model->item(index)->group()));
-    hideGroupAction->setCheckable(true);
-    hideGroupAction->setChecked(m_model->isGroupHidden(groupType));
-
-    connect(hideGroupAction, &QAction::triggered, this, [this, groupType, hideGroupAction]{
-        m_model->setGroupHidden(groupType, hideGroupAction->isChecked());
-    });
-
-    return hideGroupAction;
-}
-
 void PlacesPanel::slotItemDropEvent(int index, QGraphicsSceneDragDropEvent* event)
 {
     if (index < 0) {
@@ -352,8 +320,8 @@ void PlacesPanel::slotItemDropEvent(int index, QGraphicsSceneDragDropEvent* even
     }
 
     const PlacesItem* destItem = m_model->placesItem(index);
-
-    if (destItem->isSearchOrTimelineUrl()) {
+    const PlacesItem::GroupType group = destItem->groupType();
+    if (group == PlacesItem::SearchForType || group == PlacesItem::RecentlySavedType) {
         return;
     }
 
@@ -406,14 +374,15 @@ void PlacesPanel::slotItemDropEventStorageSetupDone(int index, bool success)
         delete m_itemDropEvent;
 
         m_itemDropEventIndex = -1;
-        m_itemDropEventMimeData = nullptr;
-        m_itemDropEvent = nullptr;
+        m_itemDropEventMimeData = 0;
+        m_itemDropEvent = 0;
     }
 }
 
 void PlacesPanel::slotAboveItemDropEvent(int index, QGraphicsSceneDragDropEvent* event)
 {
     m_model->dropMimeDataBefore(index, event->mimeData());
+    m_model->saveBookmarks();
 }
 
 void PlacesPanel::slotUrlsDropped(const QUrl& dest, QDropEvent* event, QWidget* parent)
@@ -422,6 +391,15 @@ void PlacesPanel::slotUrlsDropped(const QUrl& dest, QDropEvent* event, QWidget* 
     if (job) {
         connect(job, &KIO::DropJob::result, this, [this](KJob *job) { if (job->error()) emit errorMessage(job->errorString()); });
     }
+}
+
+void PlacesPanel::slotTrashUpdated(KJob* job)
+{
+    if (job->error()) {
+        emit errorMessage(job->errorString());
+    }
+    // as long as KIO doesn't do this, do it ourselves
+    KNotification::event(QStringLiteral("Trash: emptied"), QString(), QPixmap(), 0, KNotification::DefaultEvent);
 }
 
 void PlacesPanel::slotStorageSetupDone(int index, bool success)
@@ -443,6 +421,17 @@ void PlacesPanel::slotStorageSetupDone(int index, bool success)
     }
 }
 
+void PlacesPanel::emptyTrash()
+{
+    KIO::JobUiDelegate uiDelegate;
+    uiDelegate.setWindow(window());
+    if (uiDelegate.askDeleteConfirmation(QList<QUrl>(), KIO::JobUiDelegate::EmptyTrash, KIO::JobUiDelegate::DefaultConfirmation)) {
+        KIO::Job* job = KIO::emptyTrash();
+        KJobWidgets::setWindow(job, window());
+        connect(job, &KIO::Job::result, this, &PlacesPanel::slotTrashUpdated);
+    }
+}
+
 void PlacesPanel::addEntry()
 {
     const int index = m_controller->selectionManager()->currentItem();
@@ -453,7 +442,9 @@ void PlacesPanel::addEntry()
     dialog->setAllowGlobal(true);
     dialog->setUrl(url);
     if (dialog->exec() == QDialog::Accepted) {
-        m_model->createPlacesItem(dialog->text(), dialog->url(), dialog->icon());
+        PlacesItem* item = m_model->createPlacesItem(dialog->text(), dialog->url(), dialog->icon());
+        m_model->appendItemToGroup(item);
+        m_model->saveBookmarks();
     }
 
     delete dialog;
@@ -475,7 +466,7 @@ void PlacesPanel::editEntry(int index)
             oldItem->setText(dialog->text());
             oldItem->setUrl(dialog->url());
             oldItem->setIcon(dialog->icon());
-            m_model->refresh();
+            m_model->saveBookmarks();
         }
     }
 
@@ -512,9 +503,9 @@ void PlacesPanel::triggerItem(int index, Qt::MouseButton button)
         const QUrl url = m_model->data(index).value("url").toUrl();
         if (!url.isEmpty()) {
             if (button == Qt::MiddleButton) {
-                emit placeMiddleClicked(KFilePlacesModel::convertedUrl(url));
+                emit placeMiddleClicked(PlacesItemModel::convertedUrl(url));
             } else {
-                emit placeActivated(KFilePlacesModel::convertedUrl(url));
+                emit placeActivated(PlacesItemModel::convertedUrl(url));
             }
         }
     }

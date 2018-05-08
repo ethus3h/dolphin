@@ -21,8 +21,8 @@
 #ifndef PANEL_H
 #define PANEL_H
 
-#include <QUrl>
 #include <QWidget>
+#include <QUrl>
 
 /**
  * @brief Base widget for all panels that can be docked on the window borders.
@@ -35,8 +35,8 @@ class Panel : public QWidget
     Q_OBJECT
 
 public:
-    explicit Panel(QWidget* parent = nullptr);
-    ~Panel() override;
+    explicit Panel(QWidget* parent = 0);
+    virtual ~Panel();
 
     /** Returns the current set URL of the active Dolphin view. */
     QUrl url() const;
@@ -49,7 +49,7 @@ public:
     void setCustomContextMenuActions(const QList<QAction*>& actions);
     QList<QAction*> customContextMenuActions() const;
 
-    QSize sizeHint() const override;
+    virtual QSize sizeHint() const Q_DECL_OVERRIDE;
 
 public slots:
     /**

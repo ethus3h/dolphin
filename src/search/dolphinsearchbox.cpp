@@ -21,47 +21,49 @@
 
 #include "dolphin_searchsettings.h"
 #include "dolphinfacetswidget.h"
-#include "panels/places/placesitemmodel.h"
 
+#include <QIcon>
+#include <QLineEdit>
 #include <KLocalizedString>
-#include <KNS3/KMoreToolsMenuFactory>
 #include <KSeparator>
-#include <config-baloo.h>
-#ifdef HAVE_BALOO
-#include <Baloo/Query>
-#include <Baloo/IndexerConfig>
-#endif
+#include <KNS3/KMoreToolsMenuFactory>
 
 #include <QButtonGroup>
 #include <QDir>
-#include <QFontDatabase>
+#include <QEvent>
 #include <QHBoxLayout>
-#include <QIcon>
+#include <QKeyEvent>
 #include <QLabel>
-#include <QLineEdit>
 #include <QScrollArea>
 #include <QTimer>
 #include <QToolButton>
+#include <QVBoxLayout>
 #include <QUrlQuery>
+
+#include <config-baloo.h>
+#ifdef HAVE_BALOO
+    #include <Baloo/Query>
+    #include <Baloo/IndexerConfig>
+#endif
+#include <QFontDatabase>
 
 DolphinSearchBox::DolphinSearchBox(QWidget* parent) :
     QWidget(parent),
     m_startedSearching(false),
     m_active(true),
-    m_topLayout(nullptr),
-    m_searchLabel(nullptr),
-    m_searchInput(nullptr),
-    m_saveSearchAction(nullptr),
-    m_optionsScrollArea(nullptr),
-    m_fileNameButton(nullptr),
-    m_contentButton(nullptr),
-    m_separator(nullptr),
-    m_fromHereButton(nullptr),
-    m_everywhereButton(nullptr),
-    m_facetsToggleButton(nullptr),
-    m_facetsWidget(nullptr),
+    m_topLayout(0),
+    m_searchLabel(0),
+    m_searchInput(0),
+    m_optionsScrollArea(0),
+    m_fileNameButton(0),
+    m_contentButton(0),
+    m_separator(0),
+    m_fromHereButton(0),
+    m_everywhereButton(0),
+    m_facetsToggleButton(0),
+    m_facetsWidget(0),
     m_searchPath(),
-    m_startSearchTimer(nullptr)
+    m_startSearchTimer(0)
 {
 }
 
@@ -248,7 +250,6 @@ void DolphinSearchBox::emitSearchRequest()
 {
     m_startSearchTimer->stop();
     m_startedSearching = true;
-    m_saveSearchAction->setEnabled(true);
     emit searchRequest();
 }
 
@@ -256,7 +257,6 @@ void DolphinSearchBox::emitCloseRequest()
 {
     m_startSearchTimer->stop();
     m_startedSearching = false;
-    m_saveSearchAction->setEnabled(false);
     emit closeRequest();
 }
 
@@ -297,18 +297,6 @@ void DolphinSearchBox::slotFacetChanged()
     m_startedSearching = true;
     m_startSearchTimer->stop();
     emit searchRequest();
-}
-
-void DolphinSearchBox::slotSearchSaved()
-{
-    const QUrl searchURL = urlForSearching();
-    if (searchURL.isValid()) {
-        PlacesItemModel model;
-        const QString label = i18n("Search for %1 in %2", text(), searchPath().fileName());
-        model.createPlacesItem(label,
-                               searchURL,
-                               QStringLiteral("folder-saved-search-symbolic"));
-    }
 }
 
 void DolphinSearchBox::initButton(QToolButton* button)
@@ -367,14 +355,6 @@ void DolphinSearchBox::init()
     connect(m_searchInput, &QLineEdit::textChanged,
             this, &DolphinSearchBox::slotSearchTextChanged);
     setFocusProxy(m_searchInput);
-
-    // Add "Save search" button inside search box
-    m_saveSearchAction = new QAction(this);
-    m_saveSearchAction->setIcon (QIcon::fromTheme(QStringLiteral("document-save-symbolic")));
-    m_saveSearchAction->setText(i18nc("action:button", "Save this search to quickly access it again in the future"));
-    m_saveSearchAction->setEnabled(false);
-    m_searchInput->addAction(m_saveSearchAction, QLineEdit::TrailingPosition);
-    connect(m_saveSearchAction, &QAction::triggered, this, &DolphinSearchBox::slotSearchSaved);
 
     // Apply layout for the search input
     QHBoxLayout* searchInputLayout = new QHBoxLayout();

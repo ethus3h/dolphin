@@ -20,7 +20,7 @@
 #ifndef FOLDERSITEMLISTWIDGET_H
 #define FOLDERSITEMLISTWIDGET_H
 
-#include "kitemviews/kfileitemlistwidget.h"
+#include <kitemviews/kfileitemlistwidget.h>
 
 /**
  * @brief Extends KFileItemListWidget to use the right text color.
@@ -31,10 +31,10 @@ class FoldersItemListWidget : public KFileItemListWidget
 
 public:
     FoldersItemListWidget(KItemListWidgetInformant* informant, QGraphicsItem* parent);
-    ~FoldersItemListWidget() override;
+    virtual ~FoldersItemListWidget();
 
 protected:
-    QPalette::ColorRole normalTextColorRole() const override;
+    virtual QPalette::ColorRole normalTextColorRole() const Q_DECL_OVERRIDE;
 };
 
 #endif

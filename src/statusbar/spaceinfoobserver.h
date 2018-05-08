@@ -20,9 +20,9 @@
 #ifndef SPACEINFOOBSERVER_H
 #define SPACEINFOOBSERVER_H
 
-#include <KIO/Job>
-
 #include <QObject>
+
+#include <KIO/Job>
 
 class QUrl;
 class MountPointObserver;
@@ -32,8 +32,8 @@ class SpaceInfoObserver : public QObject
     Q_OBJECT
 
 public:
-    explicit SpaceInfoObserver(const QUrl& url, QObject* parent = nullptr);
-    ~SpaceInfoObserver() override;
+    explicit SpaceInfoObserver(const QUrl& url, QObject* parent = 0);
+    virtual ~SpaceInfoObserver();
 
     quint64 size() const;
     quint64 available() const;

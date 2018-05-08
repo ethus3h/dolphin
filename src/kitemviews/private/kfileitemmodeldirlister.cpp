@@ -18,14 +18,13 @@
  ***************************************************************************/
 
 #include "kfileitemmodeldirlister.h"
-
 #include <KLocalizedString>
 #include <KIO/Job>
 
 KFileItemModelDirLister::KFileItemModelDirLister(QObject* parent) :
     KDirLister(parent)
 {
-    setAutoErrorHandlingEnabled(false, nullptr);
+    setAutoErrorHandlingEnabled(false, 0);
 }
 
 KFileItemModelDirLister::~KFileItemModelDirLister()

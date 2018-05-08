@@ -20,10 +20,10 @@
 #ifndef TOOLTIPMANAGER_H
 #define TOOLTIPMANAGER_H
 
-#include <KFileItem>
-
 #include <QObject>
 #include <QRect>
+
+#include <KFileItem>
 
 class DolphinFileMetaDataWidget;
 class KToolTipWidget;
@@ -43,7 +43,7 @@ class ToolTipManager : public QObject
 
 public:
     explicit ToolTipManager(QWidget* parent);
-    ~ToolTipManager() override;
+    virtual ~ToolTipManager();
 
     /**
      * Triggers the showing of the tooltip for the item \p item

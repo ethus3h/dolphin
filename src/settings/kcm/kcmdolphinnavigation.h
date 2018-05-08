@@ -33,10 +33,10 @@ class DolphinNavigationConfigModule : public KCModule
 
 public:
     DolphinNavigationConfigModule(QWidget* parent, const QVariantList& args);
-    ~DolphinNavigationConfigModule() override;
+    virtual ~DolphinNavigationConfigModule();
 
-    void save() override;
-    void defaults() override;
+    virtual void save() Q_DECL_OVERRIDE;
+    virtual void defaults() Q_DECL_OVERRIDE;
 
 private:
     NavigationSettingsPage* m_navigation;

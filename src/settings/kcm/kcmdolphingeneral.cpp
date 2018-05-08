@@ -19,16 +19,17 @@
 
 #include "kcmdolphingeneral.h"
 
-#include "settings/general/behaviorsettingspage.h"
-#include "settings/general/previewssettingspage.h"
-#include "settings/general/confirmationssettingspage.h"
-
 #include <KLocalizedString>
 #include <KPluginFactory>
 #include <KPluginLoader>
 
-#include <QTabWidget>
+#include <settings/general/behaviorsettingspage.h>
+#include <settings/general/previewssettingspage.h>
+#include <settings/general/confirmationssettingspage.h>
+
+#include <QDir>
 #include <QVBoxLayout>
+#include <QTabWidget>
 
 K_PLUGIN_FACTORY(KCMDolphinGeneralConfigFactory, registerPlugin<DolphinGeneralConfigModule>(QStringLiteral("dolphingeneral"));)
 
@@ -64,7 +65,7 @@ DolphinGeneralConfigModule::DolphinGeneralConfigModule(QWidget* parent, const QV
     m_pages.append(previewsPage);
     m_pages.append(confirmationsPage);
 
-    topLayout->addWidget(tabWidget, 0, nullptr);
+    topLayout->addWidget(tabWidget, 0, 0);
 }
 
 DolphinGeneralConfigModule::~DolphinGeneralConfigModule()

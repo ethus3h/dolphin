@@ -21,9 +21,9 @@
 #define FILEMETADATACONFIGURATIONDIALOG_H
 
 #include <QDialog>
-
 #include <KFileItem>
-#include <config-baloo.h>
+#include "config-baloo.h"
+
 #ifndef HAVE_BALOO
 class KFileMetaDataConfigurationWidget;
 #else
@@ -43,8 +43,8 @@ class FileMetaDataConfigurationDialog : public QDialog
     Q_OBJECT
 
 public:
-    explicit FileMetaDataConfigurationDialog(QWidget* parent = nullptr);
-    ~FileMetaDataConfigurationDialog() override;
+    explicit FileMetaDataConfigurationDialog(QWidget* parent = 0);
+    virtual ~FileMetaDataConfigurationDialog();
 
     /**
      * Sets the items, for which the visibility of the meta data should

@@ -24,24 +24,26 @@
 #include <KColorScheme>
 #include <KSeparator>
 #include <KStringHandler>
+#include <QTextDocument>
+
+#include <QLabel>
+#include <QStyleOptionFrame>
+#include <QStylePainter>
+#include <QVBoxLayout>
+#include <QTextLayout>
+#include <QTextLine>
+
 #ifndef HAVE_BALOO
 #include <KFileMetaDataWidget>
 #else
 #include <Baloo/FileMetaDataWidget>
 #endif
 
-#include <QLabel>
-#include <QStyleOptionFrame>
-#include <QStylePainter>
-#include <QTextDocument>
-#include <QTextLayout>
-#include <QVBoxLayout>
-
 DolphinFileMetaDataWidget::DolphinFileMetaDataWidget(QWidget* parent) :
     QWidget(parent),
-    m_preview(nullptr),
-    m_name(nullptr),
-    m_fileMetaDataWidget(nullptr)
+    m_preview(0),
+    m_name(0),
+    m_fileMetaDataWidget(0)
 {
     // Create widget for file preview
     m_preview = new QLabel(this);

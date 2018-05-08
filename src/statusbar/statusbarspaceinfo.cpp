@@ -22,15 +22,16 @@
 
 #include "spaceinfoobserver.h"
 
+#include <QMouseEvent>
+
 #include <KLocalizedString>
 #include <KNS3/KMoreToolsMenuFactory>
+#include <KIO/Job>
 #include <knewstuff_version.h>
-
-#include <QMouseEvent>
 
 StatusBarSpaceInfo::StatusBarSpaceInfo(QWidget* parent) :
     KCapacityBar(KCapacityBar::DrawTextInline, parent),
-    m_observer(nullptr)
+    m_observer(0)
 {
     setCursor(Qt::PointingHandCursor);
 }

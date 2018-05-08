@@ -21,7 +21,6 @@
 #define KCMDOLPHINGENERAL_H
 
 #include <kcmodule.h>
-
 #include <QList>
 
 class SettingsPageBase;
@@ -35,10 +34,10 @@ class DolphinGeneralConfigModule : public KCModule
 
 public:
     DolphinGeneralConfigModule(QWidget* parent, const QVariantList& args);
-    ~DolphinGeneralConfigModule() override;
+    virtual ~DolphinGeneralConfigModule();
 
-    void save() override;
-    void defaults() override;
+    virtual void save() Q_DECL_OVERRIDE;
+    virtual void defaults() Q_DECL_OVERRIDE;
 
 private:
     QList<SettingsPageBase*> m_pages;

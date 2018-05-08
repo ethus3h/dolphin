@@ -21,15 +21,19 @@
 #include "viewpropertiesdialog.h"
 
 #include "additionalinfodialog.h"
+#include "kitemviews/kfileitemmodel.h"
+#include "views/dolphinview.h"
 #include "dolphin_generalsettings.h"
 #include "dolphin_iconsmodesettings.h"
-#include "kitemviews/kfileitemmodel.h"
 #include "viewpropsprogressinfo.h"
-#include "views/dolphinview.h"
 
-#include <KComboBox>
+#include <config-baloo.h>
+
 #include <KLocalizedString>
 #include <KMessageBox>
+#include <QUrl>
+#include <KComboBox>
+#include <KConfigGroup>
 #include <KWindowConfig>
 
 #include <QButtonGroup>
@@ -39,6 +43,8 @@
 #include <QLabel>
 #include <QPushButton>
 #include <QRadioButton>
+#include <QDialogButtonBox>
+#include <QVBoxLayout>
 
 #include <views/viewproperties.h>
 
@@ -46,19 +52,19 @@ ViewPropertiesDialog::ViewPropertiesDialog(DolphinView* dolphinView) :
     QDialog(dolphinView),
     m_isDirty(false),
     m_dolphinView(dolphinView),
-    m_viewProps(nullptr),
-    m_viewMode(nullptr),
-    m_sortOrder(nullptr),
-    m_sorting(nullptr),
-    m_sortFoldersFirst(nullptr),
-    m_previewsShown(nullptr),
-    m_showInGroups(nullptr),
-    m_showHiddenFiles(nullptr),
-    m_additionalInfo(nullptr),
-    m_applyToCurrentFolder(nullptr),
-    m_applyToSubFolders(nullptr),
-    m_applyToAllFolders(nullptr),
-    m_useAsDefault(nullptr)
+    m_viewProps(0),
+    m_viewMode(0),
+    m_sortOrder(0),
+    m_sorting(0),
+    m_sortFoldersFirst(0),
+    m_previewsShown(0),
+    m_showInGroups(0),
+    m_showHiddenFiles(0),
+    m_additionalInfo(0),
+    m_applyToCurrentFolder(0),
+    m_applyToSubFolders(0),
+    m_applyToAllFolders(0),
+    m_useAsDefault(0)
 {
     Q_ASSERT(dolphinView);
     const bool useGlobalViewProps = GeneralSettings::globalViewProps();
@@ -192,7 +198,7 @@ ViewPropertiesDialog::ViewPropertiesDialog(DolphinView* dolphinView) :
     layout->addWidget(buttonBox);
 
     auto okButton = buttonBox->button(QDialogButtonBox::Ok);
-    okButton->setShortcut(Qt::CTRL + Qt::Key_Return);
+    okButton->setShortcut(Qt::CTRL | Qt::Key_Return);
     okButton->setDefault(true);
 
     auto applyButton = buttonBox->button(QDialogButtonBox::Apply);
@@ -211,7 +217,7 @@ ViewPropertiesDialog::~ViewPropertiesDialog()
 {
     m_isDirty = false;
     delete m_viewProps;
-    m_viewProps = nullptr;
+    m_viewProps = 0;
 
     KConfigGroup dialogConfig(KSharedConfig::openConfig(QStringLiteral("dolphinrc")), "ViewPropertiesDialog");
     KWindowConfig::saveWindowSize(windowHandle(), dialogConfig);

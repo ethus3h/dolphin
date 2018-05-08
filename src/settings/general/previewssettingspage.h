@@ -20,7 +20,7 @@
 #ifndef PREVIEWSSETTINGSPAGE_H
 #define PREVIEWSSETTINGSPAGE_H
 
-#include "settings/settingspagebase.h"
+#include <settings/settingspagebase.h>
 
 class QSpinBox;
 class QListView;
@@ -34,21 +34,21 @@ class PreviewsSettingsPage : public SettingsPageBase
     Q_OBJECT
 
 public:
-    explicit PreviewsSettingsPage(QWidget* parent);
-    ~PreviewsSettingsPage() override;
+    PreviewsSettingsPage(QWidget* parent);
+    virtual ~PreviewsSettingsPage();
 
     /**
      * Applies the general settings for the view modes
      * The settings are persisted automatically when
      * closing Dolphin.
      */
-    void applySettings() override;
+    virtual void applySettings() Q_DECL_OVERRIDE;
 
     /** Restores the settings to default values. */
-    void restoreDefaults() override;
+    virtual void restoreDefaults() Q_DECL_OVERRIDE;
 
 protected:
-    void showEvent(QShowEvent* event) override;
+    virtual void showEvent(QShowEvent* event) Q_DECL_OVERRIDE;
 
 private slots:
     void configureService(const QModelIndex& index);

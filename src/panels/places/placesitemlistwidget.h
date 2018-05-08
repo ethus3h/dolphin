@@ -20,7 +20,7 @@
 #ifndef PLACESITEMLISTWIDGET_H
 #define PLACESITEMLISTWIDGET_H
 
-#include "kitemviews/kstandarditemlistwidget.h"
+#include <kitemviews/kstandarditemlistwidget.h>
 
 /**
  * @brief Extends KStandardItemListWidget to interpret the hidden
@@ -32,11 +32,11 @@ class PlacesItemListWidget : public KStandardItemListWidget
 
 public:
     PlacesItemListWidget(KItemListWidgetInformant* informant, QGraphicsItem* parent);
-    ~PlacesItemListWidget() override;
+    virtual ~PlacesItemListWidget();
 
 protected:
-    bool isHidden() const override;
-    QPalette::ColorRole normalTextColorRole() const override;
+    virtual bool isHidden() const Q_DECL_OVERRIDE;
+    virtual QPalette::ColorRole normalTextColorRole() const Q_DECL_OVERRIDE;
 };
 
 #endif

@@ -34,18 +34,18 @@ class DOLPHIN_EXPORT KItemListSelectionToggle : public QGraphicsWidget
     Q_OBJECT
 
 public:
-    explicit KItemListSelectionToggle(QGraphicsItem* parent);
-    ~KItemListSelectionToggle() override;
+    KItemListSelectionToggle(QGraphicsItem* parent);
+    virtual ~KItemListSelectionToggle();
 
     void setChecked(bool checked);
     bool isChecked() const;
 
     void setHovered(bool hovered);
 
-    void paint(QPainter* painter, const QStyleOptionGraphicsItem* option, QWidget* widget = nullptr) override;
+    void paint(QPainter* painter, const QStyleOptionGraphicsItem* option, QWidget* widget = 0) Q_DECL_OVERRIDE;
 
 protected:
-    void resizeEvent(QGraphicsSceneResizeEvent* event) override;
+    void resizeEvent(QGraphicsSceneResizeEvent* event) Q_DECL_OVERRIDE;
 
 private:
     void updatePixmap();

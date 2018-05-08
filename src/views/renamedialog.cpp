@@ -19,30 +19,30 @@
 
 #include "renamedialog.h"
 
-#include <KGuiItem>
-#include <KIO/BatchRenameJob>
+#include <KLocalizedString>
+#include <KJobWidgets>
 #include <KIO/CopyJob>
 #include <KIO/FileUndoManager>
 #include <KJobUiDelegate>
-#include <KJobWidgets>
-#include <KLocalizedString>
 
-#include <QDialogButtonBox>
 #include <QHBoxLayout>
 #include <QLabel>
-#include <QLineEdit>
+#include <QVBoxLayout>
 #include <QMimeDatabase>
+#include <QDialogButtonBox>
 #include <QPushButton>
+#include <QLineEdit>
 #include <QSpinBox>
+#include <KGuiItem>
 
 RenameDialog::RenameDialog(QWidget *parent, const KFileItemList& items) :
     QDialog(parent),
     m_renameOneItem(false),
     m_newName(),
-    m_lineEdit(nullptr),
+    m_lineEdit(0),
     m_items(items),
     m_allExtensionsDifferent(true),
-    m_spinBox(nullptr)
+    m_spinBox(0)
 {
     const QSize minSize = minimumSize();
     setMinimumSize(QSize(320, minSize.height()));
@@ -59,7 +59,7 @@ RenameDialog::RenameDialog(QWidget *parent, const KFileItemList& items) :
     setLayout(mainLayout);
     m_okButton = buttonBox->button(QDialogButtonBox::Ok);
     m_okButton->setDefault(true);
-    m_okButton->setShortcut(Qt::CTRL + Qt::Key_Return);
+    m_okButton->setShortcut(Qt::CTRL | Qt::Key_Return);
     connect(buttonBox, &QDialogButtonBox::accepted, this, &RenameDialog::slotAccepted);
     connect(buttonBox, &QDialogButtonBox::rejected, this, &RenameDialog::reject);
     m_okButton->setDefault(true);
@@ -72,7 +72,7 @@ RenameDialog::RenameDialog(QWidget *parent, const KFileItemList& items) :
 
     QVBoxLayout* topLayout = new QVBoxLayout(page);
 
-    QLabel* editLabel = nullptr;
+    QLabel* editLabel = 0;
     if (m_renameOneItem) {
         m_newName = items.first().name();
         editLabel = new QLabel(xi18nc("@label:textbox", "Rename the item <filename>%1</filename> to:", m_newName),
@@ -148,39 +148,38 @@ RenameDialog::~RenameDialog()
 {
 }
 
-void RenameDialog::slotAccepted()
+void RenameDialog::renameItem(const KFileItem &item, const QString& newName)
 {
+    const QUrl oldUrl = item.url();
+    QUrl newUrl = oldUrl.adjusted(QUrl::RemoveFilename);
+    newUrl.setPath(newUrl.path() + KIO::encodeFileName(newName));
+
     QWidget* widget = parentWidget();
     if (!widget) {
         widget = this;
     }
 
-    const QList<QUrl> srcList = m_items.urlList();
-    const QString newName = m_lineEdit->text();
-    KIO::FileUndoManager::CommandType cmdType;
-    KIO::Job *job = nullptr;
-    if (m_renameOneItem) {
-        Q_ASSERT(m_items.count() == 1);
-        cmdType = KIO::FileUndoManager::Rename;
-        const QUrl oldUrl = m_items.constFirst().url();
-        QUrl newUrl = oldUrl.adjusted(QUrl::RemoveFilename);
-        newUrl.setPath(newUrl.path() + KIO::encodeFileName(newName));
+    KIO::Job * job = KIO::moveAs(oldUrl, newUrl, KIO::HideProgressInfo);
+    KJobWidgets::setWindow(job, widget);
+    KIO::FileUndoManager::self()->recordJob(KIO::FileUndoManager::Rename, {oldUrl}, newUrl, job);
+
+    if (!job->error()) {
         m_renamedItems << newUrl;
-        job = KIO::moveAs(oldUrl, newUrl, KIO::HideProgressInfo);
-    } else {
-        cmdType = KIO::FileUndoManager::BatchRename;
-        job = KIO::batchRename(srcList, newName, m_spinBox->value(), QLatin1Char('#'));
-        connect(qobject_cast<KIO::BatchRenameJob*>(job), &KIO::BatchRenameJob::fileRenamed, this, &RenameDialog::slotFileRenamed);
     }
 
-    KJobWidgets::setWindow(job, widget);
-    const QUrl parentUrl = srcList.first().adjusted(QUrl::RemoveFilename | QUrl::StripTrailingSlash);
-    KIO::FileUndoManager::self()->recordJob(cmdType, srcList, parentUrl, job);
-
-    connect(job, &KJob::result, this, &RenameDialog::slotResult);
-
     job->uiDelegate()->setAutoErrorHandlingEnabled(true);
+}
 
+void RenameDialog::slotAccepted()
+{
+    m_newName = m_lineEdit->text();
+
+    if (m_renameOneItem) {
+        Q_ASSERT(m_items.count() == 1);
+        renameItem(m_items.first(), m_newName);
+    } else {
+        renameItems();
+    }
     accept();
 }
 
@@ -202,22 +201,55 @@ void RenameDialog::slotTextChanged(const QString& newName)
     m_okButton->setEnabled(enable);
 }
 
-void RenameDialog::slotFileRenamed(const QUrl &oldUrl, const QUrl &newUrl)
-{
-    Q_UNUSED(oldUrl)
-    m_renamedItems << newUrl;
-}
-
-void RenameDialog::slotResult(KJob *job)
-{
-    if (!job->error()) {
-        emit renamingFinished(m_renamedItems);
-    }
-}
-
 void RenameDialog::showEvent(QShowEvent* event)
 {
     m_lineEdit->setFocus();
 
     QDialog::showEvent(event);
 }
+
+void RenameDialog::renameItems()
+{
+    // Iterate through all items and rename them...
+    int index = m_spinBox->value();
+    foreach (const KFileItem& item, m_items) {
+        QString newName = indexedName(m_newName, index, QLatin1Char('#'));
+        ++index;
+
+        const QUrl oldUrl = item.url();
+        QMimeDatabase db;
+        const QString extension = db.suffixForFileName(oldUrl.path().toLower());
+        if (!extension.isEmpty()) {
+            newName.append(QLatin1Char('.'));
+            newName.append(extension);
+        }
+
+        if (oldUrl.fileName() != newName) {
+            renameItem(item, newName);
+        }
+    }
+
+    if (!m_items.empty()) {
+        emit renamingFinished(m_renamedItems);
+    }
+}
+
+QString RenameDialog::indexedName(const QString& name, int index, const QChar& indexPlaceHolder)
+{
+    QString newName = name;
+
+    QString indexString = QString::number(index);
+
+    // Insert leading zeros if necessary
+    const int minIndexLength = name.count(indexPlaceHolder);
+    while (indexString.length() < minIndexLength) {
+        indexString.prepend(QLatin1Char('0'));
+    }
+
+    // Replace the index placeholders by the indexString
+    const int placeHolderStart = newName.indexOf(indexPlaceHolder);
+    newName.replace(placeHolderStart, minIndexLength, indexString);
+
+    return newName;
+}
+

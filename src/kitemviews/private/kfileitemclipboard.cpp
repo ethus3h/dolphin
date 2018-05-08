@@ -19,11 +19,10 @@
 
 #include "kfileitemclipboard.h"
 
-#include <KUrlMimeData>
-
 #include <QApplication>
 #include <QClipboard>
 #include <QMimeData>
+#include <KUrlMimeData>
 
 class KFileItemClipboardSingleton
 {
@@ -75,7 +74,7 @@ void KFileItemClipboard::updateCutItems()
 }
 
 KFileItemClipboard::KFileItemClipboard() :
-    QObject(nullptr),
+    QObject(0),
     m_cutItems()
 {
     updateCutItems();

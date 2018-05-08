@@ -21,15 +21,14 @@
 #define KFILEITEMMODEL_H
 
 #include "dolphin_export.h"
-#include "kitemviews/kitemmodelbase.h"
-#include "kitemviews/private/kfileitemmodelfilter.h"
-
 #include <KFileItem>
+#include <QUrl>
+#include <kitemviews/kitemmodelbase.h>
+#include <kitemviews/private/kfileitemmodelfilter.h>
 
 #include <QCollator>
 #include <QHash>
 #include <QSet>
-#include <QUrl>
 
 #include <functional>
 
@@ -51,8 +50,8 @@ class DOLPHIN_EXPORT KFileItemModel : public KItemModelBase
     Q_OBJECT
 
 public:
-    explicit KFileItemModel(QObject* parent = nullptr);
-    ~KFileItemModel() override;
+    explicit KFileItemModel(QObject* parent = 0);
+    virtual ~KFileItemModel();
 
     /**
      * Loads the directory specified by \a url. The signals
@@ -74,7 +73,7 @@ public:
      *         the root-parent of all items.
      * @see rootItem()
      */
-    QUrl directory() const override;
+    QUrl directory() const;
 
     /**
      * Cancels the loading of a directory which has been started by either
@@ -82,9 +81,9 @@ public:
      */
     void cancelDirectoryLoading();
 
-    int count() const override;
-    QHash<QByteArray, QVariant> data(int index) const override;
-    bool setData(int index, const QHash<QByteArray, QVariant>& values) override;
+    virtual int count() const Q_DECL_OVERRIDE;
+    virtual QHash<QByteArray, QVariant> data(int index) const Q_DECL_OVERRIDE;
+    virtual bool setData(int index, const QHash<QByteArray, QVariant>& values) Q_DECL_OVERRIDE;
 
     /**
      * Sets a separate sorting with directories first (true) or a mixed
@@ -103,15 +102,15 @@ public:
     void setShowDirectoriesOnly(bool enabled);
     bool showDirectoriesOnly() const;
 
-    QMimeData* createMimeData(const KItemSet& indexes) const override;
+    virtual QMimeData* createMimeData(const KItemSet& indexes) const Q_DECL_OVERRIDE;
 
-    int indexForKeyboardSearch(const QString& text, int startFromIndex = 0) const override;
+    virtual int indexForKeyboardSearch(const QString& text, int startFromIndex = 0) const Q_DECL_OVERRIDE;
 
-    bool supportsDropping(int index) const override;
+    virtual bool supportsDropping(int index) const Q_DECL_OVERRIDE;
 
-    QString roleDescription(const QByteArray& role) const override;
+    virtual QString roleDescription(const QByteArray& role) const Q_DECL_OVERRIDE;
 
-    QList<QPair<int, QVariant> > groups() const override;
+    virtual QList<QPair<int, QVariant> > groups() const Q_DECL_OVERRIDE;
 
     /**
      * @return The file-item for the index \a index. If the index is in a valid
@@ -157,10 +156,10 @@ public:
     void setRoles(const QSet<QByteArray>& roles);
     QSet<QByteArray> roles() const;
 
-    bool setExpanded(int index, bool expanded) override;
-    bool isExpanded(int index) const override;
-    bool isExpandable(int index) const override;
-    int expandedParentsCount(int index) const override;
+    virtual bool setExpanded(int index, bool expanded) Q_DECL_OVERRIDE;
+    virtual bool isExpanded(int index) const Q_DECL_OVERRIDE;
+    virtual bool isExpandable(int index) const Q_DECL_OVERRIDE;
+    virtual int expandedParentsCount(int index) const Q_DECL_OVERRIDE;
 
     QSet<QUrl> expandedDirectories() const;
 
@@ -259,9 +258,9 @@ signals:
     void urlIsFileError(const QUrl& url);
 
 protected:
-    void onGroupedSortingChanged(bool current) override;
-    void onSortRoleChanged(const QByteArray& current, const QByteArray& previous) override;
-    void onSortOrderChanged(Qt::SortOrder current, Qt::SortOrder previous) override;
+    virtual void onGroupedSortingChanged(bool current) Q_DECL_OVERRIDE;
+    virtual void onSortRoleChanged(const QByteArray& current, const QByteArray& previous) Q_DECL_OVERRIDE;
+    virtual void onSortOrderChanged(Qt::SortOrder current, Qt::SortOrder previous) Q_DECL_OVERRIDE;
 
 private slots:
     /**
@@ -286,9 +285,9 @@ private:
         NoRole, NameRole, SizeRole, ModificationTimeRole, CreationTimeRole, AccessTimeRole, PermissionsRole, OwnerRole,
         GroupRole, TypeRole, DestinationRole, PathRole, DeletionTimeRole,
         // User visible roles available with Baloo:
-        CommentRole, TagsRole, RatingRole, WidthRole, HeightRole, ImageDateTimeRole, OrientationRole,
-        WordCountRole, TitleRole, LineCountRole, ArtistRole, GenreRole, AlbumRole, DurationRole, TrackRole, ReleaseYearRole,
-        BitrateRole, OriginUrlRole,
+        CommentRole, TagsRole, RatingRole, ImageSizeRole, OrientationRole,
+        WordCountRole, TitleRole, LineCountRole, ArtistRole, AlbumRole, DurationRole, TrackRole,
+        OriginUrlRole,
         // Non-visible roles:
         IsDirRole, IsLinkRole, IsHiddenRole, IsExpandedRole, IsExpandableRole, ExpandedParentsCountRole,
         // Mandatory last entry:

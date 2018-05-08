@@ -21,22 +21,31 @@
 
 #include "dolphin_generalsettings.h"
 #include "dolphin_versioncontrolsettings.h"
-#include "settings/serviceitemdelegate.h"
-#include "settings/servicemodel.h"
 
+#include <KConfig>
+#include <KConfigGroup>
 #include <KDesktopFile>
+#include <kdesktopfileactions.h>
+#include <QIcon>
 #include <KLocalizedString>
 #include <KMessageBox>
 #include <KNS3/Button>
 #include <KPluginMetaData>
 #include <KService>
 #include <KServiceTypeTrader>
-#include <kdesktopfileactions.h>
+#include <QStandardPaths>
 
+#include <settings/serviceitemdelegate.h>
+#include <settings/servicemodel.h>
+
+#include <QCheckBox>
 #include <QGridLayout>
+#include <QGroupBox>
 #include <QLabel>
 #include <QListWidget>
+#include <QPushButton>
 #include <QSortFilterProxyModel>
+#include <QShowEvent>
 
 namespace
 {
@@ -49,9 +58,9 @@ namespace
 ServicesSettingsPage::ServicesSettingsPage(QWidget* parent) :
     SettingsPageBase(parent),
     m_initialized(false),
-    m_serviceModel(nullptr),
-    m_sortModel(nullptr),
-    m_listView(nullptr),
+    m_serviceModel(0),
+    m_sortModel(0),
+    m_listView(0),
     m_enabledVcsPlugins()
 {
     QVBoxLayout* topLayout = new QVBoxLayout(this);

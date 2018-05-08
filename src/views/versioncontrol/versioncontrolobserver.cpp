@@ -20,14 +20,16 @@
 #include "versioncontrolobserver.h"
 
 #include "dolphin_versioncontrolsettings.h"
-#include "dolphindebug.h"
-#include "kitemviews/kfileitemmodel.h"
-#include "updateitemstatesthread.h"
 
 #include <KLocalizedString>
 #include <KService>
+#include "dolphindebug.h"
 #include <KServiceTypeTrader>
+#include <kitemviews/kfileitemmodel.h>
 
+#include "updateitemstatesthread.h"
+
+#include <QFile>
 #include <QTimer>
 
 VersionControlObserver::VersionControlObserver(QObject* parent) :
@@ -35,10 +37,10 @@ VersionControlObserver::VersionControlObserver(QObject* parent) :
     m_pendingItemStatesUpdate(false),
     m_versionedDirectory(false),
     m_silentUpdate(false),
-    m_model(nullptr),
-    m_dirVerificationTimer(nullptr),
-    m_plugin(nullptr),
-    m_updateItemStatesThread(nullptr)
+    m_model(0),
+    m_dirVerificationTimer(0),
+    m_plugin(0),
+    m_updateItemStatesThread(0)
 {
     // The verification timer specifies the timeout until the shown directory
     // is checked whether it is versioned. Per default it is assumed that users
@@ -56,7 +58,7 @@ VersionControlObserver::~VersionControlObserver()
 {
     if (m_plugin) {
         m_plugin->disconnect(this);
-        m_plugin = nullptr;
+        m_plugin = 0;
     }
 }
 
@@ -161,7 +163,7 @@ void VersionControlObserver::verifyDirectory()
 void VersionControlObserver::slotThreadFinished()
 {
     UpdateItemStatesThread* thread = m_updateItemStatesThread;
-    m_updateItemStatesThread = nullptr; // The thread deletes itself automatically (see updateItemStates())
+    m_updateItemStatesThread = 0; // The thread deletes itself automatically (see updateItemStates())
 
     if (!m_plugin || !thread) {
         return;
@@ -264,7 +266,7 @@ KVersionControlPlugin* VersionControlObserver::searchPlugin(const QUrl& director
     if (!pluginsAvailable) {
         // A searching for plugins has already been done, but no
         // plugins are installed
-        return nullptr;
+        return 0;
     }
 
     if (plugins.isEmpty()) {
@@ -283,13 +285,13 @@ KVersionControlPlugin* VersionControlObserver::searchPlugin(const QUrl& director
         }
         if (plugins.isEmpty()) {
             pluginsAvailable = false;
-            return nullptr;
+            return 0;
         }
     }
 
     // We use the number of upUrl() calls to find the best matching plugin
     // for the given directory. The smaller value, the better it is (0 is best).
-    KVersionControlPlugin* bestPlugin = nullptr;
+    KVersionControlPlugin* bestPlugin = 0;
     int bestScore = INT_MAX;
 
     // Verify whether the current directory contains revision information

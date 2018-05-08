@@ -27,20 +27,25 @@
 #include "kitemlistcontroller.h"
 #include "kitemlistheader.h"
 #include "kitemlistselectionmanager.h"
-#include "kitemlistviewaccessible.h"
-#include "kstandarditemlistwidget.h"
+#include "kitemlistwidget.h"
 
 #include "private/kitemlistheaderwidget.h"
 #include "private/kitemlistrubberband.h"
 #include "private/kitemlistsizehintresolver.h"
 #include "private/kitemlistviewlayouter.h"
+#include "private/kitemlistviewanimation.h"
 
-#include <QElapsedTimer>
 #include <QGraphicsSceneMouseEvent>
 #include <QGraphicsView>
+#include <QPainter>
+#include <QStyle>
 #include <QStyleOptionRubberBand>
 #include <QTimer>
+#include <QElapsedTimer>
 
+#include <algorithm>
+
+#include "kitemlistviewaccessible.h"
 
 namespace {
     // Time in ms until reaching the autoscroll margin triggers
@@ -62,7 +67,7 @@ QAccessibleInterface* accessibleInterfaceFactory(const QString& key, QObject* ob
         return new KItemListViewAccessible(view);
     }
 
-    return nullptr;
+    return 0;
 }
 #endif
 
@@ -75,30 +80,30 @@ KItemListView::KItemListView(QGraphicsWidget* parent) :
     m_activeTransactions(0),
     m_endTransactionAnimationHint(Animation),
     m_itemSize(),
-    m_controller(nullptr),
-    m_model(nullptr),
+    m_controller(0),
+    m_model(0),
     m_visibleRoles(),
-    m_widgetCreator(nullptr),
-    m_groupHeaderCreator(nullptr),
+    m_widgetCreator(0),
+    m_groupHeaderCreator(0),
     m_styleOption(),
     m_visibleItems(),
     m_visibleGroups(),
     m_visibleCells(),
-    m_sizeHintResolver(nullptr),
-    m_layouter(nullptr),
-    m_animation(nullptr),
-    m_layoutTimer(nullptr),
+    m_sizeHintResolver(0),
+    m_layouter(0),
+    m_animation(0),
+    m_layoutTimer(0),
     m_oldScrollOffset(0),
     m_oldMaximumScrollOffset(0),
     m_oldItemOffset(0),
     m_oldMaximumItemOffset(0),
     m_skipAutoScrollForRubberBand(false),
-    m_rubberBand(nullptr),
+    m_rubberBand(0),
     m_mousePos(),
     m_autoScrollIncrement(0),
-    m_autoScrollTimer(nullptr),
-    m_header(nullptr),
-    m_headerWidget(nullptr),
+    m_autoScrollTimer(0),
+    m_header(0),
+    m_headerWidget(0),
     m_dropIndicator()
 {
     setAcceptHoverEvents(true);
@@ -136,13 +141,13 @@ KItemListView::~KItemListView()
     // widgetCreator(). So it is mandatory to delete the group headers
     // first.
     delete m_groupHeaderCreator;
-    m_groupHeaderCreator = nullptr;
+    m_groupHeaderCreator = 0;
 
     delete m_widgetCreator;
-    m_widgetCreator = nullptr;
+    m_widgetCreator = 0;
 
     delete m_sizeHintResolver;
-    m_sizeHintResolver = nullptr;
+    m_sizeHintResolver = 0;
 }
 
 void KItemListView::setScrollOffset(qreal offset)
@@ -265,13 +270,13 @@ void KItemListView::setAutoScroll(bool enabled)
         m_autoScrollTimer->start(InitialAutoScrollDelay);
     } else if (!enabled && m_autoScrollTimer) {
         delete m_autoScrollTimer;
-        m_autoScrollTimer = nullptr;
+        m_autoScrollTimer = 0;
     }
 }
 
 bool KItemListView::autoScroll() const
 {
-    return m_autoScrollTimer != nullptr;
+    return m_autoScrollTimer != 0;
 }
 
 void KItemListView::setEnabledSelectionToggles(bool enabled)
@@ -304,7 +309,9 @@ KItemModelBase* KItemListView::model() const
 
 void KItemListView::setWidgetCreator(KItemListWidgetCreatorBase* widgetCreator)
 {
-    delete m_widgetCreator;
+    if (m_widgetCreator) {
+        delete m_widgetCreator;
+    }
     m_widgetCreator = widgetCreator;
 }
 
@@ -318,7 +325,9 @@ KItemListWidgetCreatorBase* KItemListView::widgetCreator() const
 
 void KItemListView::setGroupHeaderCreator(KItemListGroupHeaderCreatorBase* groupHeaderCreator)
 {
-    delete m_groupHeaderCreator;
+    if (m_groupHeaderCreator) {
+        delete m_groupHeaderCreator;
+    }
     m_groupHeaderCreator = groupHeaderCreator;
 }
 
@@ -337,7 +346,7 @@ QSizeF KItemListView::itemSize() const
 
 QSizeF KItemListView::itemSizeHint() const
 {
-    return m_sizeHintResolver->minSizeHint();
+    return m_sizeHintResolver->maxSizeHint();
 }
 
 const KItemListStyleOption& KItemListView::styleOption() const
@@ -439,19 +448,6 @@ bool KItemListView::isAboveExpansionToggle(int index, const QPointF& pos) const
         if (!expansionToggleRect.isEmpty()) {
             const QPointF mappedPos = widget->mapFromItem(this, pos);
             return expansionToggleRect.contains(mappedPos);
-        }
-    }
-    return false;
-}
-
-bool KItemListView::isAboveText(int index, const QPointF &pos) const
-{
-    const KItemListWidget* widget = m_visibleItems.value(index);
-    if (widget) {
-        const QRectF &textRect = widget->textRect();
-        if (!textRect.isEmpty()) {
-            const QPointF mappedPos = widget->mapFromItem(this, pos);
-            return textRect.contains(mappedPos);
         }
     }
     return false;
@@ -624,7 +620,7 @@ QPixmap KItemListView::createDragPixmap(const KItemSet& indexes) const
         KItemListWidget* item = m_visibleItems.value(indexes.first());
         QGraphicsView* graphicsView = scene()->views()[0];
         if (item && graphicsView) {
-            pixmap = item->createDragPixmap(nullptr, graphicsView);
+            pixmap = item->createDragPixmap(0, graphicsView);
         }
     } else {
         // TODO: Not implemented yet. Probably extend the interface
@@ -637,7 +633,7 @@ QPixmap KItemListView::createDragPixmap(const KItemSet& indexes) const
 
 void KItemListView::editRole(int index, const QByteArray& role)
 {
-    KStandardItemListWidget* widget = qobject_cast<KStandardItemListWidget *>(m_visibleItems.value(index));
+    KItemListWidget* widget = m_visibleItems.value(index);
     if (!widget || m_editingRole) {
         return;
     }
@@ -649,9 +645,6 @@ void KItemListView::editRole(int index, const QByteArray& role)
             this, &KItemListView::slotRoleEditingCanceled);
     connect(widget, &KItemListWidget::roleEditingFinished,
             this, &KItemListView::slotRoleEditingFinished);
-
-    connect(this, &KItemListView::scrollOffsetChanged,
-            widget, &KStandardItemListWidget::finishRoleEditing);
 }
 
 void KItemListView::paint(QPainter* painter, const QStyleOptionGraphicsItem* option, QWidget* widget)
@@ -752,10 +745,6 @@ void KItemListView::setItemSize(const QSizeF& size)
 
 void KItemListView::setStyleOption(const KItemListStyleOption& option)
 {
-    if (m_styleOption == option) {
-        return;
-    }
-
     const KItemListStyleOption previousOption = m_styleOption;
     m_styleOption = option;
 
@@ -833,12 +822,12 @@ Qt::Orientation KItemListView::scrollOrientation() const
 
 KItemListWidgetCreatorBase* KItemListView::defaultWidgetCreator() const
 {
-    return nullptr;
+    return 0;
 }
 
 KItemListGroupHeaderCreatorBase* KItemListView::defaultGroupHeaderCreator() const
 {
-    return nullptr;
+    return 0;
 }
 
 void KItemListView::initializeItemListWidget(KItemListWidget* item)
@@ -2089,7 +2078,7 @@ void KItemListView::recycleGroupHeaderForWidget(KItemListWidget* widget)
 {
     KItemListGroupHeader* header = m_visibleGroups.value(widget);
     if (header) {
-        header->setParentItem(nullptr);
+        header->setParentItem(0);
         groupHeaderCreator()->recycle(header);
         m_visibleGroups.remove(widget);
         disconnect(widget, &KItemListWidget::geometryChanged, this, &KItemListView::slotGeometryOfGroupHeaderParentChanged);
@@ -2550,7 +2539,7 @@ void KItemListView::updateSiblingsInformation(int firstIndex, int lastIndex)
             const int parents = m_model->expandedParentsCount(lastIndex + 1);
             for (int i = lastIndex; i >= firstIndex; --i) {
                 if (m_model->expandedParentsCount(i) != parents) {
-                    widget = nullptr;
+                    widget = 0;
                     break;
                 }
             }
@@ -2641,14 +2630,13 @@ bool KItemListView::hasSiblingSuccessor(int index) const
 
 void KItemListView::disconnectRoleEditingSignals(int index)
 {
-    KStandardItemListWidget* widget = qobject_cast<KStandardItemListWidget *>(m_visibleItems.value(index));
+    KItemListWidget* widget = m_visibleItems.value(index);
     if (!widget) {
         return;
     }
 
     disconnect(widget, &KItemListWidget::roleEditingCanceled, this, nullptr);
     disconnect(widget, &KItemListWidget::roleEditingFinished, this, nullptr);
-    disconnect(this, &KItemListView::scrollOffsetChanged, widget, nullptr);
 }
 
 int KItemListView::calculateAutoScrollingIncrement(int pos, int range, int oldInc)
@@ -2713,7 +2701,7 @@ void KItemListCreatorBase::pushRecycleableWidget(QGraphicsWidget* widget)
 QGraphicsWidget* KItemListCreatorBase::popRecycleableWidget()
 {
     if (m_recycleableWidgets.isEmpty()) {
-        return nullptr;
+        return 0;
     }
 
     QGraphicsWidget* widget = m_recycleableWidgets.takeLast();
@@ -2727,7 +2715,7 @@ KItemListWidgetCreatorBase::~KItemListWidgetCreatorBase()
 
 void KItemListWidgetCreatorBase::recycle(KItemListWidget* widget)
 {
-    widget->setParentItem(nullptr);
+    widget->setParentItem(0);
     widget->setOpacity(1.0);
     pushRecycleableWidget(widget);
 }

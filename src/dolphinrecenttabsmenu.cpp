@@ -19,10 +19,9 @@
 
 #include "dolphinrecenttabsmenu.h"
 
-#include <KAcceleratorManager>
 #include <KLocalizedString>
+#include <KAcceleratorManager>
 #include <kio/global.h>
-
 #include <QMenu>
 
 DolphinRecentTabsMenu::DolphinRecentTabsMenu(QObject* parent) :
@@ -87,7 +86,7 @@ void DolphinRecentTabsMenu::handleAction(QAction* action)
         const QByteArray state = action->data().toByteArray();
         removeAction(action);
         delete action;
-        action = nullptr;
+        action = 0;
         emit restoreClosedTab(state);
         emit closedTabsCountChanged(menu()->actions().size() - 2);
     }

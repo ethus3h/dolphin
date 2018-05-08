@@ -18,16 +18,16 @@
  *   Free Software Foundation, Inc.,                                       *
  *   51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA            *
  ***************************************************************************/
-
 #include "filterbar.h"
 
-#include <KLocalizedString>
-
-#include <QHBoxLayout>
 #include <QKeyEvent>
 #include <QLabel>
-#include <QLineEdit>
 #include <QToolButton>
+#include <QHBoxLayout>
+
+#include <QIcon>
+#include <KLocalizedString>
+#include <QLineEdit>
 
 FilterBar::FilterBar(QWidget* parent) :
     QWidget(parent)

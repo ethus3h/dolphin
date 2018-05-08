@@ -20,6 +20,7 @@
 #include "kitemviews/kitemrange.h"
 
 #include <QTest>
+#include <QVector>
 
 Q_DECLARE_METATYPE(QVector<int>)
 Q_DECLARE_METATYPE(KItemRangeList)

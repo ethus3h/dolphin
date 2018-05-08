@@ -19,9 +19,11 @@
 
 #include "dolphinfileitemlistwidget.h"
 
-#include "dolphindebug.h"
-
+#include <QIcon>
 #include <KIconLoader>
+#include <QColor>
+
+#include "dolphindebug.h"
 
 DolphinFileItemListWidget::DolphinFileItemListWidget(KItemListWidgetInformant* informant,
                                                      QGraphicsItem* parent) :
