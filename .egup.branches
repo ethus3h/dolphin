@@ -280,6 +280,7 @@
   remotes/origin/upstream-branches/upstream/stashAction                                                                3e32ee5e8 need to fix async conditions
   remotes/origin/wreathe-2016dec14                                                                                     5eefb96b6 Update columnviewsettingspage.cpp
   remotes/origin/wreathe/implement-miller-columns-on-current                                                           3051c1991 Update Git repository using egup-single
+  remotes/origin/wreathe/kf5-port                                                                                      aa8b72779 Update Git repository using egup-single
   remotes/upstream/Applications/14.12                                                                                  85957c72f SVN_SILENT made messages (after extraction)
   remotes/upstream/Applications/15.08                                                                                  3d54caadb SVN_SILENT made messages (.desktop file)
   remotes/upstream/Applications/15.12                                                                                  cacba0c4c SVN_SILENT made messages (.desktop file)
