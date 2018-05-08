@@ -82,7 +82,7 @@ set(dolphinprivate_LIB_SRCS
     views/zoomlevelinfo.cpp
 )
 
-kde4_add_kcfg_files(dolphinprivate_LIB_SRCS
+kconfig_add_kcfg_files(dolphinprivate_LIB_SRCS
     settings/dolphin_columnmodesettings.kcfgc
     settings/dolphin_directoryviewpropertysettings.kcfgc
     settings/dolphin_detailsmodesettings.kcfgc
@@ -91,7 +91,7 @@ kde4_add_kcfg_files(dolphinprivate_LIB_SRCS
     settings/dolphin_versioncontrolsettings.kcfgc
 )
 
-kde4_add_library(dolphinprivate SHARED ${dolphinprivate_LIB_SRCS})
+add_library(dolphinprivate SHARED ${dolphinprivate_LIB_SRCS})
 
 target_link_libraries(dolphinprivate ${KDE4_KFILE_LIBS} konq ${KDE4_KNEWSTUFF3_LIBS})
 if (Nepomuk_FOUND)
@@ -109,7 +109,7 @@ set(dolphinpart_SRCS
    dolphinpart.cpp
 )
 
-kde4_add_plugin(dolphinpart ${dolphinpart_SRCS})
+add_library(dolphinpart ${dolphinpart_SRCS})
 
 target_link_libraries(dolphinpart dolphinprivate konq ${KDE4_KPARTS_LIBS} ${KDE4_KFILE_LIBS})
 
