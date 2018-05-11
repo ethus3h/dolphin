@@ -289,7 +289,7 @@ c44ff72ce2817d1b159bf706278eb13670492b17 refs/remotes/upstream/Applications/16.0
 df0741ce370dc933ac8adcf34c79dcae412d453f refs/remotes/upstream/Applications/17.04
 507594879824b6d57d27f80bb480598aca462741 refs/remotes/upstream/Applications/17.08
 9342b73b2746e9c10695d6dea03921b13984c13a refs/remotes/upstream/Applications/17.12
-8d9e0c2426c285223955ffa3bb7968d1055006fc refs/remotes/upstream/Applications/18.04
+ac9e3f9295516b9c7439a09c70bb9f2fb34e616d refs/remotes/upstream/Applications/18.04
 fa907ecba97c251320481413091bbe752118b6b4 refs/remotes/upstream/KDE/4.0
 7731abf980f6d0785e09bd0d929539181c8eede9 refs/remotes/upstream/KDE/4.1
 4c99efe4d2d0b4558a563732d13bccf26f9e922f refs/remotes/upstream/KDE/4.10
@@ -314,7 +314,7 @@ a1649952b842afa83d819d9c43832f8bdb912301 refs/remotes/upstream/KDE/4.3
 7a7cfa6addc3c6089a0d48e17ec623d248b97df2 refs/remotes/upstream/isemenov/qml
 91607d4c4d60d7d51827e770e5504aa4ff552e48 refs/remotes/upstream/kdepim/enterprise-4.0.83
 d5967230c0e8c5d6d22982b341c9123fae211e9f refs/remotes/upstream/kdepim/enterprise-4.1
-e133c4557ecc37ed3f7e1b9418306aa8cc516865 refs/remotes/upstream/master
+1c9d91b217b2fe3eb41fc4f05ca800705445c8b3 refs/remotes/upstream/master
 ce69bb06e6e0e3e588a797a5e5a057e9bf529eec refs/remotes/upstream/origin
 6bc77951e49ed070bc70ceba5d510acc6c71c02d refs/remotes/upstream/plasma/isemenov/fvport
 7a7cfa6addc3c6089a0d48e17ec623d248b97df2 refs/remotes/upstream/plasma/isemenov/qml
@@ -436,6 +436,8 @@ f728d728649681bef78d53ea3b96d8dc2461a19a refs/tags/v18.03.80^{}
 30349ef1bdcae0ed80f47c168d46c15020b927d3 refs/tags/v18.03.90^{}
 1c14981e08249b09e813bbb415e69be57f71f9cf refs/tags/v18.04.0
 ed5102a5fd7ad3fa569f7e0af66171c0b19c2a3b refs/tags/v18.04.0^{}
+73a28dfb1eabd1af4a1fc069f633084b640a0e09 refs/tags/v18.04.1
+8d9e0c2426c285223955ffa3bb7968d1055006fc refs/tags/v18.04.1^{}
 e9fbc303668a03956670820fe873637bd2c8f4d5 refs/tags/v3.80.2
 fa5b6ad801524135be35ad20f52e07db1f22f1a6 refs/tags/v3.80.2^{}
 cad024a827a4d84f7c007d6113fe82ea4b22c83f refs/tags/v3.80.3
