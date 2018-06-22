@@ -32,6 +32,8 @@
 #include <QDate>
 #include <QFile>
 #include <QFileInfo>
+#include <QRegExp>
+#include <QtDebug>
 
 #include "settings/dolphinsettings.h"
 
@@ -73,6 +75,19 @@ ViewProperties::ViewProperties(const KUrl& url) :
     }
 
     const QString file = m_filePath + QDir::separator() + QLatin1String(".directory");
+    const QString hiddenfile = m_filePath + QDir::separator() + QLatin1String(".hidden");
+    QFile thefile(hiddenfile);
+    QStringList m_hiddenList = QStringList();
+    if (thefile.open(QIODevice::ReadOnly | QIODevice::Text)) {
+        while (!thefile.atEnd()) {
+            QString string = thefile.readLine();
+            QRegExp re("^(.+)\n$");
+            if (re.indexIn(string) >= 0) {
+                m_hiddenList.append(re.cap(1));
+            }
+        }
+        thefile.close();
+    }
     m_node = new ViewPropertySettings(KSharedConfig::openConfig(file));
 
     // If the .directory file does not exist or the timestamp is too old,
@@ -94,6 +109,12 @@ ViewProperties::ViewProperties(const KUrl& url) :
 
             settings->setGlobalViewProps(false);
             m_changedProps = false;
+        }
+    } else {
+        QStringList directoryList = QStringList(m_node->hideSpecificFiles());
+        for (QStringList::Iterator it = directoryList.begin();
+                                  it != directoryList.end(); ++it) {
+              m_hiddenList.append(*it);
         }
     }
 }
@@ -158,6 +179,11 @@ bool ViewProperties::categorizedSorting() const
 bool ViewProperties::showHiddenFiles() const
 {
     return m_node->showHiddenFiles();
+}
+
+QStringList ViewProperties::hiddenList() const
+{
+    return QStringList(m_hiddenList);
 }
 
 void ViewProperties::setSorting(DolphinView::Sorting sorting)

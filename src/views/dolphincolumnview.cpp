@@ -53,6 +53,7 @@
 #include <QPainter>
 #include <QPoint>
 #include <QScrollBar>
+#include <qstringlist.h>
 
 DolphinColumnView::DolphinColumnView(QWidget* parent,
                                      DolphinColumnViewContainer* container,
@@ -103,7 +104,7 @@ DolphinColumnView::DolphinColumnView(QWidget* parent,
         m_font.setPointSizeF(settings->fontSize());
     }
 
-    setMinimumWidth(settings->fontSize() * 10);
+    setMinimumWidth(749);
     setMaximumWidth(settings->columnWidth());
 
     connect(this, SIGNAL(viewportEntered()),
@@ -121,6 +122,7 @@ DolphinColumnView::DolphinColumnView(QWidget* parent,
     m_dirLister->setDelayedMimeTypes(true);
     const bool showHiddenFiles = m_container->m_dolphinViewController->view()->showHiddenFiles();
     m_dirLister->setShowingDotFiles(showHiddenFiles);
+    m_dirLister->setHiddenList(QStringList(m_container->m_dolphinViewController->view()->hiddenList()));
     connect(m_dirLister, SIGNAL(completed()), this, SLOT(slotDirListerCompleted()));
 
     m_dolphinModel = new DolphinModel(this);
@@ -536,10 +538,8 @@ void DolphinColumnView::slotDirListerCompleted()
         return;
     }
 
-    // Try to optimize the width of the column, so that no name gets clipped
-    const int requiredWidth = sizeHintForColumn(DolphinModel::Name);
-
     const ColumnModeSettings* settings = DolphinSettings::instance().columnModeSettings();
+    const int requiredWidth = settings->columnWidth();
     if (requiredWidth > settings->columnWidth()) {
         int frameAroundContents = 0;
         if (style()->styleHint(QStyle::SH_ScrollView_FrameOnlyAroundContents)) {

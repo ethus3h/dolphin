@@ -54,8 +54,8 @@ NavigationSettingsPage::NavigationSettingsPage(QWidget* parent) :
                                            "Double-click to open files and folders"), mouseBox);
 
     QVBoxLayout* mouseBoxLayout = new QVBoxLayout(mouseBox);
-    mouseBoxLayout->addWidget(m_singleClick);
     mouseBoxLayout->addWidget(m_doubleClick);
+    mouseBoxLayout->addWidget(m_singleClick);
 
     m_openArchivesAsFolder = new QCheckBox(i18nc("@option:check", "Open archives as folder"), vBox);
 

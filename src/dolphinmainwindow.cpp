@@ -256,7 +256,7 @@ DolphinMainWindow::DolphinMainWindow() :
     if (firstRun) {
         menuBar()->setVisible(false);
         // Assure a proper default size if Dolphin runs the first time
-        resize(750, 500);
+        resize(2832, 1750);
     }
 
     const bool showMenu = !menuBar()->isHidden();
@@ -612,7 +612,7 @@ void DolphinMainWindow::closeEvent(QCloseEvent* event)
     }
 
     if ((m_viewTab.count() > 1) && generalSettings->confirmClosingMultipleTabs() && closedByUser) {
-        // Ask the user if he really wants to quit and close all tabs.
+        // Ask the user if they really want to quit and close all tabs.
         // Open a confirmation dialog with 3 buttons:
         // KDialog::Yes    -> Quit
         // KDialog::No     -> Close only the current tab
@@ -826,6 +826,18 @@ void DolphinMainWindow::paste()
 
 void DolphinMainWindow::find()
 {
+    // This runs kfind.
+    m_activeViewContainer->view()->searchSelectedItems();
+}
+
+void DolphinMainWindow::qlookAction()
+{
+    m_activeViewContainer->view()->qlookSelectedItems();
+}
+
+void DolphinMainWindow::search()
+{
+    // Opens the built-in search bar.
     m_activeViewContainer->setSearchModeEnabled(true);
 }
 
@@ -1615,14 +1627,20 @@ void DolphinMainWindow::setupActions()
     KShortcut cutShortcut = cut->shortcut();
     cutShortcut.remove(Qt::SHIFT | Qt::Key_Delete, KShortcut::KeepEmpty);
     cut->setShortcut(cutShortcut);
-    KStandardAction::copy(this, SLOT(copy()), actionCollection());
+    cut->setIconText(i18nc("@action:inmenu ✂", "✂"));
+    KAction* copy = KStandardAction::copy(this, SLOT(copy()), actionCollection());
+    copy->setIconText(i18nc("@action:inmenu 🗍", "🗍"));
     KAction* paste = KStandardAction::paste(this, SLOT(paste()), actionCollection());
     // The text of the paste-action is modified dynamically by Dolphin
     // (e. g. to "Paste One Folder"). To prevent that the size of the toolbar changes
     // due to the long text, the text "Paste" is used:
-    paste->setIconText(i18nc("@action:inmenu Edit", "Paste"));
+    paste->setIconText(i18nc("@action:inmenu 📋", "📋"));
 
     KStandardAction::find(this, SLOT(find()), actionCollection());
+
+    KAction* qlookAction = actionCollection()->addAction("qlook");
+    qlookAction->setShortcut(Qt::Key_Space);
+    connect(qlookAction, SIGNAL(triggered()), this, SLOT(qlookAction()));
 
     KAction* selectAll = actionCollection()->addAction("select_all");
     selectAll->setText(i18nc("@action:inmenu Edit", "Select All"));
@@ -1638,13 +1656,13 @@ void DolphinMainWindow::setupActions()
     // (note that most of it is set up in DolphinViewActionHandler)
 
     KAction* split = actionCollection()->addAction("split_view");
-    split->setShortcut(Qt::Key_F3);
+    split->setShortcut(Qt::CTRL | Qt::Key_S);
     updateSplitAction();
     connect(split, SIGNAL(triggered()), this, SLOT(toggleSplitView()));
 
     KAction* reload = actionCollection()->addAction("reload");
     reload->setText(i18nc("@action:inmenu View", "Reload"));
-    reload->setShortcut(Qt::Key_F5);
+    reload->setShortcut(Qt::CTRL | Qt::Key_R);
     reload->setIcon(KIcon("view-refresh"));
     connect(reload, SIGNAL(triggered()), this, SLOT(reloadView()));
 
@@ -1696,7 +1714,7 @@ void DolphinMainWindow::setupActions()
     KAction* showFilterBar = actionCollection()->addAction("show_filter_bar");
     showFilterBar->setText(i18nc("@action:inmenu Tools", "Show Filter Bar"));
     showFilterBar->setIcon(KIcon("view-filter"));
-    showFilterBar->setShortcut(Qt::CTRL | Qt::Key_I);
+    showFilterBar->setShortcut(Qt::Key_Slash);
     connect(showFilterBar, SIGNAL(triggered()), this, SLOT(showFilterBar()));
 
     KAction* compareFiles = actionCollection()->addAction("compare_files");
@@ -1850,8 +1868,6 @@ void DolphinMainWindow::setupDockWidgets()
     const GeneralSettings* generalSettings = DolphinSettings::instance().generalSettings();
     const bool firstRun = generalSettings->firstRun();
     if (firstRun) {
-        infoDock->hide();
-        foldersDock->hide();
 #ifndef Q_OS_WIN
         terminalDock->hide();
 #endif
@@ -1895,6 +1911,7 @@ void DolphinMainWindow::setupDockWidgets()
             placesPanel, SLOT(setUrl(KUrl)));
     connect(placesDock, SIGNAL(visibilityChanged(bool)),
             this, SLOT(slotPlacesPanelVisibilityChanged(bool)));
+    tabifyDockWidget(foldersDock, placesDock);
 
     // Add actions into the "Panels" menu
     KActionMenu* panelsMenu = new KActionMenu(i18nc("@action:inmenu View", "Panels"), this);

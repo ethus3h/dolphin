@@ -93,7 +93,7 @@ void DolphinViewActionHandler::createActions()
 
     KAction* rename = m_actionCollection->addAction("rename");
     rename->setText(i18nc("@action:inmenu File", "Rename..."));
-    rename->setShortcut(Qt::Key_F2);
+    rename->setShortcut(Qt::Key_Backslash);
     rename->setIcon(KIcon("edit-rename"));
     connect(rename, SIGNAL(triggered()), this, SLOT(slotRename()));
 
@@ -125,7 +125,7 @@ void DolphinViewActionHandler::createActions()
     // Well, it's the File menu in dolphinmainwindow and the Edit menu in dolphinpart... :)
     propertiesAction->setText( i18nc("@action:inmenu File", "Properties") );
     propertiesAction->setIcon(KIcon("document-properties"));
-    propertiesAction->setShortcut(Qt::ALT | Qt::Key_Return);
+    propertiesAction->setShortcut(Qt::CTRL | Qt::Key_I);
     connect(propertiesAction, SIGNAL(triggered()), SLOT(slotProperties()));
 
     // View menu

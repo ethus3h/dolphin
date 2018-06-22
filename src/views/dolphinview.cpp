@@ -45,6 +45,7 @@
 #include <konq_fileitemcapabilities.h>
 #include <konq_operations.h>
 #include <konqmimedata.h>
+#include <KRun>
 #include <KToggleAction>
 #include <KUrl>
 
@@ -54,6 +55,7 @@
 #include "dolphincolumnviewcontainer.h"
 #include "dolphinviewcontroller.h"
 #include "dolphindetailsview.h"
+#include "dolphindirlister.h"
 #include "dolphinfileitemdelegate.h"
 #include "dolphinnewfilemenuobserver.h"
 #include "dolphinsortfilterproxymodel.h"
@@ -257,6 +259,11 @@ bool DolphinView::showPreview() const
 bool DolphinView::showHiddenFiles() const
 {
     return m_viewAccessor.dirLister()->showingDotFiles();
+}
+
+QStringList DolphinView::hiddenList() const
+{
+    return m_viewAccessor.dirLister()->hiddenList();
 }
 
 bool DolphinView::categorizedSorting() const
@@ -619,6 +626,18 @@ void DolphinView::trashSelectedItems()
 {
     const KUrl::List list = simplifiedSelectedUrls();
     KonqOperations::del(this, KonqOperations::TRASH, list);
+}
+
+void DolphinView::searchSelectedItems()
+{
+    const KUrl::List list = simplifiedSelectedUrls();
+    KRun::run("kfind", list, this);
+}
+
+void DolphinView::qlookSelectedItems()
+{
+    const KUrl::List list = simplifiedSelectedUrls();
+    KRun::run("qlook", list, this);
 }
 
 void DolphinView::deleteSelectedItems()
@@ -1151,7 +1170,7 @@ void DolphinView::loadDirectory(const KUrl& url, bool reload)
         return;
     }
 
-    KDirLister* dirLister = m_viewAccessor.dirLister();
+    DolphinDirLister* dirLister = m_viewAccessor.dirLister();
     dirLister->openUrl(url, reload ? KDirLister::Reload : KDirLister::NoFlags);
 }
 
@@ -1181,6 +1200,8 @@ void DolphinView::applyViewProperties()
         m_viewAccessor.dirLister()->setShowingDotFiles(showHiddenFiles);
         emit showHiddenFilesChanged();
     }
+
+    m_viewAccessor.dirLister()->setHiddenList(props.hiddenList());
 
     m_storedCategorizedSorting = props.categorizedSorting();
     const bool categorized = m_storedCategorizedSorting && supportsCategorizedSorting();
@@ -1347,7 +1368,7 @@ QItemSelection DolphinView::childrenMatchingPattern(const QModelIndex& parent, c
 
 void DolphinView::connectViewAccessor()
 {
-    KDirLister* dirLister = m_viewAccessor.dirLister();
+    DolphinDirLister* dirLister = m_viewAccessor.dirLister();
     connect(dirLister, SIGNAL(redirection(KUrl,KUrl)), this, SLOT(slotRedirection(KUrl,KUrl)));
     connect(dirLister, SIGNAL(started(KUrl)),          this, SLOT(slotDirListerStarted(KUrl)));
     connect(dirLister, SIGNAL(completed()),            this, SLOT(slotDirListerCompleted()));
@@ -1620,9 +1641,10 @@ DolphinSortFilterProxyModel* DolphinView::ViewAccessor::proxyModel() const
     return m_proxyModel;
 }
 
-KDirLister* DolphinView::ViewAccessor::dirLister() const
+DolphinDirLister* DolphinView::ViewAccessor::dirLister() const
 {
-    return dirModel()->dirLister();
+    return static_cast<DolphinDirLister*>(dirModel()->dirLister());
+    /* may need new DolphinDirLister(dirModel()->dirLister()) */
 }
 
 #include "dolphinview.moc"

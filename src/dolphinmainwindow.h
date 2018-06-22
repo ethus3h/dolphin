@@ -123,6 +123,9 @@ public slots:
      * change.
      */
     void changeUrl(const KUrl& url);
+    
+    /** Qlook slot for running Sushi. */
+    void qlookAction();
 
     /** Stores all settings and quits Dolphin. */
     void quit();
@@ -203,8 +206,11 @@ private slots:
     /** Pastes the clipboard data to the active view. */
     void paste();
 
-    /** Replaces the URL navigator by a search box to find files. */
+    /** Runs kfind */
     void find();
+
+    /** Replaces the URL navigator by a search box to find files. */
+    void search();
 
     /**
      * Is invoked when the "Find" is active and the search location
@@ -609,4 +615,3 @@ inline int DolphinMainWindow::getId() const
 }
 
 #endif // DOLPHIN_MAINWINDOW_H
-

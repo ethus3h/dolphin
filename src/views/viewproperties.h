@@ -23,6 +23,7 @@
 
 #include <views/dolphinview.h>
 #include <KUrl>
+#include <qstringlist.h>
 #include <libdolphin_export.h>
 
 class ViewPropertySettings;
@@ -61,6 +62,8 @@ public:
 
     void setShowHiddenFiles(bool show);
     bool showHiddenFiles() const;
+
+    QStringList hiddenList() const;
 
     void setCategorizedSorting(bool categorized);
     bool categorizedSorting() const;
@@ -160,6 +163,7 @@ private:
     bool m_changedProps;
     bool m_autoSave;
     QString m_filePath;
+	QStringList m_hiddenList;
     ViewPropertySettings* m_node;
 };
 

@@ -1,43 +1,14 @@
-include(ECMAddAppIcon)
-find_package(NepomukCore)
-set_package_properties(NepomukCore PROPERTIES DESCRIPTION "Nepomuk Core libraries"
-                       URL "http://www.kde.org"
-                       TYPE OPTIONAL
-                       PURPOSE "For adding desktop-wide tagging support to dolphin"
-                      )
-
-find_package(NepomukWidgets)
-set_package_properties(NepomukWidgets PROPERTIES DESCRIPTION "Nepomuk Widgets"
-                       URL "http://www.kde.org"
-                       TYPE OPTIONAL
-                       PURPOSE "For adding desktop-wide tagging support to dolphin"
-                      )
-
-if(NepomukCore_FOUND AND NepomukWidgets_FOUND)
-    set(HAVE_NEPOMUK TRUE)
-endif()
-
+macro_optional_find_package(Nepomuk)
+macro_log_feature(Nepomuk_FOUND "Nepomuk" "Nepomuk" "http://www.kde.org" FALSE "" "For adding desktop-wide tagging support to dolphin")
+macro_bool_to_01(Nepomuk_FOUND HAVE_NEPOMUK)
 configure_file(config-nepomuk.h.cmake ${CMAKE_CURRENT_BINARY_DIR}/config-nepomuk.h )
 
-if(X11_Xrender_FOUND)
-    set(HAVE_XRENDER 1)
-else()
-    set(HAVE_XRENDER 0)
-endif()
-configure_file(config-X11.h.cmake ${CMAKE_CURRENT_BINARY_DIR}/config-X11.h )
+include_directories( ${KDE4_INCLUDE_DIR} ${QT_INCLUDES} )
 
-include_directories( ${KACTIVITIES_INCLUDE_DIRS} )
-
-if(HAVE_NEPOMUK)
-  find_package(Soprano 2.7.56)
-  set_package_properties(Soprano PROPERTIES DESCRIPTION "Qt-based RDF storage and parsing solution"
-                         URL "http://soprano.sourceforge.net"
-                         TYPE REQUIRED
-                         PURPOSE "Required for everything (storage and general data management)"
-                        )
-
-  include_directories( ${SOPRANO_INCLUDE_DIR} ${NEPOMUK_CORE_INCLUDE_DIR} ${NEPOMUK_WIDGETS_INCLUDE_DIR} )
-endif()
+if (Nepomuk_FOUND)
+  # Yes, Soprano includes is what we need here
+  include_directories( ${SOPRANO_INCLUDE_DIR} ${NEPOMUK_INCLUDE_DIR} )
+endif (Nepomuk_FOUND)
 
 add_subdirectory(tests)
 
@@ -83,7 +54,7 @@ set(dolphinprivate_LIB_SRCS
     views/zoomlevelinfo.cpp
 )
 
-kconfig_add_kcfg_files(dolphinprivate_LIB_SRCS
+kde4_add_kcfg_files(dolphinprivate_LIB_SRCS
     settings/dolphin_columnmodesettings.kcfgc
     settings/dolphin_directoryviewpropertysettings.kcfgc
     settings/dolphin_detailsmodesettings.kcfgc
@@ -92,7 +63,7 @@ kconfig_add_kcfg_files(dolphinprivate_LIB_SRCS
     settings/dolphin_versioncontrolsettings.kcfgc
 )
 
-add_library(dolphinprivate SHARED ${dolphinprivate_LIB_SRCS})
+kde4_add_library(dolphinprivate SHARED ${dolphinprivate_LIB_SRCS})
 
 target_link_libraries(dolphinprivate ${KDE4_KFILE_LIBS} konq ${KDE4_KNEWSTUFF3_LIBS})
 if (Nepomuk_FOUND)
@@ -110,7 +81,7 @@ set(dolphinpart_SRCS
    dolphinpart.cpp
 )
 
-add_library(dolphinpart ${dolphinpart_SRCS})
+kde4_add_plugin(dolphinpart ${dolphinpart_SRCS})
 
 target_link_libraries(dolphinpart dolphinprivate konq ${KDE4_KPARTS_LIBS} ${KDE4_KFILE_LIBS})
 
@@ -170,7 +141,7 @@ set(dolphin_SRCS
     views/zoomlevelinfo.cpp
 )
 
-kconfig_add_kcfg_files(dolphin_SRCS
+kde4_add_kcfg_files(dolphin_SRCS
     panels/folders/dolphin_folderspanelsettings.kcfgc
     panels/information/dolphin_informationpanelsettings.kcfgc
     search/dolphin_searchsettings.kcfgc
@@ -188,9 +159,9 @@ if(NOT WIN32)
    set(dolphin_SRCS ${dolphin_SRCS} panels/terminal/terminalpanel.cpp)
 endif(NOT WIN32)
 
-#kde4_add_app_icon(dolphin_SRCS "${KDE4_ICON_INSTALL_DIR}/oxygen/*/apps/system-file-manager.png")
+kde4_add_app_icon(dolphin_SRCS "${KDE4_ICON_INSTALL_DIR}/oxygen/*/apps/system-file-manager.png")
 
-kf5_add_kdeinit_executable(dolphin ${dolphin_SRCS})
+kde4_add_kdeinit_executable(dolphin ${dolphin_SRCS})
 
 target_link_libraries(kdeinit_dolphin
     ${KDE4_KDEPRINT_LIBS}
@@ -249,7 +220,7 @@ set(kcm_dolphingeneral_PART_SRCS
     settings/serviceitemdelegate.cpp
     settings/servicemodel.cpp)
 
-kconfig_add_kcfg_files(kcm_dolphinviewmodes_PART_SRCS
+kde4_add_kcfg_files(kcm_dolphinviewmodes_PART_SRCS
     settings/dolphin_columnmodesettings.kcfgc
     settings/dolphin_directoryviewpropertysettings.kcfgc
     settings/dolphin_detailsmodesettings.kcfgc
@@ -258,20 +229,20 @@ kconfig_add_kcfg_files(kcm_dolphinviewmodes_PART_SRCS
     settings/dolphin_versioncontrolsettings.kcfgc
 )
 
-kconfig_add_kcfg_files(kcm_dolphinnavigation_PART_SRCS
+kde4_add_kcfg_files(kcm_dolphinnavigation_PART_SRCS
     settings/dolphin_generalsettings.kcfgc)
 
-kconfig_add_kcfg_files(kcm_dolphinservices_PART_SRCS
+kde4_add_kcfg_files(kcm_dolphinservices_PART_SRCS
     settings/dolphin_generalsettings.kcfgc
     settings/dolphin_versioncontrolsettings.kcfgc)
 
-kconfig_add_kcfg_files(kcm_dolphingeneral_PART_SRCS
+kde4_add_kcfg_files(kcm_dolphingeneral_PART_SRCS
     settings/dolphin_generalsettings.kcfgc)
 
-add_library(kcm_dolphinviewmodes ${kcm_dolphinviewmodes_PART_SRCS})
-add_library(kcm_dolphinnavigation ${kcm_dolphinnavigation_PART_SRCS})
-add_library(kcm_dolphinservices ${kcm_dolphinservices_PART_SRCS})
-add_library(kcm_dolphingeneral ${kcm_dolphingeneral_PART_SRCS})
+kde4_add_plugin(kcm_dolphinviewmodes ${kcm_dolphinviewmodes_PART_SRCS})
+kde4_add_plugin(kcm_dolphinnavigation ${kcm_dolphinnavigation_PART_SRCS})
+kde4_add_plugin(kcm_dolphinservices ${kcm_dolphinservices_PART_SRCS})
+kde4_add_plugin(kcm_dolphingeneral ${kcm_dolphingeneral_PART_SRCS})
 
 target_link_libraries(kcm_dolphinviewmodes  ${KDE4_KDEUI_LIBS} ${KDE4_KFILE_LIBS} dolphinprivate)
 target_link_libraries(kcm_dolphinnavigation  ${KDE4_KDEUI_LIBS} ${KDE4_KFILE_LIBS} dolphinprivate)
@@ -293,7 +264,7 @@ install(TARGETS kcm_dolphingeneral DESTINATION ${PLUGIN_INSTALL_DIR} )
 
 set(kio_search_PART_SRCS
     search/filenamesearchprotocol.cpp)
-add_library(kio_filenamesearch ${kio_search_PART_SRCS})
+kde4_add_plugin(kio_filenamesearch ${kio_search_PART_SRCS})
 target_link_libraries(kio_filenamesearch ${KDE4_KIO_LIBS})
 install(TARGETS kio_filenamesearch DESTINATION ${PLUGIN_INSTALL_DIR})
 
@@ -317,3 +288,4 @@ install( FILES settings/kcm/kcmdolphingeneral.desktop DESTINATION ${SERVICES_INS
 install( FILES settings/services/servicemenu.knsrc DESTINATION ${CONFIG_INSTALL_DIR} )
 install( PROGRAMS settings/services/servicemenuinstallation DESTINATION ${BIN_INSTALL_DIR} )
 install( PROGRAMS settings/services/servicemenudeinstallation DESTINATION ${BIN_INSTALL_DIR} )
+

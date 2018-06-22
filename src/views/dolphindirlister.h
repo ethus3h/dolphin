@@ -22,6 +22,7 @@
 
 #include <libdolphin_export.h>
 #include <KDirLister>
+#include <qstringlist.h>
 
 /**
  * @brief Extends the class KDirLister by emitting a signal when an
@@ -34,6 +35,8 @@ class LIBDOLPHINPRIVATE_EXPORT DolphinDirLister : public KDirLister
 public:
     DolphinDirLister();
     virtual ~DolphinDirLister();
+    virtual void setHiddenList(const QStringList& list);
+    virtual QStringList hiddenList();
 
 signals:
     /** Is emitted whenever an error has occurred. */
@@ -44,6 +47,10 @@ signals:
 
 protected:
     virtual void handleError(KIO::Job* job);
+    virtual bool matchesFilter(const KFileItem& item) const;
+
+private:
+    QStringList hiddenlist;
 };
 
 #endif

@@ -114,8 +114,7 @@ void ColumnViewSettingsPage::applySettings()
     settings->setItalicFont(font.italic());
     settings->setFontWeight(font.weight());
 
-    const int columnWidth = BaseTextWidth + (m_textWidthBox->currentIndex() * TextInc);
-    settings->setColumnWidth(columnWidth);
+    const int columnWidth = 750;
 
     settings->writeConfig();
 }

@@ -25,6 +25,7 @@
 #include <config-nepomuk.h>
 
 #include "libdolphin_export.h"
+#include "dolphindirlister.h"
 
 #include <kparts/part.h>
 #include <KFileItem>
@@ -38,19 +39,20 @@
 #include <QListView>
 #include <QSet>
 #include <QWidget>
+#include <qstringlist.h>
 
 typedef KIO::FileUndoManager::CommandType CommandType;
 
 class DolphinColumnViewContainer;
 class DolphinDetailsView;
 class DolphinDetailsViewExpander;
+class DolphinDirLister;
 class DolphinIconsView;
 class DolphinModel;
 class DolphinSortFilterProxyModel;
 class DolphinViewController;
 class KAction;
 class KActionCollection;
-class KDirLister;
 class KUrl;
 class ViewModeController;
 class ViewProperties;
@@ -164,6 +166,9 @@ public:
 
     /** See setShowHiddenFiles */
     bool showHiddenFiles() const;
+    
+    /** returns the list of specifically hidden files in the current folder */
+    QStringList hiddenList() const;
 
     /** See setCategorizedSorting */
     bool categorizedSorting() const;
@@ -371,6 +376,16 @@ public slots:
      * Moves all selected items to the trash.
      */
     void trashSelectedItems();
+
+    /**
+     * Shows a preview of selected items.
+     */
+    void qlookSelectedItems();
+
+    /**
+     * Open kfind at the selected items. FIXME: Make it open with current directory instead of currently selected items.
+     */
+    void searchSelectedItems();
 
     /**
      * Deletes all selected items.
@@ -817,7 +832,7 @@ private:
 
         DolphinModel* dirModel() const;
         DolphinSortFilterProxyModel* proxyModel() const;
-        KDirLister* dirLister() const;
+        DolphinDirLister* dirLister() const;
 
     private:
         KUrl m_rootUrl;

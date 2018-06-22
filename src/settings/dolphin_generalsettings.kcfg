@@ -42,11 +42,11 @@
         </entry>
         <entry name="FilterBar" type="Bool">
             <label>Should the filter bar be shown</label>
-            <default>false</default>
+            <default>true</default>
         </entry>
         <entry name="GlobalViewProps" type="Bool">
             <label>Should the view properties be used for all directories</label>
-            <default>false</default>
+            <default>true</default>
         </entry>
         <entry name="BrowseThroughArchives" type="Bool">
             <label>Browse through archives</label>
@@ -77,7 +77,7 @@
         </entry>
         <entry name="AutoExpandFolders" type="Bool">
             <label>Use auto-expanding folders for all view types</label>
-            <default>false</default>
+            <default>true</default>
         </entry>
         <entry name="ShowZoomSlider" type="Bool">
             <label>Show zoom slider in the statusbar</label>
@@ -85,7 +85,7 @@
         </entry>
         <entry name="ShowSpaceInfo" type="Bool">
             <label>Show the space information in the statusbar</label>
-            <default>false</default>
+            <default>true</default>
         </entry>
         <entry name="LockPanels" type="Bool">
             <label>Lock the layout of the panels</label>
