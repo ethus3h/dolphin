@@ -291,7 +291,7 @@
   remotes/upstream/Applications/17.08                                                                                  507594879 GIT_SILENT made messages (after extraction)
   remotes/upstream/Applications/17.12                                                                                  9342b73b2 SVN_SILENT made messages (.desktop file) - always resolve ours
   remotes/upstream/Applications/18.04                                                                                  317c93fbe GIT_SILENT Upgrade KDE Applications version to 18.04.3.
-  remotes/upstream/Applications/18.08                                                                                  6e04f5008 Remove custom icon selection for trash
+  remotes/upstream/Applications/18.08                                                                                  d58fb6940 GIT_SILENT Upgrade KDE Applications version to 18.08.0.
   remotes/upstream/KDE/4.0                                                                                             fa907ecba SVN_SILENT made messages (.desktop file)
   remotes/upstream/KDE/4.1                                                                                             7731abf98 SVN_SILENT made messages (.desktop file)
   remotes/upstream/KDE/4.10                                                                                            4c99efe4d Dolphin Search Date: Set the proper date
