@@ -1,1 +1,0 @@
-for remote in $(git branch -r | grep '^upstream/' | grep -v '\->'); do git branch --track "upstream-branches/${remote# }" "${remote# }"; done || true
