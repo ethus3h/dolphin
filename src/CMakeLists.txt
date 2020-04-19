@@ -88,7 +88,7 @@ target_link_libraries(dolphinpart dolphinprivate konq ${KDE4_KPARTS_LIBS} ${KDE4
 install(TARGETS dolphinpart DESTINATION ${PLUGIN_INSTALL_DIR})
 
 install(FILES dolphinpart.rc DESTINATION ${DATA_INSTALL_DIR}/dolphinpart)
-install(FILES dolphinpart.desktop DESTINATION ${SERVICES_INSTALL_DIR} )
+install(FILES wfmpart.desktop DESTINATION ${SERVICES_INSTALL_DIR} )
 install(FILES views/versioncontrol/fileviewversioncontrolplugin.desktop DESTINATION ${SERVICETYPES_INSTALL_DIR})
 
 ##########################################
@@ -270,7 +270,7 @@ install(TARGETS kio_filenamesearch DESTINATION ${PLUGIN_INSTALL_DIR})
 
 ########### install files ###############
 
-install( PROGRAMS dolphin.desktop DESTINATION ${XDG_APPS_INSTALL_DIR} )
+install( PROGRAMS wfm.desktop DESTINATION ${XDG_APPS_INSTALL_DIR} )
 install( FILES settings/dolphin_directoryviewpropertysettings.kcfg
                settings/dolphin_generalsettings.kcfg
                settings/dolphin_columnmodesettings.kcfg
