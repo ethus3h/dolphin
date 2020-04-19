@@ -1,3 +1,5 @@
+find_package(ECM REQUIRED NO_MODULE)
+set(CMAKE_MODULE_PATH ${ECM_MODULE_PATH})
 macro_optional_find_package(Nepomuk)
 macro_log_feature(Nepomuk_FOUND "Nepomuk" "Nepomuk" "http://www.kde.org" FALSE "" "For adding desktop-wide tagging support to dolphin")
 macro_bool_to_01(Nepomuk_FOUND HAVE_NEPOMUK)
